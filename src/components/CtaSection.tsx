@@ -55,7 +55,7 @@ export default function CtaSection({
         </div>
 
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display mb-6 leading-tight">
-          An agent-first engine turning static websites into{" "}
+          NextConversion: An agent-first engine turning static websites into{" "}
           <span className="text-primary-light">
             profitable, adaptive shopping experiences.
           </span>

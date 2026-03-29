@@ -1,17 +1,11 @@
 import type { Metadata } from "next";
-import { Inter, Poppins } from "next/font/google";
+import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  variable: "--font-plus-jakarta-sans",
-  weight: ["600", "700", "800"],
+  variable: "--font-space-grotesk",
+  weight: ["300", "400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -33,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`h-full antialiased ${inter.variable} ${poppins.variable}`}>
+    <html lang="en" className={`h-full antialiased ${spaceGrotesk.variable}`}>
       <body className="min-h-full flex flex-col font-sans">{children}</body>
     </html>
   );

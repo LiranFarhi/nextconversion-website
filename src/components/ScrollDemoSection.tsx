@@ -1,7 +1,21 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+
+// Product data returned by /api/gottex-demo
+interface DemoProduct {
+  id: string;
+  name: string;
+  price: string;
+  imageUrl: string;
+  isVideo: boolean;
+  badge?: string;
+}
+
+// Scroll calculations use a fixed step count so the section height is stable
+// even while the async product fetch is in-flight.
+const STEP_COUNT = 4;
 
 interface Step {
   phase: string;
@@ -43,24 +57,49 @@ function GottexProductCard({
   collection,
   gradient,
   badge,
+  imageUrl,
+  isVideo,
 }: {
   name: string;
   price: string;
   collection: string;
   gradient: string;
   badge?: string;
+  imageUrl?: string;
+  isVideo?: boolean;
 }) {
   return (
     <div className="rounded-lg overflow-hidden border border-gray-100 bg-white shadow-sm">
-      <div className={`aspect-[3/4] bg-gradient-to-b ${gradient} relative`}>
+      <div className={`aspect-[3/4] relative ${imageUrl ? "" : `bg-gradient-to-b ${gradient}`}`}>
+        {imageUrl && !isVideo && (
+          <img
+            src={imageUrl}
+            alt={name}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        )}
+        {imageUrl && isVideo && (
+          <video
+            src={imageUrl}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        )}
         {badge && (
-          <div className="absolute top-1.5 left-1.5 bg-white/80 text-[7px] font-bold tracking-wider text-gray-700 uppercase px-1.5 py-0.5 rounded">
+          <div className="absolute top-1.5 left-1.5 bg-white/80 text-[7px] font-bold tracking-wider text-gray-700 uppercase px-1.5 py-0.5 rounded z-10">
             {badge}
           </div>
         )}
-        <div className="absolute bottom-1.5 left-1.5 right-1.5 text-[7px] font-bold tracking-[0.15em] text-white/80 uppercase">
-          {collection}
-        </div>
+        {!imageUrl && (
+          <div className="absolute bottom-1.5 left-1.5 right-1.5 text-[7px] font-bold tracking-[0.15em] text-white/80 uppercase">
+            {collection}
+          </div>
+        )}
       </div>
       <div className="p-1.5">
         <p className="text-[8px] font-bold tracking-widest uppercase text-gray-800 leading-tight">{name}</p>
@@ -119,7 +158,15 @@ function PhoneScreen1() {
   );
 }
 
-function PhoneScreen2() {
+// Static fallback card data for PhoneScreen2 when products haven't loaded
+const FALLBACK_CARDS = [
+  { name: "Riviera One-Piece", price: "$285", collection: "Resort '26", gradient: "from-rose-200 to-pink-300", badge: "New" },
+  { name: "Santorini Bikini",  price: "$195", collection: "Resort '26", gradient: "from-orange-100 to-amber-200", badge: undefined },
+  { name: "Cannes Cover-Up",   price: "$165", collection: "New In",      gradient: "from-pink-100 to-rose-200",   badge: undefined },
+  { name: "Nice Sarong",       price: "$125", collection: "Accessories", gradient: "from-orange-100 to-amber-200", badge: undefined },
+];
+
+function PhoneScreen2({ products }: { products: DemoProduct[] }) {
   return (
     <div className="h-full flex flex-col">
       {/* Gottex brand header */}
@@ -140,17 +187,26 @@ function PhoneScreen2() {
       {/* Product grid */}
       <div className="flex-1 p-2.5 overflow-hidden">
         <div className="grid grid-cols-2 gap-2">
-          <GottexProductCard name="Riviera One-Piece" price="$285" collection="Resort '26" gradient="from-rose-200 to-pink-300" badge="New" />
-          <GottexProductCard name="Santorini Bikini" price="$195" collection="Resort '26" gradient="from-orange-100 to-amber-200" />
-          <GottexProductCard name="Cannes Cover-Up" price="$165" collection="New In" gradient="from-pink-100 to-rose-200" />
-          <GottexProductCard name="Nice Sarong" price="$125" collection="Accessories" gradient="from-orange-100 to-amber-200" />
+          {FALLBACK_CARDS.map((card, i) => (
+            <GottexProductCard
+              key={card.name}
+              name={products[i]?.name ?? card.name}
+              price={products[i]?.price ? `$${products[i].price}` : card.price}
+              collection={card.collection}
+              gradient={card.gradient}
+              badge={products[i]?.badge ?? card.badge}
+              imageUrl={products[i]?.imageUrl}
+              isVideo={products[i]?.isVideo}
+            />
+          ))}
         </div>
       </div>
     </div>
   );
 }
 
-function PhoneScreen3() {
+function PhoneScreen3({ products }: { products: DemoProduct[] }) {
+  const hero = products[0];
   return (
     <div className="h-full flex flex-col">
       {/* Brand header */}
@@ -160,11 +216,37 @@ function PhoneScreen3() {
       </div>
       {/* Editorial product hero */}
       <div className="relative">
-        <div className="h-40 bg-gradient-to-br from-rose-400 to-pink-600 flex items-end p-3"
-          style={{ background: "linear-gradient(135deg, #e11d48 0%, #9f1239 50%, #4c0519 100%)" }}>
-          <div>
+        <div className="h-40 relative overflow-hidden">
+          {hero?.imageUrl && !hero.isVideo && (
+            <img
+              src={hero.imageUrl}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          )}
+          {hero?.imageUrl && hero.isVideo && (
+            <video
+              src={hero.imageUrl}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          )}
+          {!hero?.imageUrl && (
+            <div
+              className="absolute inset-0"
+              style={{ background: "linear-gradient(135deg, #e11d48 0%, #9f1239 50%, #4c0519 100%)" }}
+            />
+          )}
+          {/* Gradient overlay so text stays readable over photos */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+          <div className="absolute bottom-3 left-3">
             <p className="text-white/70 text-[8px] font-bold tracking-widest uppercase mb-0.5">Riviera Collection</p>
-            <p className="text-white text-sm font-bold leading-tight">RIVIERA ONE-PIECE</p>
+            <p className="text-white text-sm font-bold leading-tight">
+              {hero?.name ?? "RIVIERA ONE-PIECE"}
+            </p>
             <div className="flex items-center gap-1 mt-1">
               <span className="text-amber-300 text-[10px]">★★★★★</span>
               <span className="text-white/60 text-[8px]">4.9</span>
@@ -172,17 +254,21 @@ function PhoneScreen3() {
           </div>
         </div>
         <div className="absolute top-2 right-2 bg-rose-600 text-white text-[8px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
-          New
+          {hero?.badge ?? "New"}
         </div>
       </div>
       {/* Product details */}
       <div className="flex-1 p-3 space-y-2.5">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-[10px] font-bold tracking-widest uppercase text-gray-800">Riviera One-Piece</p>
+            <p className="text-[10px] font-bold tracking-widest uppercase text-gray-800">
+              {hero?.name ?? "Riviera One-Piece"}
+            </p>
             <p className="text-[9px] text-gray-500 mt-0.5">Sustainable fabric · Tummy support</p>
           </div>
-          <p className="text-sm font-bold text-gray-900">$285</p>
+          <p className="text-sm font-bold text-gray-900">
+            {hero?.price ? `$${hero.price}` : "$285"}
+          </p>
         </div>
         {/* Size selector */}
         <div>
@@ -202,14 +288,23 @@ function PhoneScreen3() {
         </div>
         {/* CTA */}
         <button className="w-full bg-gray-900 text-white text-[10px] font-bold py-2 rounded-lg tracking-wider uppercase">
-          Add to Cart — $285
+          Add to Cart — {hero?.price ? `$${hero.price}` : "$285"}
         </button>
       </div>
     </div>
   );
 }
 
-function PhoneScreen4() {
+const BUNDLE_FALLBACKS = [
+  { gradient: "from-rose-200 to-pink-300",   label: "Riviera One-Piece" },
+  { gradient: "from-orange-100 to-amber-200", label: "Cannes Cover-Up" },
+  { gradient: "from-amber-100 to-yellow-200", label: "Nice Sarong" },
+];
+
+function PhoneScreen4({ products }: { products: DemoProduct[] }) {
+  // Pick products 0, 2, 3 for the bundle (skip index 1 to vary imagery)
+  const bundleProducts = [products[0], products[2], products[3]];
+
   return (
     <div className="h-full flex flex-col">
       {/* Chat header */}
@@ -233,16 +328,32 @@ function PhoneScreen4() {
         <div className="rounded-xl border border-orange-200 bg-white p-2.5 shadow-sm">
           <p className="text-[9px] font-bold text-gray-800 mb-2 uppercase tracking-wider">Complete the Look</p>
           <div className="flex gap-1.5 mb-2.5">
-            <div className="w-14 h-14 rounded-lg bg-gradient-to-b from-rose-200 to-pink-300 flex-shrink-0" />
-            <div className="w-14 h-14 rounded-lg bg-gradient-to-b from-orange-100 to-amber-200 flex-shrink-0" />
-            <div className="w-14 h-14 rounded-lg bg-gradient-to-b from-amber-100 to-yellow-200 flex-shrink-0" />
+            {BUNDLE_FALLBACKS.map((fb, i) => {
+              const p = bundleProducts[i];
+              return (
+                <div key={i} className="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0 relative">
+                  {p?.imageUrl && !p.isVideo && (
+                    <img src={p.imageUrl} alt="" className="absolute inset-0 w-full h-full object-cover" />
+                  )}
+                  {p?.imageUrl && p.isVideo && (
+                    <video src={p.imageUrl} autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" />
+                  )}
+                  {!p?.imageUrl && (
+                    <div className={`absolute inset-0 bg-gradient-to-b ${fb.gradient}`} />
+                  )}
+                </div>
+              );
+            })}
           </div>
           <div className="flex gap-0.5 mb-2 flex-wrap">
-            <span className="text-[7px] text-gray-500">Riviera One-Piece</span>
-            <span className="text-[7px] text-gray-400">+</span>
-            <span className="text-[7px] text-gray-500">Cannes Cover-Up</span>
-            <span className="text-[7px] text-gray-400">+</span>
-            <span className="text-[7px] text-gray-500">Nice Sarong</span>
+            {BUNDLE_FALLBACKS.map((fb, i) => (
+              <span key={i} className="flex items-center gap-0.5">
+                {i > 0 && <span className="text-[7px] text-gray-400">+</span>}
+                <span className="text-[7px] text-gray-500">
+                  {bundleProducts[i]?.name ?? fb.label}
+                </span>
+              </span>
+            ))}
           </div>
           <div className="flex items-center justify-between">
             <div>
@@ -274,53 +385,75 @@ function PhoneScreen4() {
   );
 }
 
-const steps: Step[] = [
-  {
-    phase: "The Trigger",
-    agent: "Danny",
-    agentColor: "text-blue-400",
-    title: "A shopper clicks an ad for Gottex Resort Wear",
-    description:
-      "A 32-year-old shopper arrives from a resort wear ad. Danny instantly maps her intent signals, browsing history, and purchase context.",
-    tasks: ["Maps intent signals", "Forecasts trends", "Identifies hidden patterns"],
-    phoneContent: <PhoneScreen1 />,
-  },
-  {
-    phase: "The Evolution",
-    agent: "Emilia",
-    agentColor: "text-purple-400",
-    title: "A full Spring Resort experience generates",
-    description:
-      "Emilia builds a complete luxury shopping experience — Spring Resort collection, coral palette, tailored for Women 25–35.",
-    tasks: ["Personalizes UX layouts", "Adapts merchandising", "Removes friction"],
-    phoneContent: <PhoneScreen2 />,
-  },
-  {
-    phase: "The Adaptation",
-    agent: "John",
-    agentColor: "text-emerald-400",
-    title: "Editorial content shifts to match her world",
-    description:
-      "Product pages shift to an editorial Riviera theme — warm photography tones, sustainability copy, lifestyle-driven descriptions.",
-    tasks: ["Iterates creative assets", "A/B tests copy styles", "Prevents fatigue"],
-    phoneContent: <PhoneScreen3 />,
-  },
-  {
-    phase: "The Upsell",
-    agent: "Donna",
-    agentColor: "text-orange-400",
-    title: "Smart bundling at the right moment",
-    description:
-      "Donna suggests complementary pieces at the moment of highest intent — turning a $285 item into a $489 resort bundle.",
-    tasks: ["Pairs products smartly", "Offers dynamically", "Optimizes carts"],
-    phoneContent: <PhoneScreen4 />,
-  },
-];
+// ─── Steps builder ─────────────────────────────────────────────────────────────
+// Called inside useMemo so React nodes are created fresh when products load.
+
+function buildSteps(products: DemoProduct[]): Step[] {
+  return [
+    {
+      phase: "The Trigger",
+      agent: "Danny",
+      agentColor: "text-blue-400",
+      title: "A shopper clicks an ad for Gottex Resort Wear",
+      description:
+        "A 32-year-old shopper arrives from a resort wear ad. Danny instantly maps her intent signals, browsing history, and purchase context.",
+      tasks: ["Maps Intent Signals", "Forecasts Trends", "Identifies Hidden Patterns"],
+      phoneContent: <PhoneScreen1 />,
+    },
+    {
+      phase: "The Evolution",
+      agent: "Emilia",
+      agentColor: "text-purple-400",
+      title: "A full Spring Resort experience generates",
+      description:
+        "Emilia builds a complete luxury shopping experience — Spring Resort collection, coral palette, tailored for Women 25–35.",
+      tasks: ["Personalizes UX Layouts", "Adapts Merchandising", "Removes Friction"],
+      phoneContent: <PhoneScreen2 products={products} />,
+    },
+    {
+      phase: "The Adaptation",
+      agent: "John",
+      agentColor: "text-emerald-400",
+      title: "Editorial content shifts to match her world",
+      description:
+        "Product pages shift to an editorial Riviera theme — warm photography tones, sustainability copy, lifestyle-driven descriptions.",
+      tasks: ["Iterates Creative Assets", "A/B Tests Copy Styles", "Prevents Fatigue"],
+      phoneContent: <PhoneScreen3 products={products} />,
+    },
+    {
+      phase: "The Upsell",
+      agent: "Donna",
+      agentColor: "text-orange-400",
+      title: "Smart bundling at the right moment",
+      description:
+        "Donna suggests complementary pieces at the moment of highest intent — turning a $285 item into a $489 resort bundle.",
+      tasks: ["Pairs Products Smartly", "Offers Dynamically", "Optimizes Carts"],
+      phoneContent: <PhoneScreen4 products={products} />,
+    },
+  ];
+}
+
+// ─── Main section ──────────────────────────────────────────────────────────────
 
 export default function ScrollDemoSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [activeStep, setActiveStep] = useState(0);
   const [completedTasks, setCompletedTasks] = useState<Record<number, number[]>>({});
+  const [demoProducts, setDemoProducts] = useState<DemoProduct[]>([]);
+
+  // Fetch real CDN product images from the landing-server proxy.
+  // On failure the state stays [], and gradient placeholders are shown.
+  useEffect(() => {
+    fetch("/api/gottex-demo")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data.products)) setDemoProducts(data.products);
+      })
+      .catch(() => {});
+  }, []);
+
+  // Rebuild step JSX whenever products load — STEP_COUNT stays constant.
+  const stepsData = useMemo(() => buildSteps(demoProducts), [demoProducts]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -331,13 +464,13 @@ export default function ScrollDemoSection() {
       const sectionHeight = rect.height;
       const scrollProgress = Math.max(0, -rect.top) / (sectionHeight - window.innerHeight);
       const stepIndex = Math.min(
-        steps.length - 1,
-        Math.floor(scrollProgress * steps.length)
+        STEP_COUNT - 1,
+        Math.floor(scrollProgress * STEP_COUNT)
       );
 
       setActiveStep(stepIndex);
 
-      const stepProgress = (scrollProgress * steps.length) % 1;
+      const stepProgress = (scrollProgress * STEP_COUNT) % 1;
       const taskCount = Math.floor(stepProgress * 4);
       setCompletedTasks((prev) => {
         const newTasks: number[] = [];
@@ -355,7 +488,7 @@ export default function ScrollDemoSection() {
       id="demo"
       ref={sectionRef}
       className="relative bg-white"
-      style={{ height: `${(steps.length + 1) * 100}vh` }}
+      style={{ height: `${(STEP_COUNT + 1) * 100}vh` }}
     >
       <div className="sticky top-0 h-screen flex items-center overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
@@ -382,7 +515,7 @@ export default function ScrollDemoSection() {
 
                 {/* Steps as terminal output */}
                 <div className="space-y-4">
-                  {steps.map((step, i) => {
+                  {stepsData.map((step, i) => {
                     const isActive = i === activeStep;
                     const isPast = i < activeStep;
                     const isFuture = i > activeStep;
@@ -456,7 +589,7 @@ export default function ScrollDemoSection() {
                     transition={{ duration: 0.4, ease: "easeOut" }}
                     className="absolute inset-0"
                   >
-                    {steps[activeStep].phoneContent}
+                    {stepsData[activeStep].phoneContent}
                   </motion.div>
                 </AnimatePresence>
               </PhoneFrame>
@@ -473,21 +606,21 @@ export default function ScrollDemoSection() {
                   transition={{ duration: 0.4, ease: "easeOut" }}
                 >
                   <div className={`inline-flex items-center gap-2 mb-4 rounded-full px-3 py-1 text-xs font-bold bg-surface border border-border`}>
-                    <span className={steps[activeStep].agentColor}>{steps[activeStep].agent}</span>
+                    <span className={stepsData[activeStep].agentColor}>{stepsData[activeStep].agent}</span>
                     <span className="text-muted">is working</span>
                   </div>
                   <h3 className="text-xl sm:text-2xl font-bold font-display text-foreground mb-3">
-                    {steps[activeStep].title}
+                    {stepsData[activeStep].title}
                   </h3>
                   <p className="text-muted leading-relaxed">
-                    {steps[activeStep].description}
+                    {stepsData[activeStep].description}
                   </p>
                 </motion.div>
               </AnimatePresence>
 
               {/* Step indicators */}
               <div className="flex gap-2 mt-8">
-                {steps.map((_, i) => (
+                {stepsData.map((_, i) => (
                   <motion.div
                     key={i}
                     animate={{

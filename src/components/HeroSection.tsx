@@ -31,7 +31,7 @@ const personas: Persona[] = [
   {
     id: "hiking",
     demo: "24M · Laptop",
-    intent: "Hiking & Outdoors",
+    intent: "Sustainable Hiking Gear",
     gradient: "from-emerald-500 to-teal-600",
     products: [
       "from-emerald-200 to-teal-300",
@@ -57,7 +57,7 @@ const personas: Persona[] = [
   {
     id: "streetwear",
     demo: "19M · Mobile",
-    intent: "Streetwear",
+    intent: "Limited-Edition Streetwear",
     gradient: "from-rose-500 to-red-600",
     products: [
       "from-rose-200 to-red-300",
@@ -70,7 +70,7 @@ const personas: Persona[] = [
   {
     id: "skincare",
     demo: "41F · Desktop",
-    intent: "Skincare & Wellness",
+    intent: "Organic Skincare",
     gradient: "from-green-500 to-lime-600",
     products: [
       "from-green-200 to-lime-300",
@@ -83,7 +83,7 @@ const personas: Persona[] = [
   {
     id: "vintage",
     demo: "30M · Mobile",
-    intent: "Vintage Fashion",
+    intent: "Vintage Accessories",
     gradient: "from-cyan-500 to-blue-600",
     products: [
       "from-cyan-200 to-blue-300",
@@ -96,7 +96,7 @@ const personas: Persona[] = [
   {
     id: "jewelry",
     demo: "61F · Desktop",
-    intent: "Fine Jewelry",
+    intent: "Handcrafted Jewelry",
     gradient: "from-fuchsia-500 to-purple-600",
     products: [
       "from-fuchsia-200 to-purple-300",
@@ -109,7 +109,7 @@ const personas: Persona[] = [
   {
     id: "outerwear",
     demo: "28F · Mobile",
-    intent: "Winter Outerwear",
+    intent: "Budget-Friendly Outerwear",
     gradient: "from-sky-500 to-indigo-600",
     products: [
       "from-sky-200 to-indigo-300",
@@ -121,9 +121,55 @@ const personas: Persona[] = [
   },
 ];
 
+// ─── Persona Media Slot ───────────────────────────────────────────────────────
+// Renders a CDN image or a muted looping video (.mp4), falling back to a
+// gradient placeholder while the API call is in-flight or unavailable.
+
+function PersonaMediaSlot({
+  url,
+  gradient,
+  isVideo,
+}: {
+  url?: string;
+  gradient: string;
+  isVideo?: boolean;
+}) {
+  if (!url) {
+    return <div className={`aspect-square rounded-lg bg-gradient-to-b ${gradient}`} />;
+  }
+  if (isVideo) {
+    return (
+      <video
+        src={url}
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="aspect-square rounded-lg object-cover w-full"
+      />
+    );
+  }
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={url}
+      alt=""
+      loading="lazy"
+      decoding="async"
+      className="aspect-square rounded-lg object-cover w-full"
+    />
+  );
+}
+
 // ─── Persona Card ─────────────────────────────────────────────────────────────
 
-function PersonaCard({ persona }: { persona: Persona }) {
+function PersonaCard({
+  persona,
+  cdnImages,
+}: {
+  persona: Persona;
+  cdnImages?: string[];
+}) {
   return (
     <div className="rounded-xl overflow-hidden shadow-lg border border-gray-100 bg-white w-full">
       {/* Gradient header band */}
@@ -135,11 +181,15 @@ function PersonaCard({ persona }: { persona: Persona }) {
           {persona.intent}
         </p>
       </div>
-      {/* 2×2 product grid */}
+      {/* 2×2 product grid — real CDN images when available, gradients as fallback */}
       <div className="bg-white p-2 grid grid-cols-2 gap-1.5">
-        {persona.products.map((g, i) => (
-          <div key={i} className={`aspect-square rounded-lg bg-gradient-to-b ${g}`} />
-        ))}
+        {persona.products.map((g, i) => {
+          const url = cdnImages?.[i];
+          const isVideo = typeof url === "string" && (url.endsWith(".mp4") || url.includes(".mp4?"));
+          return (
+            <PersonaMediaSlot key={i} url={url} gradient={g} isVideo={isVideo} />
+          );
+        })}
       </div>
       {/* Personalized badge */}
       <div className="bg-gray-50 px-3 py-2 border-t border-gray-100">
@@ -156,6 +206,17 @@ function PersonaCard({ persona }: { persona: Persona }) {
 function PersonaCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  // Map of personaId → up to 4 CDN image/video URLs from the landing-server.
+  // Populated asynchronously; gradients show until the fetch resolves.
+  const [cdnImages, setCdnImages] = useState<Record<string, string[]>>({});
+
+  // Fetch persona-specific CDN images once on mount.
+  useEffect(() => {
+    fetch("/api/persona-products")
+      .then((r) => r.ok ? r.json() : {})
+      .then((data: Record<string, string[]>) => setCdnImages(data))
+      .catch(() => {}); // silent — gradient fallback stays visible
+  }, []);
 
   useEffect(() => {
     if (isHovered) return;
@@ -179,6 +240,7 @@ function PersonaCarousel() {
         {([-1, 0, 1] as const).map((offset) => {
           const idx = (activeIndex + offset + personas.length) % personas.length;
           const isCenter = offset === 0;
+          const persona = personas[idx];
           return (
             <motion.div
               key={`${idx}-${offset}`}
@@ -190,7 +252,10 @@ function PersonaCarousel() {
               transition={{ duration: 0.35, ease: "easeOut" }}
               className={`flex-shrink-0 w-[160px] sm:w-[180px] ${isCenter ? "" : "pointer-events-none"}`}
             >
-              <PersonaCard persona={personas[idx]} />
+              <PersonaCard
+                persona={persona}
+                cdnImages={cdnImages[persona.id]}
+              />
             </motion.div>
           );
         })}
@@ -340,8 +405,8 @@ export default function HeroSection({ onBookDemo }: { onBookDemo: () => void }) 
               transition={{ delay: 0.55, duration: 0.6, ease: "easeOut" }}
             >
               Stop sending laser-focused ad traffic to one-size-fits-all websites.
-              NextConversion deploys AI agents that turn every click into a
-              personalized micro-storefront — optimizing 24/7.
+              NextConversion is the agent-led engine that turns every click into a
+              personalized, real-time micro-storefront that optimizes itself 24/7.
             </motion.p>
 
             <motion.div
@@ -352,22 +417,25 @@ export default function HeroSection({ onBookDemo }: { onBookDemo: () => void }) 
             >
               <motion.button
                 onClick={onBookDemo}
-                className="btn-primary rounded-xl bg-primary px-8 py-4 text-white font-semibold text-lg animate-pulse-glow inline-flex items-center justify-center gap-2"
+                className="btn-primary rounded-xl bg-primary px-8 py-4 text-white font-semibold text-base animate-pulse-glow inline-flex items-center justify-center gap-2"
                 whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.97 }}
                 transition={{ type: "spring", stiffness: 400, damping: 20 }}
               >
-                Book a Demo
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                Deploy Your E-Commerce AI Agentic Work Force
+                <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </motion.button>
-              <a
-                href="#demo"
-                className="btn-secondary rounded-xl border border-border px-8 py-4 text-foreground font-semibold text-lg bg-white"
+              <motion.button
+                onClick={onBookDemo}
+                className="btn-secondary rounded-xl border border-border px-8 py-4 text-foreground font-semibold text-base bg-white"
+                whileHover={{ scale: 1.02, y: -1 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 400, damping: 20 }}
               >
-                See How It Works
-              </a>
+                Book a Demo
+              </motion.button>
             </motion.div>
           </div>
 
@@ -422,7 +490,7 @@ export default function HeroSection({ onBookDemo }: { onBookDemo: () => void }) 
           className="btn-primary w-full rounded-xl bg-primary px-6 py-3 text-white font-semibold text-base inline-flex items-center justify-center gap-2"
         >
           Book a Demo
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
           </svg>
         </button>

@@ -122,7 +122,7 @@ const features = [
     ),
     title: "Strict Enforcement",
     description:
-      "Margin and discount policies are baked into the agent's logic. Agents never exceed your discount caps or violate pricing rules.",
+      "Margin and discount policies are baked into the agent's logic.",
     control: <StrictEnforcementControl />,
   },
   {
@@ -135,7 +135,7 @@ const features = [
     ),
     title: "Brand Alignment",
     description:
-      "Approval workflows ensure the AI operates within your brand voice, visual identity, and business constraints.",
+      "Approval workflows ensure the AI operates within your specific brand voice and business constraints and goals.",
     control: <BrandAlignmentControl />,
   },
   {
@@ -148,7 +148,7 @@ const features = [
     ),
     title: "Plug & Play",
     description:
-      "Sits on top of your existing stack without migration headaches. One-line integration, zero disruption.",
+      "Sit on top of your existing stack (Shopify, BigCommerce) without a migration headache.",
     control: <PlugPlayControl />,
   },
 ];

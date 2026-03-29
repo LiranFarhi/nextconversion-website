@@ -20,7 +20,7 @@ function GoogleBadge() {
 
 const channelSources = [
   { name: "Google",    badge: <GoogleBadge />,     bg: "bg-white border border-gray-200 text-gray-800" },
-  { name: "ChatGPT",  badge: <span className="font-bold text-sm text-white">✦</span>, bg: "bg-[#10a37f] border border-[#0d8c6b]" },
+  { name: "OpenAI",   badge: <span className="font-bold text-sm text-white" style={{ fontFamily: "serif" }}>⬟</span>, bg: "bg-[#1a1a1a] border border-gray-700" },
   { name: "Meta",     badge: <span className="font-bold text-sm text-white">f</span>,  bg: "bg-[#0866ff] border border-[#0655d4]" },
   { name: "TikTok",   badge: <span className="font-bold text-sm text-white">♪</span>,  bg: "bg-black border border-gray-700" },
   { name: "Instagram",badge: <span className="font-bold text-sm text-white">◈</span>,  bg: "bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 border border-pink-400" },
@@ -131,7 +131,7 @@ export default function ProblemSection() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-amber-600 uppercase tracking-wider mb-1">
-                    Revenue Impact
+                    Business Gets Hit
                   </p>
                   <p className="text-3xl font-bold text-foreground mb-1">
                     <AnimatedStat value={50} isVisible={isVisible} />
@@ -165,9 +165,10 @@ export default function ProblemSection() {
               <div className="space-y-0">
                 {/* Top: Traffic sources */}
                 <div className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-t-2xl p-6 border border-primary/10 border-b-0">
-                  <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-3">
+                  <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">
                     Peak Traffic Sources
                   </p>
+                  <p className="text-[10px] text-muted mb-3">Social · Email · SEO · GEO</p>
                   <div className="flex flex-wrap gap-3">
                     {channelSources.map((ch) => (
                       <div key={ch.name} className="flex flex-col items-center gap-1">

@@ -16,7 +16,7 @@ const agents = [
     textColor: "text-blue-600",
     accentLight: "text-blue-400",
     quote:
-      "I find the buying patterns your team misses — turning raw data into real-time decisions.",
+      "I process intent signals and social trends that human teams miss.",
     tasks: [
       "Intent signal processing",
       "Trend forecasting",
@@ -33,7 +33,7 @@ const agents = [
     textColor: "text-purple-600",
     accentLight: "text-purple-400",
     quote:
-      "I redesign your store for each visitor in real-time — no designer needed.",
+      "I adjust your site design, UX, and merchandising in live sessions.",
     tasks: [
       "Dynamic UX layouts",
       "Adaptive merchandising",
@@ -50,7 +50,7 @@ const agents = [
     textColor: "text-emerald-600",
     accentLight: "text-emerald-400",
     quote:
-      "I keep your product pages fresh and high-performing — new copy, images, and videos generated automatically.",
+      "I enhance product details — generating descriptions, images and videos, copy styles to ensure your performance never drops.",
     tasks: [
       "Creative asset generation",
       "A/B tested copy styles",
@@ -67,7 +67,7 @@ const agents = [
     textColor: "text-orange-600",
     accentLight: "text-orange-400",
     quote:
-      "I guide shoppers to buy more — intelligently bundling products to maximize every cart.",
+      "While chatting with the user I intelligently bundle products to maximize Average Order Value (AOV)",
     tasks: [
       "Smart product pairing",
       "Dynamic offers",
@@ -104,8 +104,8 @@ const roundtableAgents = [
     color: "from-blue-500 to-indigo-600",
     ringRgba: "rgba(99,102,241,0.7)",
     avatar: "📊",
-    quote: "I find the patterns your team misses — turning raw data into real-time decisions.",
-    tasks: ["Intent signal processing", "Trend forecasting", "Segment discovery"],
+    quote: "I process intent signals and social trends that human teams miss.",
+    tasks: ["Maps Intent Signals", "Forecasts Trends", "Identifies Hidden Patterns"],
     pos: "top-12 left-1/2 -translate-x-1/2",
     tooltipDir: "below",
   },
@@ -115,8 +115,8 @@ const roundtableAgents = [
     color: "from-purple-500 to-fuchsia-600",
     ringRgba: "rgba(168,85,247,0.7)",
     avatar: "🎨",
-    quote: "I redesign your store for each visitor in real-time — no designer needed.",
-    tasks: ["Dynamic UX layouts", "Adaptive merchandising", "Friction removal"],
+    quote: "I adjust your site design, UX, and merchandising in live sessions.",
+    tasks: ["Personalizes UX Layouts", "Adapts Merchandising", "Removes Friction"],
     pos: "top-1/2 left-2 -translate-y-1/2",
     tooltipDir: "right",
   },
@@ -126,8 +126,8 @@ const roundtableAgents = [
     color: "from-emerald-500 to-teal-600",
     ringRgba: "rgba(16,185,129,0.7)",
     avatar: "⚡",
-    quote: "I keep your pages fresh and high-performing — generated automatically.",
-    tasks: ["Creative asset generation", "A/B tested copy", "Performance monitoring"],
+    quote: "I enhance product details — generating descriptions, images and videos, copy styles to ensure your performance never drops.",
+    tasks: ["Iterates Creative Assets", "A/B Tests Copy Styles", "Prevents Fatigue"],
     pos: "top-1/2 right-2 -translate-y-1/2",
     tooltipDir: "left",
   },
@@ -137,8 +137,8 @@ const roundtableAgents = [
     color: "from-orange-500 to-red-600",
     ringRgba: "rgba(249,115,22,0.7)",
     avatar: "🛍️",
-    quote: "I guide shoppers to buy more — intelligently bundling products to maximize every cart.",
-    tasks: ["Smart product pairing", "Dynamic offers", "Cart optimization"],
+    quote: "While chatting with the user I intelligently bundle products to maximize Average Order Value (AOV)",
+    tasks: ["Pairs Products Smartly", "Offers Dynamically", "Optimizes Carts"],
     pos: "bottom-2 left-1/2 -translate-x-1/2",
     tooltipDir: "above",
   },

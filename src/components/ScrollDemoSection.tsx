@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ShoppingBag } from "lucide-react";
 
 // Product data returned by /api/gottex-demo
 interface DemoProduct {
@@ -309,7 +310,9 @@ function PhoneScreen4({ products }: { products: DemoProduct[] }) {
     <div className="h-full flex flex-col">
       {/* Chat header */}
       <div className="bg-gradient-to-r from-orange-500 to-rose-600 px-3 py-2.5 pt-7 flex items-center gap-2">
-        <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-sm">🛍️</div>
+        <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
+          <ShoppingBag className="w-3.5 h-3.5 text-white" strokeWidth={1.75} />
+        </div>
         <div>
           <p className="text-white text-[10px] font-bold">Donna — Your AI Stylist</p>
           <p className="text-white/70 text-[8px]">Here to help you look amazing</p>

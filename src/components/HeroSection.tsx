@@ -2,6 +2,30 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { Mountain, Leaf, Flame, Zap } from "lucide-react";
+
+// ─── Storefront layout variants ───────────────────────────────────────────────
+
+type StorefrontLayout =
+  | "athletic"   // APEX · Sportswear
+  | "outdoor"    // TrailCo · Hiking
+  | "editorial"  // MAISON · Luxury Coats
+  | "hype"       // DRIP · Streetwear
+  | "botanical"  // Botanica · Skincare
+  | "vintage"    // Archive · Vintage
+  | "artisan"    // Atelier · Jewelry
+  | "deals";     // CozyFit · Outerwear
+
+interface PersonaTheme {
+  store: string;
+  tagline: string;
+  badge: string;
+  layout: StorefrontLayout;
+  dark: boolean;
+  ctaLabel: string;
+  accentHex: string;
+  headerClass: string;
+}
 
 // ─── 8 Demographic Personas ───────────────────────────────────────────────────
 
@@ -10,8 +34,9 @@ interface Persona {
   demo: string;
   intent: string;
   gradient: string;
-  products: string[];
+  products: string[]; // fallback Tailwind gradient classes for product slots
   pronoun: string;
+  theme: PersonaTheme;
 }
 
 const personas: Persona[] = [
@@ -27,6 +52,16 @@ const personas: Persona[] = [
       "from-purple-100 to-indigo-200",
     ],
     pronoun: "her",
+    theme: {
+      store: "APEX",
+      tagline: "Performance Redefined",
+      badge: "New Collection",
+      layout: "athletic",
+      dark: false,
+      ctaLabel: "Shop New Collection",
+      accentHex: "#6366f1",
+      headerClass: "bg-gradient-to-br from-purple-500 to-indigo-600",
+    },
   },
   {
     id: "hiking",
@@ -40,6 +75,16 @@ const personas: Persona[] = [
       "from-teal-200 to-green-300",
     ],
     pronoun: "him",
+    theme: {
+      store: "TrailCo",
+      tagline: "Built for the Wild",
+      badge: "Gear Drop",
+      layout: "outdoor",
+      dark: false,
+      ctaLabel: "View Gear",
+      accentHex: "#059669",
+      headerClass: "bg-gradient-to-br from-emerald-500 to-teal-600",
+    },
   },
   {
     id: "luxury-coats",
@@ -53,6 +98,16 @@ const personas: Persona[] = [
       "from-amber-100 to-orange-200",
     ],
     pronoun: "her",
+    theme: {
+      store: "MAISON",
+      tagline: "Autumn / Winter \u201926",
+      badge: "Exclusive Edit",
+      layout: "editorial",
+      dark: false,
+      ctaLabel: "Explore the Edit",
+      accentHex: "#d97706",
+      headerClass: "bg-gradient-to-br from-amber-50 to-orange-100",
+    },
   },
   {
     id: "streetwear",
@@ -66,6 +121,16 @@ const personas: Persona[] = [
       "from-rose-100 to-red-200",
     ],
     pronoun: "him",
+    theme: {
+      store: "DRIP",
+      tagline: "Limited Drop",
+      badge: "🔥 Live Now",
+      layout: "hype",
+      dark: true,
+      ctaLabel: "Add to Cart",
+      accentHex: "#f43f5e",
+      headerClass: "bg-gray-950",
+    },
   },
   {
     id: "skincare",
@@ -79,6 +144,16 @@ const personas: Persona[] = [
       "from-green-100 to-lime-200",
     ],
     pronoun: "her",
+    theme: {
+      store: "Botanica",
+      tagline: "Pure \u00b7 Natural \u00b7 Yours",
+      badge: "Certified Organic",
+      layout: "botanical",
+      dark: false,
+      ctaLabel: "Discover Your Routine",
+      accentHex: "#16a34a",
+      headerClass: "bg-white",
+    },
   },
   {
     id: "vintage",
@@ -86,12 +161,22 @@ const personas: Persona[] = [
     intent: "Vintage Accessories",
     gradient: "from-cyan-500 to-blue-600",
     products: [
-      "from-cyan-200 to-blue-300",
-      "from-blue-100 to-cyan-200",
-      "from-sky-200 to-blue-300",
-      "from-cyan-100 to-blue-200",
+      "from-amber-200 to-stone-300",
+      "from-stone-100 to-amber-200",
+      "from-orange-100 to-stone-200",
+      "from-amber-100 to-orange-200",
     ],
     pronoun: "him",
+    theme: {
+      store: "Archive",
+      tagline: "Curated Finds",
+      badge: "Rare Find",
+      layout: "vintage",
+      dark: false,
+      ctaLabel: "Browse the Archive",
+      accentHex: "#92400e",
+      headerClass: "bg-gradient-to-br from-amber-100 to-stone-200",
+    },
   },
   {
     id: "jewelry",
@@ -105,6 +190,16 @@ const personas: Persona[] = [
       "from-fuchsia-100 to-purple-200",
     ],
     pronoun: "her",
+    theme: {
+      store: "Atelier",
+      tagline: "Handcrafted Pieces",
+      badge: "Artisan Made",
+      layout: "artisan",
+      dark: true,
+      ctaLabel: "View Collection",
+      accentHex: "#c026d3",
+      headerClass: "bg-gradient-to-br from-purple-900 to-fuchsia-900",
+    },
   },
   {
     id: "outerwear",
@@ -118,24 +213,36 @@ const personas: Persona[] = [
       "from-sky-100 to-indigo-200",
     ],
     pronoun: "her",
+    theme: {
+      store: "CozyFit",
+      tagline: "Warm. Affordable.",
+      badge: "Up to 40% off",
+      layout: "deals",
+      dark: false,
+      ctaLabel: "Shop Sale Now",
+      accentHex: "#0284c7",
+      headerClass: "bg-gradient-to-br from-sky-500 to-indigo-600",
+    },
   },
 ];
 
-// ─── Persona Media Slot ───────────────────────────────────────────────────────
-// Renders a CDN image or a muted looping video (.mp4), falling back to a
-// gradient placeholder while the API call is in-flight or unavailable.
+// ─── Media Slot ───────────────────────────────────────────────────────────────
+// Renders a CDN image or video, falling back to a gradient placeholder.
+// className overrides the default aspect-ratio and rounding.
 
 function PersonaMediaSlot({
   url,
   gradient,
   isVideo,
+  className = "aspect-square rounded-lg",
 }: {
   url?: string;
   gradient: string;
   isVideo?: boolean;
+  className?: string;
 }) {
   if (!url) {
-    return <div className={`aspect-square rounded-lg bg-gradient-to-b ${gradient}`} />;
+    return <div className={`bg-gradient-to-b ${gradient} ${className}`} />;
   }
   if (isVideo) {
     return (
@@ -145,7 +252,7 @@ function PersonaMediaSlot({
         muted
         loop
         playsInline
-        className="aspect-square rounded-lg object-cover w-full"
+        className={`w-full object-cover ${className}`}
       />
     );
   }
@@ -156,46 +263,282 @@ function PersonaMediaSlot({
       alt=""
       loading="lazy"
       decoding="async"
-      className="aspect-square rounded-lg object-cover w-full"
+      className={`w-full object-cover ${className}`}
     />
   );
 }
 
-// ─── Persona Card ─────────────────────────────────────────────────────────────
+// ─── Storefront Variants ──────────────────────────────────────────────────────
 
-function PersonaCard({
+function PersonaStorefront({
   persona,
   cdnImages,
 }: {
   persona: Persona;
   cdnImages?: string[];
 }) {
-  return (
-    <div className="rounded-xl overflow-hidden shadow-lg border border-gray-100 bg-white w-full">
-      {/* Gradient header band */}
-      <div className={`bg-gradient-to-r ${persona.gradient} px-3 py-3`}>
-        <span className="bg-white/25 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">
-          {persona.demo}
-        </span>
-        <p className="text-white text-[10px] font-bold mt-1.5 uppercase tracking-wider leading-tight">
-          {persona.intent}
-        </p>
+  const { theme } = persona;
+
+  const slot = (i: number, cls?: string) => {
+    const url = cdnImages?.[i];
+    const isVid = !!url && (url.endsWith(".mp4") || url.includes(".mp4?"));
+    return (
+      <PersonaMediaSlot
+        key={i}
+        url={url}
+        gradient={persona.products[i] ?? "from-gray-200 to-gray-300"}
+        isVideo={isVid}
+        className={cls ?? "aspect-square rounded-lg"}
+      />
+    );
+  };
+
+  // ── ATHLETIC ──────────────────────────────────────────────────────────────
+  if (theme.layout === "athletic") {
+    return (
+      <div className="rounded-xl overflow-hidden shadow-lg border border-gray-100 w-full">
+        <div className={`${theme.headerClass} px-3 py-2.5`}>
+          <p className="text-white font-black text-[11px] tracking-[0.25em] uppercase">{theme.store}</p>
+          <p className="text-white/70 text-[7px] tracking-widest uppercase mt-0.5">{theme.tagline}</p>
+          <div className="flex gap-1 mt-1.5">
+            <span className="inline-flex items-center gap-0.5 bg-white/20 text-white text-[6px] font-bold px-1.5 py-0.5 rounded-full">
+              <Zap className="w-2.5 h-2.5" />Performance
+            </span>
+            <span className="inline-flex items-center gap-0.5 bg-white/20 text-white text-[6px] font-bold px-1.5 py-0.5 rounded-full">
+              <Leaf className="w-2.5 h-2.5" />Eco
+            </span>
+          </div>
+        </div>
+        <div className="bg-white p-2 grid grid-cols-2 gap-1.5">
+          {slot(0)}{slot(1)}{slot(2)}{slot(3)}
+        </div>
+        <div className="bg-white px-3 py-2 border-t border-gray-100">
+          <span className="text-[8px] font-bold tracking-wider" style={{ color: theme.accentHex }}>
+            {theme.ctaLabel} →
+          </span>
+        </div>
       </div>
-      {/* 2×2 product grid — real CDN images when available, gradients as fallback */}
+    );
+  }
+
+  // ── OUTDOOR ───────────────────────────────────────────────────────────────
+  if (theme.layout === "outdoor") {
+    return (
+      <div className="rounded-xl overflow-hidden shadow-lg border border-gray-100 w-full">
+        <div className={`${theme.headerClass} px-3 py-2.5`}>
+          <div className="flex items-center gap-1.5 mb-0.5">
+            <Mountain className="w-3.5 h-3.5 text-white/80" strokeWidth={1.75} />
+            <p className="text-white font-bold text-[11px] tracking-wider">{theme.store}</p>
+          </div>
+          <p className="text-white/80 text-[7px]">{theme.tagline}</p>
+          <span className="inline-block mt-1 bg-white/15 text-white text-[6px] font-semibold px-1.5 py-0.5 rounded">
+            {theme.badge}
+          </span>
+        </div>
+        <div className="bg-white p-2 space-y-1.5">
+          <div className="w-full">{slot(0, "aspect-[4/3] rounded-lg w-full")}</div>
+          <div className="grid grid-cols-2 gap-1.5">
+            {slot(1)}{slot(2)}
+          </div>
+        </div>
+        <div className="bg-white px-3 py-2 border-t border-gray-100">
+          <span className="text-[8px] font-semibold" style={{ color: theme.accentHex }}>{theme.ctaLabel} →</span>
+        </div>
+      </div>
+    );
+  }
+
+  // ── EDITORIAL ─────────────────────────────────────────────────────────────
+  if (theme.layout === "editorial") {
+    return (
+      <div className="rounded-xl overflow-hidden shadow-lg border border-amber-200 w-full">
+        <div className={`${theme.headerClass} px-3 py-3 text-center border-b border-amber-200`}>
+          <p className="font-bold text-[11px] tracking-[0.35em] text-amber-900 uppercase">{theme.store}</p>
+          <div className="w-8 h-px bg-amber-400 mx-auto my-1" />
+          <p className="text-[7px] text-amber-700 tracking-widest uppercase">{theme.tagline}</p>
+        </div>
+        <div className="bg-white p-2 flex gap-2">
+          <div className="w-14 flex-shrink-0">{slot(0, "aspect-[3/4] rounded-md w-full")}</div>
+          <div className="flex-1 flex flex-col justify-center min-w-0">
+            <span className="text-[6px] text-amber-600 font-bold tracking-widest uppercase">{theme.badge}</span>
+            <p className="text-[8px] font-bold text-gray-800 leading-tight mt-0.5 truncate">Heritage Coat</p>
+            <p className="text-[9px] font-black text-gray-900 mt-1">$890</p>
+            <div className="w-full h-px bg-amber-200 mt-1.5" />
+            <p className="text-[6px] text-gray-400 mt-1">Merino · Italy</p>
+          </div>
+        </div>
+        <div className="bg-amber-50 px-3 py-2 border-t border-amber-100 text-center">
+          <span className="text-[8px] italic text-amber-700">{theme.ctaLabel} →</span>
+        </div>
+      </div>
+    );
+  }
+
+  // ── HYPE ──────────────────────────────────────────────────────────────────
+  if (theme.layout === "hype") {
+    return (
+      <div className="rounded-xl overflow-hidden shadow-lg border border-gray-800 w-full">
+        <div className={`${theme.headerClass} px-3 py-2.5`}>
+          <p className="text-white font-black text-[18px] tracking-tight leading-none">{theme.store}</p>
+          <div className="flex items-center gap-1.5 mt-1">
+            <motion.span
+              className="inline-flex items-center gap-0.5 bg-rose-600 text-white text-[7px] font-bold px-1.5 py-0.5 rounded"
+              animate={{ opacity: [1, 0.55, 1] }}
+              transition={{ duration: 1.2, repeat: Infinity }}
+            >
+              <Flame className="w-2.5 h-2.5" strokeWidth={1.75} />
+              Live Now
+            </motion.span>
+            <span className="text-gray-500 text-[6px] tracking-widest uppercase">Limited Supply</span>
+          </div>
+        </div>
+        <div className="bg-gray-950 p-2 space-y-1.5">
+          {[0, 1].map((i) => (
+            <div key={i} className="relative rounded overflow-hidden">
+              {slot(i, "aspect-[5/2] rounded w-full")}
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent px-1.5 pb-1">
+                <p className="text-white text-[7px] font-bold">Drop #{i + 1}</p>
+                <p className="text-gray-300 text-[6px]">$149</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="bg-gray-950 px-3 py-2">
+          <div className="bg-rose-600 text-white text-[8px] font-bold text-center py-1 rounded">
+            {theme.ctaLabel}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── BOTANICAL ─────────────────────────────────────────────────────────────
+  if (theme.layout === "botanical") {
+    return (
+      <div className="rounded-xl overflow-hidden shadow-lg border border-green-100 w-full">
+        <div className={`${theme.headerClass} px-3 py-3 border-b border-green-100`}>
+          <p className="font-light text-[11px] tracking-[0.25em] text-green-700">{theme.store}</p>
+          <p className="text-[7px] text-gray-400 mt-0.5">{theme.tagline}</p>
+          <span className="inline-flex items-center gap-0.5 mt-1.5 bg-green-50 border border-green-200 text-green-700 text-[6px] font-semibold px-1.5 py-0.5 rounded-full">
+            <Leaf className="w-2.5 h-2.5" strokeWidth={1.75} />{theme.badge}
+          </span>
+        </div>
+        <div className="bg-green-50/30 p-2">
+          <div className="grid grid-cols-3 gap-1">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="flex flex-col gap-0.5">
+                {slot(i, "aspect-[2/3] rounded-lg w-full")}
+                <p className="text-[6px] text-gray-400 text-center leading-tight">Serum {i + 1}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="bg-white px-3 py-2 border-t border-green-100 text-center">
+          <span className="text-[8px] italic text-green-700">{theme.ctaLabel}</span>
+        </div>
+      </div>
+    );
+  }
+
+  // ── VINTAGE ───────────────────────────────────────────────────────────────
+  if (theme.layout === "vintage") {
+    return (
+      <div className="rounded-xl overflow-hidden shadow-lg border border-stone-200 w-full">
+        <div className={`${theme.headerClass} px-3 py-2.5`}>
+          <p className="font-bold text-[11px] tracking-[0.3em] text-stone-700 uppercase">{theme.store}</p>
+          <p className="text-[7px] text-stone-500 italic mt-0.5">{theme.tagline}</p>
+          <div className="flex items-center gap-1 mt-1.5">
+            <div className="h-px flex-1 bg-stone-400/50" />
+            <span className="text-[6px] text-stone-500 tracking-wider">Est. 1972</span>
+            <div className="h-px flex-1 bg-stone-400/50" />
+          </div>
+        </div>
+        <div className="bg-amber-50/30 p-2 grid grid-cols-2 gap-2">
+          {persona.products.map((g, i) => {
+            const url = cdnImages?.[i];
+            const isVid = !!url && (url.endsWith(".mp4") || url.includes(".mp4?"));
+            return (
+              <div key={i} className="border-2 border-white shadow">
+                <PersonaMediaSlot url={url} gradient={g} isVideo={isVid} className="aspect-square rounded-none w-full" />
+              </div>
+            );
+          })}
+        </div>
+        <div className="bg-amber-50/50 px-3 py-2 border-t border-stone-200 text-center">
+          <span className="text-[8px] text-stone-600">{theme.ctaLabel} →</span>
+        </div>
+      </div>
+    );
+  }
+
+  // ── ARTISAN ───────────────────────────────────────────────────────────────
+  if (theme.layout === "artisan") {
+    return (
+      <div className="rounded-xl overflow-hidden shadow-lg border border-purple-900 w-full">
+        <div className={`${theme.headerClass} px-3 py-2.5`}>
+          <p className="text-[11px] tracking-[0.35em] text-white/90 uppercase pb-1 border-b border-fuchsia-700/40">
+            {theme.store}
+          </p>
+          <p className="text-[7px] text-fuchsia-300/70 mt-1">{theme.tagline}</p>
+          <span className="inline-block mt-1 bg-fuchsia-900/60 border border-fuchsia-700/40 text-fuchsia-300 text-[6px] font-semibold px-1.5 py-0.5 rounded">
+            {theme.badge}
+          </span>
+        </div>
+        <div className="bg-gray-950 p-2 grid grid-cols-2 gap-2">
+          {persona.products.map((g, i) => {
+            const url = cdnImages?.[i];
+            const isVid = !!url && (url.endsWith(".mp4") || url.includes(".mp4?"));
+            return (
+              <PersonaMediaSlot
+                key={i}
+                url={url}
+                gradient={g}
+                isVideo={isVid}
+                className="aspect-square rounded-full w-full"
+              />
+            );
+          })}
+        </div>
+        <div className="bg-gray-950 px-3 py-2">
+          <div className="border text-[8px] text-center py-1 rounded" style={{ borderColor: "#a855f7", color: "#e879f9" }}>
+            {theme.ctaLabel}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── DEALS ─────────────────────────────────────────────────────────────────
+  // (also the default / outerwear)
+  return (
+    <div className="rounded-xl overflow-hidden shadow-lg border border-gray-100 w-full">
+      <div className={theme.headerClass}>
+        <div className="bg-green-500 text-white text-[7px] font-bold text-center py-1 tracking-wider uppercase">
+          {theme.badge}
+        </div>
+        <div className="px-3 py-2">
+          <p className="text-white font-bold text-[11px] tracking-wider">{theme.store}</p>
+          <p className="text-white/80 text-[7px] mt-0.5">{theme.tagline}</p>
+        </div>
+      </div>
       <div className="bg-white p-2 grid grid-cols-2 gap-1.5">
         {persona.products.map((g, i) => {
           const url = cdnImages?.[i];
-          const isVideo = typeof url === "string" && (url.endsWith(".mp4") || url.includes(".mp4?"));
+          const isVid = !!url && (url.endsWith(".mp4") || url.includes(".mp4?"));
           return (
-            <PersonaMediaSlot key={i} url={url} gradient={g} isVideo={isVideo} />
+            <div key={i} className="relative">
+              <PersonaMediaSlot url={url} gradient={g} isVideo={isVid} />
+              <span className="absolute top-0.5 right-0.5 bg-red-500 text-white text-[5px] font-bold px-1 py-0.5 rounded-sm">
+                -{20 + i * 5}%
+              </span>
+            </div>
           );
         })}
       </div>
-      {/* Personalized badge */}
-      <div className="bg-gray-50 px-3 py-2 border-t border-gray-100">
-        <span className="text-[10px] text-primary font-semibold">
-          ✓ Personalized for {persona.pronoun}
-        </span>
+      <div className="bg-white px-3 py-2 border-t border-gray-100">
+        <div className="bg-green-500 text-white text-[8px] font-bold text-center py-1 rounded">
+          {theme.ctaLabel}
+        </div>
       </div>
     </div>
   );
@@ -206,16 +549,13 @@ function PersonaCard({
 function PersonaCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-  // Map of personaId → up to 4 CDN image/video URLs from the landing-server.
-  // Populated asynchronously; gradients show until the fetch resolves.
   const [cdnImages, setCdnImages] = useState<Record<string, string[]>>({});
 
-  // Fetch persona-specific CDN images once on mount.
   useEffect(() => {
     fetch("/api/persona-products")
       .then((r) => r.ok ? r.json() : {})
       .then((data: Record<string, string[]>) => setCdnImages(data))
-      .catch(() => {}); // silent — gradient fallback stays visible
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -235,7 +575,6 @@ function PersonaCarousel() {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* 3-card display */}
       <div className="flex items-center justify-center gap-2 overflow-hidden">
         {([-1, 0, 1] as const).map((offset) => {
           const idx = (activeIndex + offset + personas.length) % personas.length;
@@ -252,7 +591,7 @@ function PersonaCarousel() {
               transition={{ duration: 0.35, ease: "easeOut" }}
               className={`flex-shrink-0 w-[160px] sm:w-[180px] ${isCenter ? "" : "pointer-events-none"}`}
             >
-              <PersonaCard
+              <PersonaStorefront
                 persona={persona}
                 cdnImages={cdnImages[persona.id]}
               />
@@ -374,7 +713,7 @@ export default function HeroSection({ onBookDemo }: { onBookDemo: () => void }) 
             </div>
           </motion.div>
 
-          {/* Headline — staggered word-by-word reveal */}
+          {/* Headline */}
           <div className="text-center max-w-4xl mx-auto mb-10 lg:mb-14">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-display tracking-tight text-foreground mb-5 leading-[1.1]">
               {allWords.map((word, i) => (
@@ -446,7 +785,6 @@ export default function HeroSection({ onBookDemo }: { onBookDemo: () => void }) 
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.75, duration: 0.7, ease: "easeOut" }}
           >
-            {/* Left: Legacy */}
             <div>
               <div className="flex items-center gap-2 mb-2.5">
                 <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
@@ -457,7 +795,6 @@ export default function HeroSection({ onBookDemo }: { onBookDemo: () => void }) 
               <LegacySite />
             </div>
 
-            {/* Right: 8-persona carousel */}
             <div>
               <div className="flex items-center gap-2 mb-2.5">
                 <div className="w-2.5 h-2.5 rounded-full bg-success animate-pulse" />

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { Bot, Eye, ShieldCheck, Rocket } from "lucide-react";
 import { FadeUp, StaggerParent, StaggerChild } from "./motion-primitives";
 
 const platforms = [
@@ -231,14 +232,16 @@ export default function SafetySection() {
             </p>
             <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-0">
               {[
-                { label: "Agent Suggests", icon: "🤖" },
-                { label: "You Review", icon: "👀" },
-                { label: "You Approve", icon: "✅" },
-                { label: "It Goes Live", icon: "🚀" },
+                { label: "Agent Suggests", Icon: Bot,         bg: "bg-blue-50",    icon: "text-blue-600"   },
+                { label: "You Review",     Icon: Eye,         bg: "bg-amber-50",   icon: "text-amber-600"  },
+                { label: "You Approve",    Icon: ShieldCheck, bg: "bg-green-50",   icon: "text-green-600"  },
+                { label: "It Goes Live",   Icon: Rocket,      bg: "bg-primary/8",  icon: "text-primary"    },
               ].map((step, i) => (
                 <div key={step.label} className="flex items-center gap-4 sm:flex-1">
                   <div className="flex flex-col items-center text-center">
-                    <span className="text-2xl mb-1">{step.icon}</span>
+                    <div className={`w-10 h-10 rounded-xl ${step.bg} flex items-center justify-center mb-1.5`}>
+                      <step.Icon className={`w-5 h-5 ${step.icon}`} strokeWidth={1.75} />
+                    </div>
                     <span className="text-xs font-medium text-foreground">
                       {step.label}
                     </span>

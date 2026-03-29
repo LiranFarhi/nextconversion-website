@@ -2,11 +2,35 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  BarChart2,
+  Wand2,
+  Zap,
+  ShoppingBag,
+  TrendingUp,
+  DollarSign,
+  Clock,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 import { useInView } from "./useInView";
 import { FadeUp, StaggerParent, StaggerChild } from "./motion-primitives";
 import { useCountUp } from "../lib/useCountUp";
 
-const agents = [
+interface Agent {
+  name: string;
+  role: string;
+  color: string;
+  bgLight: string;
+  borderColor: string;
+  textColor: string;
+  accentLight: string;
+  quote: string;
+  tasks: string[];
+  Icon: LucideIcon;
+}
+
+const agents: Agent[] = [
   {
     name: "Danny",
     role: "The Analyst",
@@ -15,14 +39,9 @@ const agents = [
     borderColor: "border-blue-200",
     textColor: "text-blue-600",
     accentLight: "text-blue-400",
-    quote:
-      "I process intent signals and social trends that human teams miss.",
-    tasks: [
-      "Intent signal processing",
-      "Trend forecasting",
-      "Segment discovery",
-    ],
-    avatar: "📊",
+    quote: "I process intent signals and social trends that human teams miss.",
+    tasks: ["Intent signal processing", "Trend forecasting", "Segment discovery"],
+    Icon: BarChart2,
   },
   {
     name: "Emilia",
@@ -32,14 +51,9 @@ const agents = [
     borderColor: "border-purple-200",
     textColor: "text-purple-600",
     accentLight: "text-purple-400",
-    quote:
-      "I adjust your site design, UX, and merchandising in live sessions.",
-    tasks: [
-      "Dynamic UX layouts",
-      "Adaptive merchandising",
-      "Friction removal",
-    ],
-    avatar: "🎨",
+    quote: "I adjust your site design, UX, and merchandising in live sessions.",
+    tasks: ["Dynamic UX layouts", "Adaptive merchandising", "Friction removal"],
+    Icon: Wand2,
   },
   {
     name: "John",
@@ -51,12 +65,8 @@ const agents = [
     accentLight: "text-emerald-400",
     quote:
       "I enhance product details — generating descriptions, images and videos, copy styles to ensure your performance never drops.",
-    tasks: [
-      "Creative asset generation",
-      "A/B tested copy styles",
-      "Performance monitoring",
-    ],
-    avatar: "⚡",
+    tasks: ["Creative asset generation", "A/B tested copy styles", "Performance monitoring"],
+    Icon: Zap,
   },
   {
     name: "Donna",
@@ -68,12 +78,8 @@ const agents = [
     accentLight: "text-orange-400",
     quote:
       "While chatting with the user I intelligently bundle products to maximize Average Order Value (AOV)",
-    tasks: [
-      "Smart product pairing",
-      "Dynamic offers",
-      "Cart optimization",
-    ],
-    avatar: "🛍️",
+    tasks: ["Smart product pairing", "Dynamic offers", "Cart optimization"],
+    Icon: ShoppingBag,
   },
 ];
 
@@ -83,27 +89,38 @@ interface KpiItem {
   value: number;
   suffix: string;
   decimals?: number;
-  icon: string;
+  Icon: LucideIcon;
   source: string;
 }
 
 const kpis: KpiItem[] = [
-  { label: "Conversion Rate Lift", prefix: "up to ", value: 200, suffix: "%", icon: "📈", source: "Personalization benchmark" },
-  { label: "AOV Lift",             prefix: "up to ", value: 35,  suffix: "%", icon: "💰", source: "Smart bundling benchmark" },
-  { label: "Session Duration Lift",prefix: "up to ", value: 90,  suffix: "%", icon: "⏱️", source: "Adaptive UX benchmark" },
-  { label: "Returning Users Lift", prefix: "up to ", value: 29,  suffix: "%", icon: "🔄", source: "Relevance benchmark" },
+  { label: "Conversion Rate Lift", prefix: "up to ", value: 200, suffix: "%", Icon: TrendingUp,  source: "Personalization benchmark" },
+  { label: "AOV Lift",             prefix: "up to ", value: 35,  suffix: "%", Icon: DollarSign,  source: "Smart bundling benchmark" },
+  { label: "Session Duration Lift",prefix: "up to ", value: 90,  suffix: "%", Icon: Clock,       source: "Adaptive UX benchmark" },
+  { label: "Returning Users Lift", prefix: "up to ", value: 29,  suffix: "%", Icon: Users,       source: "Relevance benchmark" },
 ];
-
 
 // ─── Agent Roundtable ──────────────────────────────────────────────────────────
 
-const roundtableAgents = [
+interface RoundtableAgent {
+  name: string;
+  role: string;
+  color: string;
+  ringRgba: string;
+  Icon: LucideIcon;
+  quote: string;
+  tasks: string[];
+  pos: string;
+  tooltipDir: "below" | "above" | "right" | "left";
+}
+
+const roundtableAgents: RoundtableAgent[] = [
   {
     name: "Danny",
     role: "The Analyst",
     color: "from-blue-500 to-indigo-600",
     ringRgba: "rgba(99,102,241,0.7)",
-    avatar: "📊",
+    Icon: BarChart2,
     quote: "I process intent signals and social trends that human teams miss.",
     tasks: ["Maps Intent Signals", "Forecasts Trends", "Identifies Hidden Patterns"],
     pos: "top-12 left-1/2 -translate-x-1/2",
@@ -114,7 +131,7 @@ const roundtableAgents = [
     role: "The Tailor",
     color: "from-purple-500 to-fuchsia-600",
     ringRgba: "rgba(168,85,247,0.7)",
-    avatar: "🎨",
+    Icon: Wand2,
     quote: "I adjust your site design, UX, and merchandising in live sessions.",
     tasks: ["Personalizes UX Layouts", "Adapts Merchandising", "Removes Friction"],
     pos: "top-1/2 left-2 -translate-y-1/2",
@@ -125,8 +142,9 @@ const roundtableAgents = [
     role: "The Optimizer",
     color: "from-emerald-500 to-teal-600",
     ringRgba: "rgba(16,185,129,0.7)",
-    avatar: "⚡",
-    quote: "I enhance product details — generating descriptions, images and videos, copy styles to ensure your performance never drops.",
+    Icon: Zap,
+    quote:
+      "I enhance product details — generating descriptions, images and videos, copy styles to ensure your performance never drops.",
     tasks: ["Iterates Creative Assets", "A/B Tests Copy Styles", "Prevents Fatigue"],
     pos: "top-1/2 right-2 -translate-y-1/2",
     tooltipDir: "left",
@@ -136,8 +154,9 @@ const roundtableAgents = [
     role: "The Shopping Assistant",
     color: "from-orange-500 to-red-600",
     ringRgba: "rgba(249,115,22,0.7)",
-    avatar: "🛍️",
-    quote: "While chatting with the user I intelligently bundle products to maximize Average Order Value (AOV)",
+    Icon: ShoppingBag,
+    quote:
+      "While chatting with the user I intelligently bundle products to maximize Average Order Value (AOV)",
     tasks: ["Pairs Products Smartly", "Offers Dynamically", "Optimizes Carts"],
     pos: "bottom-2 left-1/2 -translate-x-1/2",
     tooltipDir: "above",
@@ -151,7 +170,7 @@ function AgentSeat({
   onEnter,
   onLeave,
 }: {
-  agent: typeof roundtableAgents[0];
+  agent: RoundtableAgent;
   isAnyHovered: boolean;
   isHovered: boolean;
   onEnter: () => void;
@@ -165,6 +184,8 @@ function AgentSeat({
       : agent.tooltipDir === "right"
       ? "top-1/2 left-full ml-2 -translate-y-1/2"
       : "top-1/2 right-full mr-2 -translate-y-1/2";
+
+  const AgentIcon = agent.Icon;
 
   return (
     <div className={`absolute ${agent.pos} z-10`}>
@@ -181,7 +202,7 @@ function AgentSeat({
         onHoverStart={onEnter}
         onHoverEnd={onLeave}
       >
-        <span className="text-2xl">{agent.avatar}</span>
+        <AgentIcon className="w-6 h-6 text-white" strokeWidth={1.75} />
 
         <AnimatePresence>
           {isHovered && (
@@ -260,23 +281,15 @@ function AgentRoundtable() {
 
   return (
     <div className="relative w-full max-w-md mx-auto h-72 mb-4">
-      {/* Shadow agents (blurred, depth illusion) */}
       <div className="absolute top-10 left-20 w-9 h-9 rounded-full bg-white/15 blur-md opacity-[0.15] pointer-events-none" />
       <div className="absolute bottom-14 right-16 w-7 h-7 rounded-full bg-white/15 blur-md opacity-[0.15] pointer-events-none" />
       <div className="absolute top-1/3 right-20 w-11 h-11 rounded-full bg-white/15 blur-md opacity-[0.12] pointer-events-none" />
-
-      {/* TV Monitors */}
       <TvMonitor position="left" />
       <TvMonitor position="right" />
-
-      {/* Elliptical table */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-44 h-28 rounded-[40%] bg-gradient-to-b from-slate-700 to-slate-800 border border-slate-600 shadow-inner overflow-hidden">
-        {/* Radial glow center */}
         <div className="absolute inset-0 rounded-[40%] bg-primary/10 blur-xl" />
         <CenterBarChart />
       </div>
-
-      {/* Agent seats */}
       {roundtableAgents.map((agent) => (
         <AgentSeat
           key={agent.name}
@@ -293,6 +306,7 @@ function AgentRoundtable() {
 
 function KpiCard({ kpi, isInView }: { kpi: KpiItem; isInView: boolean }) {
   const count = useCountUp(kpi.value, 1600, isInView, kpi.decimals);
+  const KpiIcon = kpi.Icon;
 
   return (
     <motion.div
@@ -300,7 +314,9 @@ function KpiCard({ kpi, isInView }: { kpi: KpiItem; isInView: boolean }) {
       whileHover={{ scale: 1.04, backgroundColor: "rgba(255,255,255,0.09)" }}
       transition={{ type: "spring", stiffness: 400, damping: 20 }}
     >
-      <span className="text-2xl mb-2 block">{kpi.icon}</span>
+      <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center mx-auto mb-3">
+        <KpiIcon className="w-4 h-4 text-white/80" strokeWidth={1.75} />
+      </div>
       <p className="text-2xl sm:text-3xl font-bold font-display text-white mb-1">
         {kpi.prefix}{count}{kpi.suffix}
       </p>
@@ -320,7 +336,6 @@ export default function AgentSection() {
       ref={ref}
       className="py-20 lg:py-28 bg-surface-dark text-white relative overflow-hidden"
     >
-      {/* Background decorations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
           className="absolute top-1/4 -left-32 w-64 h-64 rounded-full bg-primary/10 blur-3xl"
@@ -335,7 +350,6 @@ export default function AgentSection() {
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section header */}
         <FadeUp className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display mb-6">
             Autonomous Growth.{" "}
@@ -347,7 +361,6 @@ export default function AgentSection() {
           </p>
         </FadeUp>
 
-        {/* Roundtable visual */}
         <FadeUp delay={0.05} className="mb-4">
           <p className="text-center text-xs text-gray-500 mb-6 uppercase tracking-widest font-medium">
             Hover an agent to see what they do
@@ -357,65 +370,66 @@ export default function AgentSection() {
 
         {/* Agent cards */}
         <StaggerParent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-16">
-          {agents.map((agent, i) => (
-            <StaggerChild key={agent.name}>
-              <motion.div
-                className={`
-                  relative rounded-2xl p-6 cursor-pointer h-full
-                  backdrop-blur-md border transition-colors duration-300
-                  ${
-                    activeAgent === i
-                      ? "bg-white/[0.12] border-white/20 shadow-2xl shadow-primary/10"
-                      : "bg-white/[0.05] border-white/[0.08] hover:bg-white/[0.1] hover:border-white/15"
-                  }
-                `}
-                whileHover={{ y: -6 }}
-                transition={{ type: "spring", stiffness: 350, damping: 22 }}
-                onMouseEnter={() => setActiveAgent(i)}
-                onMouseLeave={() => setActiveAgent(null)}
-                onClick={() => setActiveAgent(activeAgent === i ? null : i)}
-              >
-                {/* Gradient glow behind card on active */}
-                {activeAgent === i && (
-                  <div className={`absolute -inset-px rounded-2xl bg-gradient-to-b ${agent.color} opacity-[0.08] pointer-events-none`} />
-                )}
-
+          {agents.map((agent, i) => {
+            const AgentIcon = agent.Icon;
+            return (
+              <StaggerChild key={agent.name}>
                 <motion.div
-                  className="text-3xl mb-3"
-                  animate={{ scale: activeAgent === i ? 1.15 : 1 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 18 }}
+                  className={`
+                    relative rounded-2xl p-6 cursor-pointer h-full
+                    backdrop-blur-md border transition-colors duration-300
+                    ${
+                      activeAgent === i
+                        ? "bg-white/[0.12] border-white/20 shadow-2xl shadow-primary/10"
+                        : "bg-white/[0.05] border-white/[0.08] hover:bg-white/[0.1] hover:border-white/15"
+                    }
+                  `}
+                  whileHover={{ y: -6 }}
+                  transition={{ type: "spring", stiffness: 350, damping: 22 }}
+                  onMouseEnter={() => setActiveAgent(i)}
+                  onMouseLeave={() => setActiveAgent(null)}
+                  onClick={() => setActiveAgent(activeAgent === i ? null : i)}
                 >
-                  {agent.avatar}
-                </motion.div>
+                  {activeAgent === i && (
+                    <div className={`absolute -inset-px rounded-2xl bg-gradient-to-b ${agent.color} opacity-[0.08] pointer-events-none`} />
+                  )}
 
-                <h3 className="text-base font-bold text-white mb-0.5">{agent.name}</h3>
-                <p className={`text-xs font-medium mb-3 transition-colors ${activeAgent === i ? "text-primary-light" : "text-gray-500"}`}>
-                  {agent.role}
-                </p>
+                  {/* Icon box */}
+                  <motion.div
+                    className={`w-10 h-10 rounded-xl bg-gradient-to-br ${agent.color} flex items-center justify-center mb-4`}
+                    animate={{ scale: activeAgent === i ? 1.1 : 1 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 18 }}
+                  >
+                    <AgentIcon className="w-5 h-5 text-white" strokeWidth={1.75} />
+                  </motion.div>
 
-                <p className="text-sm text-gray-300 leading-relaxed mb-3">
-                  &ldquo;{agent.quote}&rdquo;
-                </p>
+                  <h3 className="text-base font-bold text-white mb-0.5">{agent.name}</h3>
+                  <p className={`text-xs font-medium mb-3 transition-colors ${activeAgent === i ? "text-primary-light" : "text-gray-500"}`}>
+                    {agent.role}
+                  </p>
 
-                {/* Tasks — expand on active */}
-                <div className={`overflow-hidden transition-all duration-400 ${activeAgent === i ? "max-h-40 opacity-100" : "max-h-0 opacity-0"}`}>
-                  <div className="pt-3 border-t border-white/10 space-y-1.5">
-                    {agent.tasks.map((task) => (
-                      <div key={task} className="flex items-center gap-2 text-xs text-gray-400">
-                        <svg className="w-3.5 h-3.5 text-success shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        {task}
-                      </div>
-                    ))}
+                  <p className="text-sm text-gray-300 leading-relaxed mb-3">
+                    &ldquo;{agent.quote}&rdquo;
+                  </p>
+
+                  <div className={`overflow-hidden transition-all duration-400 ${activeAgent === i ? "max-h-40 opacity-100" : "max-h-0 opacity-0"}`}>
+                    <div className="pt-3 border-t border-white/10 space-y-1.5">
+                      {agent.tasks.map((task) => (
+                        <div key={task} className="flex items-center gap-2 text-xs text-gray-400">
+                          <svg className="w-3.5 h-3.5 text-success shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                          {task}
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            </StaggerChild>
-          ))}
+                </motion.div>
+              </StaggerChild>
+            );
+          })}
         </StaggerParent>
 
-        {/* More agents hint */}
         <FadeUp delay={0.1} className="text-center mb-16">
           <p className="text-sm text-gray-500">
             ...and more specialist agents scaling your store as needed.

@@ -1115,16 +1115,16 @@ export default function HeroSection({ onBookDemo }: { onBookDemo: () => void }) 
 
   return (
     <>
-      <section className="relative pt-20 pb-12 lg:pt-28 lg:pb-16 overflow-hidden">
+      <section className="relative pt-16 pb-8 sm:pt-20 sm:pb-12 lg:pt-28 lg:pb-16 overflow-hidden">
         {/* Animated background */}
         <div className="absolute inset-0 bg-gradient-to-b from-surface via-white to-white" />
         <motion.div
-          className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-primary/[0.04] blur-[100px] pointer-events-none"
+          className="absolute top-0 right-0 w-[250px] h-[250px] sm:w-[500px] sm:h-[500px] rounded-full bg-primary/[0.04] blur-[100px] pointer-events-none"
           animate={{ x: [0, 30, 0], y: [0, -20, 0] }}
           transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-accent/[0.04] blur-[100px] pointer-events-none"
+          className="absolute bottom-0 left-0 w-[200px] h-[200px] sm:w-[400px] sm:h-[400px] rounded-full bg-accent/[0.04] blur-[100px] pointer-events-none"
           animate={{ x: [0, -20, 0], y: [0, 30, 0] }}
           transition={{ duration: 15, repeat: Infinity, ease: "easeInOut", delay: 3 }}
         />
@@ -1148,7 +1148,7 @@ export default function HeroSection({ onBookDemo }: { onBookDemo: () => void }) 
 
           {/* Headline */}
           <div className="text-center max-w-4xl mx-auto mb-10 lg:mb-14">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-display tracking-tight text-foreground mb-5 leading-[1.1]">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-display tracking-tight text-foreground mb-5 leading-[1.1]">
               {allWords.map((word, i) => (
                 <motion.span
                   key={word}

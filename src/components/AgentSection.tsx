@@ -152,7 +152,7 @@ const TABLE_POSITIONS = [
 
 function RoundTable({ activeIdx }: { activeIdx: number | null }) {
   return (
-    <div className="relative w-full" style={{ height: 280 }}>
+    <div className="relative w-full" style={{ height: 240 }}>
       {/* Table */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-24">
         {/* Table surface */}
@@ -271,7 +271,7 @@ export default function AgentSection() {
     <section
       id="agents"
       ref={ref}
-      className="py-20 lg:py-28 bg-surface-dark text-white relative overflow-hidden"
+      className="py-12 sm:py-20 lg:py-28 bg-surface-dark text-white relative overflow-hidden"
     >
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
@@ -287,8 +287,8 @@ export default function AgentSection() {
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <FadeUp className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display mb-6">
+        <FadeUp className="text-center max-w-3xl mx-auto mb-8 sm:mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-display mb-6">
             Autonomous Growth.{" "}
             <span className="text-primary-light">No Headcount Required.</span>
           </h2>
@@ -300,7 +300,7 @@ export default function AgentSection() {
 
         {/* Main visual: roundtable + detail panel */}
         <FadeUp delay={0.05}>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-10 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 items-center mb-10 max-w-4xl mx-auto">
             {/* Round table */}
             <div>
               <p className="text-center text-xs text-gray-500 mb-4 uppercase tracking-widest font-medium">
@@ -378,7 +378,7 @@ export default function AgentSection() {
         </FadeUp>
 
         {/* 4 clickable agent cards — face + name + role only */}
-        <StaggerParent className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
+        <StaggerParent className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 mb-16">
           {agents.map((agent, i) => (
             <StaggerChild key={agent.name}>
               <motion.button
@@ -429,7 +429,7 @@ export default function AgentSection() {
           <p className="text-center text-xs text-gray-500 mb-8">
             Based on industry benchmarks from McKinsey, Baymard Institute &amp; internal testing
           </p>
-          <StaggerParent className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <StaggerParent className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
             {kpis.map((kpi) => (
               <StaggerChild key={kpi.label}>
                 <KpiCard kpi={kpi} isInView={isVisible} />

@@ -31,7 +31,7 @@ interface Step {
 function PhoneFrame({ children }: { children: React.ReactNode }) {
   return (
     <motion.div
-      className="relative mx-auto w-[290px] sm:w-[320px]"
+      className="relative mx-auto w-[260px] sm:w-[290px] md:w-[320px]"
       animate={{ y: [0, -6, 0] }}
       transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
     >
@@ -49,7 +49,7 @@ function PhoneFrame({ children }: { children: React.ReactNode }) {
         {/* Notch */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-gray-900 rounded-b-2xl z-10" />
         {/* Screen */}
-        <div className="rounded-[2rem] bg-white overflow-hidden h-[530px] relative">
+        <div className="rounded-[2rem] bg-white overflow-hidden h-[420px] sm:h-[480px] md:h-[530px] relative">
           {children}
         </div>
       </div>
@@ -660,7 +660,7 @@ export default function ScrollDemoSection() {
       id="demo"
       ref={sectionRef}
       className="relative bg-white"
-      style={{ height: `${(STEP_COUNT + 1) * 100}vh` }}
+      style={{ height: `${(STEP_COUNT + 1) * 70}vh` }}
     >
       <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
         {/* Section header — always visible */}
@@ -677,7 +677,7 @@ export default function ScrollDemoSection() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
 
               {/* Left: Description + step nav */}
-              <div className="lg:col-span-4 order-3 lg:order-1 min-w-0">
+              <div className="lg:col-span-4 order-2 lg:order-1 min-w-0">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={activeStep}
@@ -774,7 +774,7 @@ export default function ScrollDemoSection() {
               </div>
 
               {/* Right: Agent Activity card */}
-              <div className="lg:col-span-3 order-2 lg:order-3">
+              <div className="lg:col-span-3 order-3 lg:order-3 hidden sm:block">
                 <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-3 overflow-hidden">
                   <div className="flex items-center gap-2 mb-3 pb-2.5 border-b border-gray-100">
                     <motion.span

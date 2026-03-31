@@ -34,15 +34,15 @@ export default function CtaSection({
   onBookDemo: () => void;
 }) {
   return (
-    <section className="py-20 lg:py-28 bg-surface-dark text-white relative overflow-hidden">
+    <section className="py-12 sm:py-20 lg:py-28 bg-surface-dark text-white relative overflow-hidden">
       {/* Background gradient orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/20 blur-[128px]"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] lg:w-[600px] lg:h-[600px] rounded-full bg-primary/20 blur-[128px]"
           animate={{ scale: [1, 1.1, 1] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
-        <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-accent/10 blur-[100px]" />
+        <div className="absolute top-0 right-0 w-48 h-48 sm:w-72 sm:h-72 lg:w-96 lg:h-96 rounded-full bg-accent/10 blur-[100px]" />
       </div>
 
       <FadeUp className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -54,7 +54,7 @@ export default function CtaSection({
           </span>
         </div>
 
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display mb-6 leading-tight">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-display mb-6 leading-tight">
           NextConversion: An agent-first engine turning static websites into{" "}
           <span className="text-primary-light">
             profitable, adaptive shopping experiences.

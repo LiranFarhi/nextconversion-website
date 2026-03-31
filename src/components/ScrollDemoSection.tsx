@@ -1,8 +1,20 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingBag } from "lucide-react";
+
+function useIsLg() {
+  const [isLg, setIsLg] = useState(false);
+  useEffect(() => {
+    const mql = window.matchMedia("(min-width: 1024px)");
+    setIsLg(mql.matches);
+    const handler = (e: MediaQueryListEvent) => setIsLg(e.matches);
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, []);
+  return isLg;
+}
 
 // Product data returned by /api/gottex-demo
 interface DemoProduct {
@@ -267,7 +279,7 @@ function MobileStorefrontContent() {
   return (
     <div className="bg-white" style={{ width: "100%" }}>
       {/* Hero banner */}
-      <div className="relative overflow-hidden" style={{ height: "160px" }}>
+      <div className="relative overflow-hidden h-[120px] sm:h-[140px] md:h-[160px]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=600&h=300&fit=crop&auto=format&q=80" alt="" className="w-full h-full object-cover"
           onError={(e) => { e.currentTarget.style.display = "none"; }} />
@@ -589,6 +601,7 @@ export default function ScrollDemoSection() {
   const [completedTasks, setCompletedTasks] = useState<Record<number, number[]>>({});
   const [demoProducts, setDemoProducts] = useState<DemoProduct[]>([]);
   const [isPaused, setIsPaused] = useState(false);
+  const isLg = useIsLg();
 
   // Fetch real CDN product images from the landing-server proxy.
   useEffect(() => {
@@ -616,8 +629,10 @@ export default function ScrollDemoSection() {
     return () => clearInterval(id);
   }, [isPaused]);
 
-  // Scroll-driven navigation (works alongside auto-play)
+  // Scroll-driven navigation — desktop only
   useEffect(() => {
+    if (!isLg) return;
+
     const handleScroll = () => {
       const section = sectionRef.current;
       if (!section) return;
@@ -646,23 +661,23 @@ export default function ScrollDemoSection() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isLg]);
 
-  const goToStep = (i: number) => {
+  const goToStep = useCallback((i: number) => {
     setActiveStep(i);
     setCompletedTasks({});
     setIsPaused(true);
     setTimeout(() => setIsPaused(false), 8000); // resume auto-play after 8s
-  };
+  }, []);
 
   return (
     <section
       id="demo"
       ref={sectionRef}
       className="relative bg-white"
-      style={{ height: `${(STEP_COUNT + 1) * 70}vh` }}
+      style={isLg ? { height: `${(STEP_COUNT + 1) * 70}vh` } : undefined}
     >
-      <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
+      <div className={isLg ? "sticky top-0 h-screen flex flex-col justify-center overflow-hidden" : "flex flex-col justify-center overflow-hidden py-12 sm:py-16"}>
         {/* Section header — always visible */}
         <div className="text-center pt-6 pb-4 px-4">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-display text-foreground">
@@ -703,7 +718,7 @@ export default function ScrollDemoSection() {
                 </AnimatePresence>
 
                 {/* Step navigation pills */}
-                <div className="grid grid-cols-2 gap-2 mt-6">
+                <div className="flex lg:grid lg:grid-cols-2 gap-2 mt-6 overflow-x-auto snap-x snap-mandatory pb-1 -mx-1 px-1">
                   {stepsData.map((step, i) => {
                     const agentColors: Record<string, { bg: string; border: string; dot: string }> = {
                       "text-blue-400":    { bg: "rgba(59,130,246,0.08)",  border: "rgba(59,130,246,0.25)",  dot: "#3b82f6" },
@@ -717,14 +732,14 @@ export default function ScrollDemoSection() {
                       <button
                         key={i}
                         onClick={() => goToStep(i)}
-                        className="text-left transition-all duration-300 rounded-xl px-3 py-2 border"
+                        className="text-left transition-all duration-300 rounded-xl px-3 py-2.5 border snap-start shrink-0 min-w-[130px] lg:min-w-0"
                         style={isActive ? { background: c.bg, borderColor: c.border } : { background: "transparent", borderColor: "transparent" }}
                       >
                         <div className="flex items-center gap-1.5 mb-0.5">
                           <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: isActive ? c.dot : "#d1d5db" }} />
-                          <p className="text-[8px] font-black uppercase tracking-wider" style={isActive ? { color: c.dot } : { color: "#9ca3af" }}>{step.phase}</p>
+                          <p className="text-[10px] lg:text-[8px] font-black uppercase tracking-wider" style={isActive ? { color: c.dot } : { color: "#9ca3af" }}>{step.phase}</p>
                         </div>
-                        <p className="text-[9px] font-medium text-gray-500 pl-3">{step.agent}</p>
+                        <p className="text-[10px] lg:text-[9px] font-medium text-gray-500 pl-3">{step.agent}</p>
                       </button>
                     );
                   })}
@@ -773,8 +788,19 @@ export default function ScrollDemoSection() {
                 </div>
               </div>
 
-              {/* Right: Agent Activity card */}
-              <div className="lg:col-span-3 order-3 lg:order-3 hidden sm:block">
+              {/* Mobile: compact agent status bar */}
+              <div className="lg:hidden order-3 flex items-center gap-2 rounded-lg bg-white border border-gray-100 shadow-sm px-3 py-2">
+                <motion.span
+                  className="w-2 h-2 rounded-full bg-green-400 shrink-0"
+                  animate={{ opacity: [1, 0.4, 1] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                />
+                <span className={`text-xs font-bold ${stepsData[activeStep].agentColor}`}>{stepsData[activeStep].agent}</span>
+                <span className="text-xs text-muted truncate">{stepsData[activeStep].tasks[0]}</span>
+              </div>
+
+              {/* Right: Agent Activity card — desktop only */}
+              <div className="lg:col-span-3 order-3 hidden lg:block">
                 <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-3 overflow-hidden">
                   <div className="flex items-center gap-2 mb-3 pb-2.5 border-b border-gray-100">
                     <motion.span

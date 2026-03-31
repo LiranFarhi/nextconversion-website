@@ -24,26 +24,27 @@ function StrictEnforcementControl() {
         <span className="text-xs font-medium text-muted">Minimum Margin</span>
         <span className="text-xs font-bold text-primary">{margin}%</span>
       </div>
-      <div className="relative h-2 bg-gray-200 rounded-full mb-3">
-        <div
-          className="absolute left-0 top-0 h-full bg-gradient-to-r from-primary to-primary-light rounded-full transition-all duration-150"
-          style={{ width: `${((pct - 10) / 50) * 100}%` }}
-        />
-        <div
-          className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 border-primary rounded-full shadow-sm transition-all duration-150"
-          style={{ left: `calc(${((pct - 10) / 50) * 100}% - 8px)` }}
+      <div className="relative h-6 mb-3">
+        <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-2 bg-gray-200 rounded-full">
+          <div
+            className="absolute left-0 top-0 h-full bg-gradient-to-r from-primary to-primary-light rounded-full transition-all duration-150"
+            style={{ width: `${((pct - 10) / 50) * 100}%` }}
+          />
+          <div
+            className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 border-primary rounded-full shadow-sm transition-all duration-150"
+            style={{ left: `calc(${((pct - 10) / 50) * 100}% - 8px)` }}
+          />
+        </div>
+        <input
+          type="range"
+          min={10}
+          max={60}
+          value={margin}
+          onChange={(e) => setMargin(Number(e.target.value))}
+          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          aria-label="Minimum margin percentage"
         />
       </div>
-      <input
-        type="range"
-        min={10}
-        max={60}
-        value={margin}
-        onChange={(e) => setMargin(Number(e.target.value))}
-        className="w-full opacity-0 absolute cursor-pointer"
-        style={{ marginTop: "-22px", height: "20px" }}
-        aria-label="Minimum margin percentage"
-      />
       <p className="text-[10px] text-muted">Agents never go below this margin floor</p>
     </div>
   );

@@ -342,7 +342,7 @@ const PERSONA_PRODUCTS: Record<string, ProductItem[]> = {
     { name: "Vitamin C Serum", price: "$62", rating: 4.9, count: 2847, img: U("photo-1620916566398-39f1143ab7be"), bg: "radial-gradient(ellipse at 40% 20%, rgba(255,255,255,0.48) 0%, transparent 55%), linear-gradient(155deg, #fde68a 0%, #f59e0b 100%)" },
     { name: "Hydrating Cream", price: "$48", rating: 4.8, count: 1923, img: U("photo-1611930022073-b7a4ba5fcccd"), bg: "radial-gradient(ellipse at 38% 22%, rgba(255,255,255,0.44) 0%, transparent 55%), linear-gradient(155deg, #e0f2fe 0%, #7dd3fc 100%)" },
     { name: "Gentle Cleanser", price: "$34", rating: 4.7, count: 3412, img: U("photo-1556228578-0d85b1a4d571"), bg: "radial-gradient(ellipse at 40% 18%, rgba(255,255,255,0.52) 0%, transparent 58%), linear-gradient(155deg, #d1fae5 0%, #6ee7b7 100%)" },
-    { name: "Retinol Eye Cream", price: "$78", rating: 4.8, count: 1156, img: U("photo-1570194065650-d99fb4a38691"), bg: "radial-gradient(ellipse at 38% 20%, rgba(255,255,255,0.40) 0%, transparent 55%), linear-gradient(155deg, #fce7f3 0%, #f9a8d4 100%)" },
+    { name: "Retinol Eye Cream", price: "$78", rating: 4.8, count: 1156, img: U("photo-1596462502278-27bfdc403348"), bg: "radial-gradient(ellipse at 38% 20%, rgba(255,255,255,0.40) 0%, transparent 55%), linear-gradient(155deg, #fce7f3 0%, #f9a8d4 100%)" },
   ],
   vintage: [
     { name: "90s Denim Jacket", price: "$89", rating: 4.7, count: 234, img: U("photo-1576995853123-5a10305d93c0"), bg: "radial-gradient(ellipse at 35% 18%, rgba(255,255,255,0.28) 0%, transparent 52%), linear-gradient(155deg, #5878a8 0%, #2d4070 100%)" },
@@ -357,7 +357,7 @@ const PERSONA_PRODUCTS: Record<string, ProductItem[]> = {
     { name: "Sapphire Ring", price: "$650", rating: 4.9, count: 89, img: U("photo-1605100804763-247f67b3557e"), bg: "radial-gradient(ellipse at 40% 20%, rgba(255,255,255,0.62) 0%, transparent 58%), linear-gradient(155deg, #1e3a5f 0%, #0c1929 100%)" },
   ],
   outerwear: [
-    { name: "Arctic Puffer", price: "$59", orig: "$89", rating: 4.7, count: 1243, img: U("photo-1544923246-77307dd270b9"), bg: "radial-gradient(ellipse at 35% 18%, rgba(255,255,255,0.28) 0%, transparent 52%), linear-gradient(155deg, #3b82f6 0%, #1d4ed8 100%)" },
+    { name: "Arctic Puffer", price: "$59", orig: "$89", rating: 4.7, count: 1243, img: U("photo-1544441893-675973e31985"), bg: "radial-gradient(ellipse at 35% 18%, rgba(255,255,255,0.28) 0%, transparent 52%), linear-gradient(155deg, #3b82f6 0%, #1d4ed8 100%)" },
     { name: "Wool Coat", price: "$79", orig: "$119", rating: 4.6, count: 876, img: U("photo-1539533113208-f6df8cc8b543"), bg: "radial-gradient(ellipse at 40% 18%, rgba(255,255,255,0.22) 0%, transparent 50%), linear-gradient(155deg, #0891b2 0%, #075985 100%)" },
     { name: "Fleece Jacket", price: "$49", orig: "$69", rating: 4.8, count: 934, img: U("photo-1551028719-00167b16eac5"), bg: "radial-gradient(ellipse at 40% 20%, rgba(255,255,255,0.22) 0%, transparent 50%), linear-gradient(155deg, #94a3b8 0%, #334155 100%)" },
     { name: "Rain Parka", price: "$69", orig: "$99", rating: 4.7, count: 621, img: U("photo-1545594861-3bef43ff2fc8"), bg: "radial-gradient(ellipse at 38% 18%, rgba(255,255,255,0.22) 0%, transparent 50%), linear-gradient(155deg, #ef4444 0%, #991b1b 100%)" },
@@ -389,10 +389,11 @@ function PCard({
 }: ProductItem & { dark?: boolean; imgAspect?: string }) {
   return (
     <div className={`rounded-xl overflow-hidden transition-shadow${dark ? "" : " shadow-sm hover:shadow-md border border-gray-100"}`}>
-      <div className={`${imgAspect} w-full relative overflow-hidden`} style={img ? undefined : { background: bg }}>
+      <div className={`${imgAspect} w-full relative overflow-hidden`} style={{ background: bg }}>
         {img && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={img} alt={name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+          <img src={img} alt={name} className="w-full h-full object-cover" loading="lazy" decoding="async"
+            onError={(e) => { e.currentTarget.style.display = "none"; }} />
         )}
       </div>
       <div className={`px-2.5 pt-2 pb-2.5 ${dark ? "bg-gray-900" : "bg-white"}`}>

@@ -84,7 +84,7 @@ function GottexProductCard({
 
   return (
     <div className="rounded-lg overflow-hidden border border-gray-100 bg-white shadow-sm flex flex-col">
-      <div className={`aspect-[3/4] relative ${imageUrl ? "" : `bg-gradient-to-b ${gradient}`}`}>
+      <div className={`aspect-[3/4] relative bg-gradient-to-b ${gradient}`}>
         {imageUrl && !isVideo && (
           <img
             src={imageUrl}
@@ -92,6 +92,7 @@ function GottexProductCard({
             loading="lazy"
             decoding="async"
             className="absolute inset-0 w-full h-full object-cover"
+            onError={(e) => { e.currentTarget.style.display = "none"; }}
           />
         )}
         {imageUrl && isVideo && (
@@ -268,7 +269,8 @@ function MobileStorefrontContent() {
       {/* Hero banner */}
       <div className="relative overflow-hidden" style={{ height: "160px" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=600&h=300&fit=crop&auto=format&q=80" alt="" className="w-full h-full object-cover" />
+        <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=600&h=300&fit=crop&auto=format&q=80" alt="" className="w-full h-full object-cover"
+          onError={(e) => { e.currentTarget.style.display = "none"; }} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
         <div className="absolute bottom-3 left-3 right-3">
           <p className="text-white/70 text-[7px] tracking-widest uppercase">New Collection</p>
@@ -294,7 +296,8 @@ function MobileStorefrontContent() {
           <div key={i} className="rounded-lg overflow-hidden border border-gray-100">
             <div className="aspect-[3/4] relative overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+              <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async"
+                onError={(e) => { e.currentTarget.style.display = "none"; }} />
               {p.badge && (
                 <span className="absolute top-1.5 left-1.5 text-[6px] font-bold bg-stone-900 text-white px-1.5 py-0.5 rounded">
                   {p.badge}

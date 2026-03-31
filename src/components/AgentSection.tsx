@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart2,
@@ -264,8 +264,21 @@ function KpiCard({ kpi, isInView }: { kpi: KpiItem; isInView: boolean }) {
 export default function AgentSection() {
   const { ref, isVisible } = useInView(0.1);
   const [activeAgent, setActiveAgent] = useState<number | null>(null);
+  const mobileDetailRef = useRef<HTMLDivElement>(null);
 
   const active = activeAgent !== null ? agents[activeAgent] : null;
+
+  // Auto-scroll to mobile detail panel when an agent is selected
+  useEffect(() => {
+    if (activeAgent === null) return;
+    const timeout = setTimeout(() => {
+      mobileDetailRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }, 100);
+    return () => clearTimeout(timeout);
+  }, [activeAgent]);
 
   return (
     <section
@@ -417,7 +430,7 @@ export default function AgentSection() {
 
         {/* Mobile detail panel — appears below agent cards */}
         {active && (
-          <div className="lg:hidden mb-6 max-w-md mx-auto">
+          <div ref={mobileDetailRef} className="lg:hidden mb-6 max-w-md mx-auto">
             <AnimatePresence mode="wait">
               <motion.div
                 key={active.name}

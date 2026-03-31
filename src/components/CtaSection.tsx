@@ -34,7 +34,7 @@ export default function CtaSection({
   onBookDemo: () => void;
 }) {
   return (
-    <section className="py-12 sm:py-20 lg:py-28 bg-surface-dark text-white relative overflow-hidden">
+    <section id="cta" className="py-12 sm:py-20 lg:py-28 bg-surface-dark text-white relative overflow-hidden">
       {/* Background gradient orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div

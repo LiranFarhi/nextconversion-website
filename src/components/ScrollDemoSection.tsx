@@ -744,14 +744,14 @@ export default function ScrollDemoSection() {
                       <button
                         key={i}
                         onClick={() => goToStep(i)}
-                        className="text-left transition-all duration-300 rounded-xl px-3 py-2.5 border snap-start shrink-0 min-w-[130px] lg:min-w-0"
+                        className="text-left transition-all duration-300 rounded-xl px-3.5 py-3 lg:px-3 lg:py-2.5 border snap-start shrink-0 min-w-[150px] lg:min-w-0 active:scale-95"
                         style={isActive ? { background: c.bg, borderColor: c.border } : { background: "transparent", borderColor: "transparent" }}
                       >
                         <div className="flex items-center gap-1.5 mb-0.5">
-                          <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: isActive ? c.dot : "#d1d5db" }} />
-                          <p className="text-[10px] lg:text-[8px] font-black uppercase tracking-wider" style={isActive ? { color: c.dot } : { color: "#9ca3af" }}>{step.phase}</p>
+                          <div className="w-2 h-2 lg:w-1.5 lg:h-1.5 rounded-full shrink-0" style={{ background: isActive ? c.dot : "#d1d5db" }} />
+                          <p className="text-[11px] lg:text-[8px] font-black uppercase tracking-wider" style={isActive ? { color: c.dot } : { color: "#9ca3af" }}>{step.phase}</p>
                         </div>
-                        <p className="text-[10px] lg:text-[9px] font-medium text-gray-500 pl-3">{step.agent}</p>
+                        <p className="text-[11px] lg:text-[9px] font-medium text-gray-500 pl-3.5 lg:pl-3">{step.agent}</p>
                       </button>
                     );
                   })}
@@ -760,6 +760,21 @@ export default function ScrollDemoSection() {
 
               {/* Center: Phone + Terminal attached below */}
               <div className="lg:col-span-5 order-1 lg:order-2 flex flex-col items-center gap-3">
+                <motion.div
+                  className="touch-pan-y"
+                  drag={isLg ? false : "x"}
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.15}
+                  onDragEnd={(_e, info) => {
+                    if (Math.abs(info.offset.x) > 50) {
+                      if (info.offset.x < 0 && activeStep < STEP_COUNT - 1) {
+                        goToStep(activeStep + 1);
+                      } else if (info.offset.x > 0 && activeStep > 0) {
+                        goToStep(activeStep - 1);
+                      }
+                    }
+                  }}
+                >
                 <PhoneFrame>
                   <AnimatePresence mode="wait">
                     <motion.div
@@ -798,17 +813,45 @@ export default function ScrollDemoSection() {
                     </button>
                   ))}
                 </div>
+                </motion.div>
               </div>
 
-              {/* Mobile: compact agent status bar */}
-              <div className="lg:hidden order-3 flex items-center gap-2 rounded-lg bg-white border border-gray-100 shadow-sm px-3 py-2">
-                <motion.span
-                  className="w-2 h-2 rounded-full bg-green-400 shrink-0"
-                  animate={{ opacity: [1, 0.4, 1] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                />
-                <span className={`text-xs font-bold ${stepsData[activeStep].agentColor}`}>{stepsData[activeStep].agent}</span>
-                <span className="text-xs text-muted truncate">{stepsData[activeStep].tasks[0]}</span>
+              {/* Mobile: expanded agent task panel */}
+              <div className="lg:hidden order-3 rounded-xl bg-white border border-gray-100 shadow-sm px-4 py-3 w-full">
+                <div className="flex items-center gap-2 mb-2 pb-2 border-b border-gray-100">
+                  <motion.span
+                    className="w-2 h-2 rounded-full bg-green-400 shrink-0"
+                    animate={{ opacity: [1, 0.4, 1] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                  />
+                  <span className={`text-xs font-bold ${stepsData[activeStep].agentColor}`}>{stepsData[activeStep].agent}</span>
+                  <span className="text-[10px] text-muted">{stepsData[activeStep].phase}</span>
+                </div>
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeStep}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.25 }}
+                    className="space-y-1.5"
+                  >
+                    {stepsData[activeStep].tasks.map((task, t) => {
+                      const isCompleted = completedTasks[activeStep]?.includes(t) ?? false;
+                      return (
+                        <div
+                          key={task}
+                          className={`flex items-center gap-2 text-xs ${
+                            isCompleted ? "text-emerald-500" : "text-gray-600"
+                          }`}
+                        >
+                          <span className="shrink-0 text-[10px]">{isCompleted ? "✓" : "·"}</span>
+                          <span>{task}</span>
+                        </div>
+                      );
+                    })}
+                  </motion.div>
+                </AnimatePresence>
               </div>
 
               {/* Right: Agent Activity card — desktop only */}

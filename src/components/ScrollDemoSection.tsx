@@ -562,36 +562,8 @@ export default function ScrollDemoSection() {
     return () => clearInterval(id);
   }, [isPaused]);
 
-  // Scroll-driven navigation — all screen sizes
   useEffect(() => {
-    const handleScroll = () => {
-      const section = sectionRef.current;
-      if (!section) return;
-
-      const rect = section.getBoundingClientRect();
-      const sectionHeight = rect.height;
-      const scrollProgress = Math.max(0, -rect.top) / (sectionHeight - window.innerHeight);
-      if (scrollProgress <= 0 || scrollProgress >= 1) return;
-
-      const stepIndex = Math.min(
-        STEP_COUNT - 1,
-        Math.floor(scrollProgress * STEP_COUNT)
-      );
-
-      setActiveStep(stepIndex);
-      setIsPaused(true); // user is scrolling manually
-
-      const stepProgress = (scrollProgress * STEP_COUNT) % 1;
-      const taskCount = Math.floor(stepProgress * 4);
-      setCompletedTasks((prev) => {
-        const newTasks: number[] = [];
-        for (let t = 0; t < Math.min(taskCount, 3); t++) newTasks.push(t);
-        return { ...prev, [stepIndex]: newTasks };
-      });
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {};
   }, []);
 
   const goToStep = useCallback((i: number) => {
@@ -606,9 +578,8 @@ export default function ScrollDemoSection() {
       id="demo"
       ref={sectionRef}
       className="relative bg-white"
-      style={{ height: `${(STEP_COUNT + 1) * 70}vh` }}
     >
-      <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
+      <div className="flex flex-col justify-center overflow-hidden py-16 sm:py-20">
         {/* Section header — always visible */}
         <div className="text-center pt-6 pb-4 px-4">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-display text-foreground">

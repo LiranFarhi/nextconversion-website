@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Mountain, Leaf, Flame, Zap } from "lucide-react";
 
 // ─── Storefront layout variants ───────────────────────────────────────────────
@@ -569,39 +569,34 @@ function PersonaCarousel() {
   const prev = () => setActiveIndex((i) => (i - 1 + personas.length) % personas.length);
   const next = () => setActiveIndex((i) => (i + 1) % personas.length);
 
+  const persona = personas[activeIndex];
+
   return (
     <div
       className="relative"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="flex items-center justify-center gap-2 overflow-hidden">
-        {([-1, 0, 1] as const).map((offset) => {
-          const idx = (activeIndex + offset + personas.length) % personas.length;
-          const isCenter = offset === 0;
-          const persona = personas[idx];
-          return (
-            <motion.div
-              key={`${idx}-${offset}`}
-              animate={{
-                scale: isCenter ? 1 : 0.88,
-                opacity: isCenter ? 1 : 0.45,
-                filter: isCenter ? "blur(0px)" : "blur(3px)",
-              }}
-              transition={{ duration: 0.35, ease: "easeOut" }}
-              className={`flex-shrink-0 w-[160px] sm:w-[180px] ${isCenter ? "" : "pointer-events-none"}`}
-            >
-              <PersonaStorefront
-                persona={persona}
-                cdnImages={cdnImages[persona.id]}
-              />
-            </motion.div>
-          );
-        })}
+      {/* Single card — full width of the column */}
+      <div className="relative overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeIndex}
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -30 }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+          >
+            <PersonaStorefront
+              persona={persona}
+              cdnImages={cdnImages[persona.id]}
+            />
+          </motion.div>
+        </AnimatePresence>
       </div>
 
-      {/* Navigation */}
-      <div className="flex items-center justify-center gap-4 mt-4">
+      {/* Navigation arrows only — no count */}
+      <div className="flex items-center justify-end gap-2 mt-3">
         <button
           onClick={prev}
           className="w-7 h-7 rounded-full bg-white border border-border flex items-center justify-center text-muted hover:text-foreground hover:border-primary/30 transition-all shadow-sm"
@@ -611,9 +606,6 @@ function PersonaCarousel() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
-        <span className="text-xs font-medium text-muted tabular-nums">
-          {activeIndex + 1} / {personas.length}
-        </span>
         <button
           onClick={next}
           className="w-7 h-7 rounded-full bg-white border border-border flex items-center justify-center text-muted hover:text-foreground hover:border-primary/30 transition-all shadow-sm"
@@ -624,6 +616,23 @@ function PersonaCarousel() {
           </svg>
         </button>
       </div>
+
+      {/* Segment label below the card */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={activeIndex}
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.3 }}
+          className="mt-3 flex items-center gap-1.5"
+        >
+          <div className="w-1.5 h-1.5 rounded-full bg-success animate-pulse flex-shrink-0" />
+          <p className="text-xs text-primary font-medium">
+            {persona.demo} &middot; {persona.intent}
+          </p>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }
@@ -738,43 +747,45 @@ export default function HeroSection({ onBookDemo }: { onBookDemo: () => void }) 
             </h1>
 
             <motion.p
-              className="text-lg sm:text-xl text-muted max-w-2xl mx-auto mb-8 leading-relaxed"
+              className="text-base sm:text-lg text-primary/80 font-medium max-w-2xl mx-auto mb-2"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.6, ease: "easeOut" }}
+            >
+              NextConversion: An agent-first engine turning static websites into
+              profitable, adaptive shopping experiences.
+            </motion.p>
+
+            <motion.p
+              className="text-base text-muted max-w-2xl mx-auto mb-6 leading-relaxed"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.55, duration: 0.6, ease: "easeOut" }}
             >
               Stop sending laser-focused ad traffic to one-size-fits-all websites.
-              NextConversion is the agent-led engine that turns every click into a
-              personalized, real-time micro-storefront that optimizes itself 24/7.
             </motion.p>
 
             <motion.div
-              className="flex flex-col sm:flex-row gap-3 justify-center"
+              className="flex flex-col items-center gap-2"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.65, duration: 0.6, ease: "easeOut" }}
             >
               <motion.button
                 onClick={onBookDemo}
-                className="btn-primary rounded-xl bg-primary px-8 py-4 text-white font-semibold text-base animate-pulse-glow inline-flex items-center justify-center gap-2"
+                className="btn-primary rounded-xl bg-primary px-10 py-4 text-white font-semibold text-base animate-pulse-glow inline-flex items-center justify-center gap-2"
                 whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.97 }}
                 transition={{ type: "spring", stiffness: 400, damping: 20 }}
               >
-                Deploy Your E-Commerce AI Agentic Work Force
+                Book a Demo
                 <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </motion.button>
-              <motion.button
-                onClick={onBookDemo}
-                className="btn-secondary rounded-xl border border-border px-8 py-4 text-foreground font-semibold text-base bg-white"
-                whileHover={{ scale: 1.02, y: -1 }}
-                whileTap={{ scale: 0.98 }}
-                transition={{ type: "spring", stiffness: 400, damping: 20 }}
-              >
-                Book a Demo
-              </motion.button>
+              <p className="text-xs text-muted">
+                Limited spots for launch cohort &middot; No credit card required
+              </p>
             </motion.div>
           </div>
 
@@ -793,30 +804,23 @@ export default function HeroSection({ onBookDemo }: { onBookDemo: () => void }) 
                 </h3>
               </div>
               <LegacySite />
+              <div className="mt-3 flex items-center gap-1.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0" />
+                <p className="text-xs text-muted">Same layout for every visitor</p>
+              </div>
             </div>
 
             <div>
               <div className="flex items-center gap-2 mb-2.5">
                 <div className="w-2.5 h-2.5 rounded-full bg-success animate-pulse" />
                 <h3 className="text-xs font-semibold text-primary uppercase tracking-wider">
-                  Endless Curated Storefronts
+                  Curated Storefront — Personalized per visitor
                 </h3>
               </div>
               <PersonaCarousel />
             </div>
           </motion.div>
 
-          {/* Early access note */}
-          <motion.div
-            className="mt-8 text-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.9, duration: 0.5 }}
-          >
-            <p className="text-xs text-muted">
-              Limited spots for launch cohort &middot; No credit card required
-            </p>
-          </motion.div>
         </div>
       </section>
 

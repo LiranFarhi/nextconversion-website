@@ -443,9 +443,9 @@ export default function ScrollDemoSection() {
   const [activeStep, setActiveStep] = useState(0);
   const [completedTasks, setCompletedTasks] = useState<Record<number, number[]>>({});
   const [demoProducts, setDemoProducts] = useState<DemoProduct[]>([]);
+  const [isPaused, setIsPaused] = useState(false);
 
   // Fetch real CDN product images from the landing-server proxy.
-  // On failure the state stays [], and gradient placeholders are shown.
   useEffect(() => {
     fetch("/api/gottex-demo")
       .then((res) => res.json())
@@ -458,6 +458,20 @@ export default function ScrollDemoSection() {
   // Rebuild step JSX whenever products load — STEP_COUNT stays constant.
   const stepsData = useMemo(() => buildSteps(demoProducts), [demoProducts]);
 
+  // Auto-play: advance every 4 seconds when not paused
+  useEffect(() => {
+    if (isPaused) return;
+    const id = setInterval(() => {
+      setActiveStep((s) => {
+        const next = (s + 1) % STEP_COUNT;
+        setCompletedTasks({});
+        return next;
+      });
+    }, 4000);
+    return () => clearInterval(id);
+  }, [isPaused]);
+
+  // Scroll-driven navigation (works alongside auto-play)
   useEffect(() => {
     const handleScroll = () => {
       const section = sectionRef.current;
@@ -466,12 +480,15 @@ export default function ScrollDemoSection() {
       const rect = section.getBoundingClientRect();
       const sectionHeight = rect.height;
       const scrollProgress = Math.max(0, -rect.top) / (sectionHeight - window.innerHeight);
+      if (scrollProgress <= 0 || scrollProgress >= 1) return;
+
       const stepIndex = Math.min(
         STEP_COUNT - 1,
         Math.floor(scrollProgress * STEP_COUNT)
       );
 
       setActiveStep(stepIndex);
+      setIsPaused(true); // user is scrolling manually
 
       const stepProgress = (scrollProgress * STEP_COUNT) % 1;
       const taskCount = Math.floor(stepProgress * 4);
@@ -486,6 +503,13 @@ export default function ScrollDemoSection() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const goToStep = (i: number) => {
+    setActiveStep(i);
+    setCompletedTasks({});
+    setIsPaused(true);
+    setTimeout(() => setIsPaused(false), 8000); // resume auto-play after 8s
+  };
+
   return (
     <section
       id="demo"
@@ -493,148 +517,164 @@ export default function ScrollDemoSection() {
       className="relative bg-white"
       style={{ height: `${(STEP_COUNT + 1) * 100}vh` }}
     >
-      <div className="sticky top-0 h-screen flex items-center overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          {/* Section header */}
-          <div className="text-center mb-8 lg:mb-12">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-foreground">
-              Watch a Storefront{" "}
-              <span className="gradient-text">Evolve in Real-Time</span>
-            </h2>
-            <p className="text-sm text-muted mt-2">Following a real Gottex shopper from ad click to purchase</p>
-          </div>
+      <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
+        {/* Section header — always visible */}
+        <div className="text-center pt-6 pb-4 px-4">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-display text-foreground">
+            Watch a Storefront{" "}
+            <span className="gradient-text">Evolve in Real-Time</span>
+          </h2>
+          <p className="text-sm text-muted mt-1">Following a real Gottex shopper from ad click to purchase</p>
+        </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            {/* Left: Terminal activity feed */}
-            <div className="lg:col-span-4 order-2 lg:order-1">
-              <div className="bg-gray-950 rounded-xl border border-gray-800 p-4 font-mono text-xs overflow-hidden">
-                {/* Terminal header */}
-                <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-800">
-                  <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
-                  <span className="text-gray-500 ml-2">nextconversion-agents</span>
-                </div>
+        <div className="flex-1 flex items-center">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
 
-                {/* Steps as terminal output */}
-                <div className="space-y-4">
-                  {stepsData.map((step, i) => {
-                    const isActive = i === activeStep;
-                    const isPast = i < activeStep;
-                    const isFuture = i > activeStep;
-
-                    return (
-                      <motion.div
-                        key={step.phase}
-                        animate={{ opacity: isPast ? 0.4 : isFuture ? 0.2 : 1 }}
-                        transition={{ duration: 0.35 }}
-                      >
-                        {/* Command line */}
-                        <div className={`mb-1.5 ${isFuture ? "text-gray-600" : "text-green-400"}`}>
-                          <span className="text-gray-500 mr-1">$</span>
-                          {`agent:${step.agent} --phase="${step.phase}"`}
-                        </div>
-
-                        {/* Tasks */}
-                        <div className="pl-3 space-y-1">
-                          {step.tasks.map((task, t) => {
-                            const isCompleted =
-                              isPast || (isActive && (completedTasks[i]?.includes(t) ?? false));
-                            const isCurrentTask =
-                              isActive &&
-                              t === (completedTasks[i]?.length ?? 0) &&
-                              !isCompleted;
-
-                            return (
-                              <div
-                                key={task}
-                                className={`flex items-center gap-2 ${
-                                  isFuture
-                                    ? "text-gray-700"
-                                    : isCompleted
-                                    ? "text-green-400"
-                                    : isActive
-                                    ? "text-gray-400"
-                                    : "text-gray-600"
-                                }`}
-                              >
-                                <span className="shrink-0">{isCompleted ? "✓" : "›"}</span>
-                                <span>{task}</span>
-                                {isCurrentTask && (
-                                  <motion.span
-                                    className="text-green-400 ml-0.5"
-                                    animate={{ opacity: [1, 0, 1] }}
-                                    transition={{ duration: 0.75, repeat: Infinity }}
-                                  >
-                                    █
-                                  </motion.span>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-            {/* Center: Phone */}
-            <div className="lg:col-span-4 order-1 lg:order-2 flex justify-center">
-              <PhoneFrame>
+              {/* Left: Description + step nav */}
+              <div className="lg:col-span-4 order-3 lg:order-1">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={activeStep}
-                    initial={{ opacity: 0, y: 12 }}
+                    initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -12 }}
+                    exit={{ opacity: 0, y: -16 }}
                     transition={{ duration: 0.4, ease: "easeOut" }}
-                    className="absolute inset-0"
                   >
-                    {stepsData[activeStep].phoneContent}
+                    <div className="inline-flex items-center gap-2 mb-4 rounded-full px-3 py-1 text-xs font-bold bg-surface border border-border">
+                      <span className={stepsData[activeStep].agentColor}>{stepsData[activeStep].agent}</span>
+                      <span className="text-muted">is working</span>
+                    </div>
+                    <p className="text-xs font-bold text-muted uppercase tracking-widest mb-1">
+                      {stepsData[activeStep].phase}
+                    </p>
+                    <h3 className="text-lg sm:text-xl font-bold font-display text-foreground mb-3">
+                      {stepsData[activeStep].title}
+                    </h3>
+                    <p className="text-sm text-muted leading-relaxed">
+                      {stepsData[activeStep].description}
+                    </p>
                   </motion.div>
                 </AnimatePresence>
-              </PhoneFrame>
-            </div>
 
-            {/* Right: Description */}
-            <div className="lg:col-span-4 order-3">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeStep}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -16 }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
-                >
-                  <div className={`inline-flex items-center gap-2 mb-4 rounded-full px-3 py-1 text-xs font-bold bg-surface border border-border`}>
-                    <span className={stepsData[activeStep].agentColor}>{stepsData[activeStep].agent}</span>
-                    <span className="text-muted">is working</span>
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-bold font-display text-foreground mb-3">
-                    {stepsData[activeStep].title}
-                  </h3>
-                  <p className="text-muted leading-relaxed">
-                    {stepsData[activeStep].description}
-                  </p>
-                </motion.div>
-              </AnimatePresence>
-
-              {/* Step indicators */}
-              <div className="flex gap-2 mt-8">
-                {stepsData.map((_, i) => (
-                  <motion.div
-                    key={i}
-                    animate={{
-                      width: i === activeStep ? 32 : 16,
-                      opacity: i <= activeStep ? 1 : 0.3,
-                    }}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
-                    className={`h-1 rounded-full ${i <= activeStep ? "bg-primary" : "bg-gray-200"}`}
-                  />
-                ))}
+                {/* Step navigation buttons */}
+                <div className="flex items-center gap-3 mt-6">
+                  {stepsData.map((step, i) => (
+                    <button
+                      key={i}
+                      onClick={() => goToStep(i)}
+                      className={`text-left transition-all duration-300 rounded-lg px-2.5 py-1.5 border ${
+                        i === activeStep
+                          ? "bg-primary/5 border-primary/20 text-primary"
+                          : "border-transparent text-muted hover:text-foreground"
+                      }`}
+                    >
+                      <p className="text-[9px] font-bold uppercase tracking-wider">{step.phase}</p>
+                      <p className={`text-[8px] ${i === activeStep ? "text-primary/70" : "text-gray-400"}`}>{step.agent}</p>
+                    </button>
+                  ))}
+                </div>
               </div>
+
+              {/* Center: Phone + Terminal attached below */}
+              <div className="lg:col-span-5 order-1 lg:order-2 flex flex-col items-center gap-3">
+                <PhoneFrame>
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeStep}
+                      initial={{ opacity: 0, scale: 0.97, y: 10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 1.02, y: -10 }}
+                      transition={{ duration: 0.45, ease: "easeOut" }}
+                      className="absolute inset-0"
+                    >
+                      {stepsData[activeStep].phoneContent}
+                    </motion.div>
+                  </AnimatePresence>
+                </PhoneFrame>
+
+                {/* Auto-play indicator */}
+                <div className="flex items-center gap-2">
+                  {stepsData.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => goToStep(i)}
+                      className="relative h-1 rounded-full overflow-hidden transition-all duration-300"
+                      style={{ width: i === activeStep ? 28 : 14 }}
+                      aria-label={`Step ${i + 1}`}
+                    >
+                      <div className={`absolute inset-0 rounded-full ${i <= activeStep ? "bg-primary" : "bg-gray-200"}`} />
+                      {i === activeStep && !isPaused && (
+                        <motion.div
+                          className="absolute inset-y-0 left-0 bg-primary/30 rounded-full"
+                          initial={{ width: "0%" }}
+                          animate={{ width: "100%" }}
+                          transition={{ duration: 4, ease: "linear" }}
+                          key={`progress-${activeStep}`}
+                        />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Right: Terminal — compact, attached to phone visually */}
+              <div className="lg:col-span-3 order-2 lg:order-3">
+                <div className="bg-gray-950 rounded-xl border border-gray-800 p-3 font-mono text-[10px] overflow-hidden">
+                  <div className="flex items-center gap-1.5 mb-3 pb-2.5 border-b border-gray-800">
+                    <div className="w-2 h-2 rounded-full bg-red-500" />
+                    <div className="w-2 h-2 rounded-full bg-yellow-500" />
+                    <div className="w-2 h-2 rounded-full bg-green-500" />
+                    <span className="text-gray-600 ml-1 text-[9px]">nc-agents</span>
+                  </div>
+
+                  <div className="space-y-3">
+                    {stepsData.map((step, i) => {
+                      const isActive = i === activeStep;
+                      const isPastStep = i < activeStep;
+                      const isFuture = i > activeStep;
+
+                      return (
+                        <motion.div
+                          key={step.phase}
+                          animate={{ opacity: isPastStep ? 0.35 : isFuture ? 0.15 : 1 }}
+                          transition={{ duration: 0.35 }}
+                        >
+                          <div className={`mb-1 ${isFuture ? "text-gray-700" : "text-green-400"}`}>
+                            <span className="text-gray-600">$</span>{" "}
+                            <span className="text-[9px]">{`${step.agent}:${step.phase}`}</span>
+                          </div>
+                          <div className="pl-2 space-y-0.5">
+                            {step.tasks.map((task, t) => {
+                              const isCompleted = isPastStep || (isActive && (completedTasks[i]?.includes(t) ?? false));
+                              const isCurrentTask = isActive && t === (completedTasks[i]?.length ?? 0) && !isCompleted;
+                              return (
+                                <div
+                                  key={task}
+                                  className={`flex items-center gap-1.5 ${
+                                    isFuture ? "text-gray-700" : isCompleted ? "text-green-400" : isActive ? "text-gray-400" : "text-gray-600"
+                                  }`}
+                                >
+                                  <span className="shrink-0 text-[9px]">{isCompleted ? "✓" : "›"}</span>
+                                  <span className="text-[9px]">{task}</span>
+                                  {isCurrentTask && (
+                                    <motion.span
+                                      className="text-green-400"
+                                      animate={{ opacity: [1, 0, 1] }}
+                                      transition={{ duration: 0.75, repeat: Infinity }}
+                                    >▌</motion.span>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>

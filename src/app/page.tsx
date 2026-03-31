@@ -10,6 +10,9 @@ import SafetySection from "../components/SafetySection";
 import CtaSection from "../components/CtaSection";
 import Footer from "../components/Footer";
 import DemoModal from "../components/DemoModal";
+import StickyMobileCta from "../components/StickyMobileCta";
+import SectionProgress from "../components/SectionProgress";
+import SiteWalkthrough from "../components/SiteWalkthrough";
 
 export default function Home() {
   const [isDemoOpen, setIsDemoOpen] = useState(false);
@@ -29,7 +32,10 @@ export default function Home() {
         <CtaSection onBookDemo={openDemo} />
       </main>
       <Footer />
+      <SectionProgress />
+      <StickyMobileCta onBookDemo={openDemo} />
       <DemoModal isOpen={isDemoOpen} onClose={closeDemo} />
+      <SiteWalkthrough />
     </>
   );
 }

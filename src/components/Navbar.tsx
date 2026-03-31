@@ -2,8 +2,32 @@
 
 import { useEffect, useState } from "react";
 
+const NAV_SECTIONS = ["problem", "agents", "demo", "safety"] as const;
+
 export default function Navbar({ onBookDemo }: { onBookDemo: () => void }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+
+  // Track which section is currently in view
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    NAV_SECTIONS.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (!mobileOpen) return;
@@ -108,34 +132,28 @@ export default function Navbar({ onBookDemo }: { onBookDemo: () => void }) {
       {mobileOpen && (
         <div className="fixed inset-x-0 top-16 bottom-0 z-40 bg-white/95 backdrop-blur-lg md:hidden animate-fade-in" style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}>
           <div className="px-4 py-3 space-y-1">
-            <a
-              href="#problem"
-              className="block text-sm text-muted hover:text-foreground px-3 py-2.5 rounded-lg active:bg-surface"
-              onClick={() => setMobileOpen(false)}
-            >
-              Why
-            </a>
-            <a
-              href="#agents"
-              className="block text-sm text-muted hover:text-foreground px-3 py-2.5 rounded-lg active:bg-surface"
-              onClick={() => setMobileOpen(false)}
-            >
-              Agents
-            </a>
-            <a
-              href="#demo"
-              className="block text-sm text-muted hover:text-foreground px-3 py-2.5 rounded-lg active:bg-surface"
-              onClick={() => setMobileOpen(false)}
-            >
-              How It Works
-            </a>
-            <a
-              href="#safety"
-              className="block text-sm text-muted hover:text-foreground px-3 py-2.5 rounded-lg active:bg-surface"
-              onClick={() => setMobileOpen(false)}
-            >
-              Safety
-            </a>
+            {([
+              { href: "problem", label: "Why" },
+              { href: "agents", label: "Agents" },
+              { href: "demo", label: "How It Works" },
+              { href: "safety", label: "Safety" },
+            ] as const).map((link) => (
+              <a
+                key={link.href}
+                href={`#${link.href}`}
+                className={`flex items-center gap-2 text-sm px-3 py-2.5 rounded-lg active:bg-surface transition-colors ${
+                  activeSection === link.href
+                    ? "text-primary font-semibold bg-primary/5"
+                    : "text-muted hover:text-foreground"
+                }`}
+                onClick={() => setMobileOpen(false)}
+              >
+                {activeSection === link.href && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+                )}
+                {link.label}
+              </a>
+            ))}
             <button
               onClick={() => {
                 setMobileOpen(false);

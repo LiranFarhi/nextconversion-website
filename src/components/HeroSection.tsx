@@ -1179,7 +1179,7 @@ export default function HeroSection({ onBookDemo }: { onBookDemo: () => void }) 
 
   return (
     <>
-      <section className="relative pt-16 pb-8 sm:pt-20 sm:pb-12 lg:pt-28 lg:pb-16 overflow-hidden">
+      <section id="hero" className="relative pt-16 pb-8 sm:pt-20 sm:pb-12 lg:pt-28 lg:pb-16 overflow-hidden">
         {/* Animated background */}
         <div className="absolute inset-0 bg-gradient-to-b from-surface via-white to-white" />
         <motion.div

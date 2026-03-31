@@ -171,7 +171,7 @@ export default function ProblemSection() {
                 </div>
 
                 {/* Execution Gap — title + reasons in one bucket */}
-                <div className="bg-red-50 py-5 px-6 border-x border-red-100 mx-[12.5%]">
+                <div className="bg-red-50 py-5 px-6 border-x border-red-100 mx-[5%] sm:mx-[12.5%]">
                   <p className="text-xs font-bold text-red-500 uppercase tracking-wider text-center mb-3">
                     The Execution Gap
                   </p>
@@ -192,7 +192,7 @@ export default function ProblemSection() {
                 </div>
 
                 {/* Bottom: Stagnant conversions */}
-                <div className="bg-gray-100 rounded-b-2xl p-6 mx-[12.5%] border border-gray-200 border-t-0 text-center">
+                <div className="bg-gray-100 rounded-b-2xl p-6 mx-[5%] sm:mx-[12.5%] border border-gray-200 border-t-0 text-center">
                   <p className="text-xs font-semibold text-muted uppercase tracking-wider mb-1">
                     Stagnant Results
                   </p>

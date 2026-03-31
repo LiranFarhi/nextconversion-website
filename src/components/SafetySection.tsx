@@ -231,15 +231,19 @@ export default function SafetySection() {
             <p className="text-sm font-semibold text-muted uppercase tracking-wider mb-4 text-center">
               How changes go live
             </p>
-            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-0">
+            <div className="flex flex-col sm:flex-row items-center gap-0 sm:gap-0">
               {[
                 { label: "Agent Suggests", Icon: Bot,         bg: "bg-blue-50",    icon: "text-blue-600"   },
                 { label: "You Review",     Icon: Eye,         bg: "bg-amber-50",   icon: "text-amber-600"  },
                 { label: "You Approve",    Icon: ShieldCheck, bg: "bg-green-50",   icon: "text-green-600"  },
                 { label: "It Goes Live",   Icon: Rocket,      bg: "bg-primary/8",  icon: "text-primary"    },
               ].map((step, i) => (
-                <div key={step.label} className="flex items-center gap-4 sm:flex-1">
-                  <div className="flex flex-col items-center text-center">
+                <div key={step.label} className="flex flex-col sm:flex-row items-center sm:flex-1">
+                  {/* Mobile vertical connector (above each step except the first) */}
+                  {i > 0 && (
+                    <div className="sm:hidden w-px h-4 bg-border" />
+                  )}
+                  <div className="flex flex-col items-center text-center py-1 sm:py-0">
                     <div className={`w-10 h-10 rounded-xl ${step.bg} flex items-center justify-center mb-1.5`}>
                       <step.Icon className={`w-5 h-5 ${step.icon}`} strokeWidth={1.75} />
                     </div>
@@ -247,6 +251,7 @@ export default function SafetySection() {
                       {step.label}
                     </span>
                   </div>
+                  {/* Desktop horizontal connector */}
                   {i < 3 && (
                     <div className="hidden sm:block flex-1 h-px bg-border mx-2" />
                   )}

@@ -292,6 +292,8 @@ function PersonaMediaSlot({
       loading="lazy"
       decoding="async"
       className={`w-full object-cover ${className}`}
+      style={{ opacity: 0, transition: "opacity 0.3s ease" }}
+      onLoad={(e) => { e.currentTarget.style.opacity = "1"; }}
     />
   );
 }
@@ -355,6 +357,8 @@ function PCard({
         {img && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={img} alt={name} className="w-full h-full object-cover" loading="lazy" decoding="async"
+            style={{ opacity: 0, transition: "opacity 0.3s ease" }}
+            onLoad={(e) => { e.currentTarget.style.opacity = "1"; }}
             onError={(e) => { e.currentTarget.style.display = "none"; }} />
         )}
       </div>
@@ -404,7 +408,9 @@ function PersonaStorefront({
                   <div className="w-full h-full rounded-full overflow-hidden" style={p.img ? undefined : { background: p.bg }}>
                     {p.img && (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                      <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async"
+                      style={{ opacity: 0, transition: "opacity 0.3s ease" }}
+                      onLoad={(e) => { e.currentTarget.style.opacity = "1"; }} />
                     )}
                   </div>
                 </div>
@@ -418,7 +424,9 @@ function PersonaStorefront({
           <div className="aspect-square w-full overflow-hidden" style={hero?.img ? undefined : { background: hero?.bg }}>
             {hero?.img && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={hero.img} alt={hero.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+              <img src={hero.img} alt={hero.name} className="w-full h-full object-cover" loading="lazy" decoding="async"
+                      style={{ opacity: 0, transition: "opacity 0.3s ease" }}
+                      onLoad={(e) => { e.currentTarget.style.opacity = "1"; }} />
             )}
           </div>
           {/* Double-tap heart overlay */}
@@ -445,7 +453,9 @@ function PersonaStorefront({
             <div key={i} className="aspect-square overflow-hidden" style={p.img ? undefined : { background: p.bg }}>
               {p.img && (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async"
+                      style={{ opacity: 0, transition: "opacity 0.3s ease" }}
+                      onLoad={(e) => { e.currentTarget.style.opacity = "1"; }} />
               )}
             </div>
           ))}
@@ -488,7 +498,9 @@ function PersonaStorefront({
               <div className="w-16 h-16 rounded-lg overflow-hidden shrink-0" style={p.img ? undefined : { background: p.bg }}>
                 {p.img && (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                  <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async"
+                      style={{ opacity: 0, transition: "opacity 0.3s ease" }}
+                      onLoad={(e) => { e.currentTarget.style.opacity = "1"; }} />
                 )}
               </div>
               <div className="flex-1 flex flex-col justify-center min-w-0">
@@ -540,7 +552,9 @@ function PersonaStorefront({
           <div className="mt-4 rounded-2xl overflow-hidden aspect-[4/3] mx-auto max-w-[200px]" style={hero?.img ? undefined : { background: hero?.bg }}>
             {hero?.img && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={hero.img} alt={hero.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+              <img src={hero.img} alt={hero.name} className="w-full h-full object-cover" loading="lazy" decoding="async"
+                      style={{ opacity: 0, transition: "opacity 0.3s ease" }}
+                      onLoad={(e) => { e.currentTarget.style.opacity = "1"; }} />
             )}
           </div>
         </div>
@@ -552,7 +566,9 @@ function PersonaStorefront({
                 <div className="aspect-square rounded-lg overflow-hidden mb-1.5" style={p.img ? undefined : { background: p.bg }}>
                   {p.img && (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                    <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async"
+                      style={{ opacity: 0, transition: "opacity 0.3s ease" }}
+                      onLoad={(e) => { e.currentTarget.style.opacity = "1"; }} />
                   )}
                 </div>
                 <p className="text-[7px] font-medium text-[#1d1d1f] leading-tight truncate">{p.name}</p>
@@ -587,7 +603,9 @@ function PersonaStorefront({
               <div className="aspect-[3/4] rounded-md overflow-hidden relative" style={p.img ? undefined : { background: p.bg }}>
                 {p.img && (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                  <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async"
+                      style={{ opacity: 0, transition: "opacity 0.3s ease" }}
+                      onLoad={(e) => { e.currentTarget.style.opacity = "1"; }} />
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                 {i === 0 && (
@@ -635,7 +653,9 @@ function PersonaStorefront({
               <div className="aspect-[3/4] w-full overflow-hidden" style={p.img ? undefined : { background: p.bg }}>
                 {p.img && (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                  <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async"
+                      style={{ opacity: 0, transition: "opacity 0.3s ease" }}
+                      onLoad={(e) => { e.currentTarget.style.opacity = "1"; }} />
                 )}
               </div>
               <div className="px-4 py-2 bg-white">
@@ -680,7 +700,9 @@ function PersonaStorefront({
               <div className="aspect-square rounded overflow-hidden mb-1.5" style={p.img ? undefined : { background: p.bg }}>
                 {p.img && (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                  <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async"
+                      style={{ opacity: 0, transition: "opacity 0.3s ease" }}
+                      onLoad={(e) => { e.currentTarget.style.opacity = "1"; }} />
                 )}
               </div>
               {/* Blue product link */}
@@ -734,7 +756,9 @@ function PersonaStorefront({
               <div className="w-24 h-24 rounded-full overflow-hidden shrink-0" style={{ border: "1px solid rgba(197,165,114,0.30)", boxShadow: "0 0 20px rgba(197,165,114,0.10)" }}>
                 {p.img ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                  <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async"
+                      style={{ opacity: 0, transition: "opacity 0.3s ease" }}
+                      onLoad={(e) => { e.currentTarget.style.opacity = "1"; }} />
                 ) : (
                   <div className="w-full h-full" style={{ background: p.bg }} />
                 )}
@@ -785,7 +809,9 @@ function PersonaStorefront({
                 <div className={`${i % 2 === 0 ? "aspect-[3/4]" : "aspect-square"} rounded-2xl overflow-hidden relative`} style={{ boxShadow: "0 1px 6px rgba(0,0,0,0.08)" }}>
                   {p.img ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                    <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async"
+                      style={{ opacity: 0, transition: "opacity 0.3s ease" }}
+                      onLoad={(e) => { e.currentTarget.style.opacity = "1"; }} />
                   ) : (
                     <div className="w-full h-full" style={{ background: p.bg }} />
                   )}
@@ -843,7 +869,9 @@ function PersonaStorefront({
             <div className="aspect-square rounded overflow-hidden mb-1.5 relative" style={p.img ? undefined : { background: p.bg }}>
               {p.img && (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async"
+                      style={{ opacity: 0, transition: "opacity 0.3s ease" }}
+                      onLoad={(e) => { e.currentTarget.style.opacity = "1"; }} />
               )}
               {/* Discount badge */}
               <div className="absolute top-1 left-1 text-[7px] font-bold text-white px-1.5 py-0.5 rounded" style={{ background: "#CC0C39" }}>

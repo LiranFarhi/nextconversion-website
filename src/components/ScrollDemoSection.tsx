@@ -6,14 +6,16 @@ import { ShoppingBag } from "lucide-react";
 
 function useIsLg() {
   const [isLg, setIsLg] = useState(false);
+  const [mounted, setMounted] = useState(false);
   useEffect(() => {
     const mql = window.matchMedia("(min-width: 1024px)");
     setIsLg(mql.matches);
+    setMounted(true);
     const handler = (e: MediaQueryListEvent) => setIsLg(e.matches);
     mql.addEventListener("change", handler);
     return () => mql.removeEventListener("change", handler);
   }, []);
-  return isLg;
+  return { isLg: mounted && isLg, mounted };
 }
 
 // Product data returned by /api/gottex-demo
@@ -104,6 +106,8 @@ function GottexProductCard({
             loading="lazy"
             decoding="async"
             className="absolute inset-0 w-full h-full object-cover"
+            style={{ opacity: 0, transition: "opacity 0.3s ease" }}
+            onLoad={(e) => { e.currentTarget.style.opacity = "1"; }}
             onError={(e) => { e.currentTarget.style.display = "none"; }}
           />
         )}
@@ -282,6 +286,8 @@ function MobileStorefrontContent() {
       <div className="relative overflow-hidden h-[120px] sm:h-[140px] md:h-[160px]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=600&h=300&fit=crop&auto=format&q=80" alt="" className="w-full h-full object-cover"
+          style={{ opacity: 0, transition: "opacity 0.3s ease" }}
+          onLoad={(e) => { e.currentTarget.style.opacity = "1"; }}
           onError={(e) => { e.currentTarget.style.display = "none"; }} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
         <div className="absolute bottom-3 left-3 right-3">
@@ -309,6 +315,8 @@ function MobileStorefrontContent() {
             <div className="aspect-[3/4] relative overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async"
+                style={{ opacity: 0, transition: "opacity 0.3s ease" }}
+                onLoad={(e) => { e.currentTarget.style.opacity = "1"; }}
                 onError={(e) => { e.currentTarget.style.display = "none"; }} />
               {p.badge && (
                 <span className="absolute top-1.5 left-1.5 text-[6px] font-bold bg-stone-900 text-white px-1.5 py-0.5 rounded">
@@ -385,7 +393,9 @@ function PhoneScreen3({ products }: { products: DemoProduct[] }) {
       {/* Full-bleed hero image — 55% of screen height */}
       <div className="relative" style={{ height: "55%" }}>
         {hero?.imageUrl && !hero.isVideo && (
-          <img src={hero.imageUrl} alt="" className="absolute inset-0 w-full h-full object-cover" />
+          <img src={hero.imageUrl} alt="" className="absolute inset-0 w-full h-full object-cover"
+                    style={{ opacity: 0, transition: "opacity 0.3s ease" }}
+                    onLoad={(e) => { e.currentTarget.style.opacity = "1"; }} />
         )}
         {hero?.imageUrl && hero.isVideo && (
           <video src={hero.imageUrl} autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" />
@@ -492,7 +502,9 @@ function PhoneScreen4({ products }: { products: DemoProduct[] }) {
               return (
                 <div key={i} className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 relative shadow-sm">
                   {p?.imageUrl && !p.isVideo && (
-                    <img src={p.imageUrl} alt="" className="absolute inset-0 w-full h-full object-cover" />
+                    <img src={p.imageUrl} alt="" className="absolute inset-0 w-full h-full object-cover"
+                      style={{ opacity: 0, transition: "opacity 0.3s ease" }}
+                      onLoad={(e) => { e.currentTarget.style.opacity = "1"; }} />
                   )}
                   {p?.imageUrl && p.isVideo && (
                     <video src={p.imageUrl} autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" />
@@ -601,7 +613,7 @@ export default function ScrollDemoSection() {
   const [completedTasks, setCompletedTasks] = useState<Record<number, number[]>>({});
   const [demoProducts, setDemoProducts] = useState<DemoProduct[]>([]);
   const [isPaused, setIsPaused] = useState(false);
-  const isLg = useIsLg();
+  const { isLg } = useIsLg();
 
   // Fetch real CDN product images from the landing-server proxy.
   useEffect(() => {
@@ -718,7 +730,7 @@ export default function ScrollDemoSection() {
                 </AnimatePresence>
 
                 {/* Step navigation pills */}
-                <div className="flex lg:grid lg:grid-cols-2 gap-2 mt-6 overflow-x-auto snap-x snap-mandatory pb-1 -mx-1 px-1">
+                <div className="flex lg:grid lg:grid-cols-2 gap-2 mt-6 overflow-x-auto snap-x snap-mandatory pb-1 scrollbar-hide">
                   {stepsData.map((step, i) => {
                     const agentColors: Record<string, { bg: string; border: string; dot: string }> = {
                       "text-blue-400":    { bg: "rgba(59,130,246,0.08)",  border: "rgba(59,130,246,0.25)",  dot: "#3b82f6" },

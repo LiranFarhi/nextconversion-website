@@ -29,7 +29,7 @@ export default function DemoModal({ isOpen, onClose }: DemoModalProps) {
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
       <div
-        className="relative w-full max-w-md rounded-2xl bg-white p-8 shadow-2xl animate-fade-in-up"
+        className="relative w-full max-w-md rounded-2xl bg-white p-5 sm:p-8 shadow-2xl animate-fade-in-up max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <button

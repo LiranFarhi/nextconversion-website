@@ -152,7 +152,7 @@ const TABLE_POSITIONS = [
 
 function RoundTable({ activeIdx }: { activeIdx: number | null }) {
   return (
-    <div className="relative w-full" style={{ height: 240 }}>
+    <div className="relative w-full h-[200px] sm:h-[240px]">
       {/* Table */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-24">
         {/* Table surface */}
@@ -298,18 +298,18 @@ export default function AgentSection() {
           </p>
         </FadeUp>
 
-        {/* Main visual: roundtable + detail panel */}
+        {/* Main visual: roundtable + detail panel (desktop) */}
         <FadeUp delay={0.05}>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 items-center mb-10 max-w-4xl mx-auto">
+          <div className="hidden lg:grid grid-cols-2 gap-8 items-center mb-10 max-w-4xl mx-auto">
             {/* Round table */}
             <div>
               <p className="text-center text-xs text-gray-500 mb-4 uppercase tracking-widest font-medium">
-                Click an agent below to see what they do
+                Select an agent to see what they do
               </p>
               <RoundTable activeIdx={activeAgent} />
             </div>
 
-            {/* Detail panel */}
+            {/* Detail panel — desktop */}
             <div className="min-h-[200px] flex items-center">
               <AnimatePresence mode="wait">
                 {active ? (
@@ -378,7 +378,7 @@ export default function AgentSection() {
         </FadeUp>
 
         {/* 4 clickable agent cards — face + name + role only */}
-        <StaggerParent className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 mb-16">
+        <StaggerParent className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 mb-6 lg:mb-16">
           {agents.map((agent, i) => (
             <StaggerChild key={agent.name}>
               <motion.button
@@ -414,6 +414,55 @@ export default function AgentSection() {
             </StaggerChild>
           ))}
         </StaggerParent>
+
+        {/* Mobile detail panel — appears below agent cards */}
+        {active && (
+          <div className="lg:hidden mb-6 max-w-md mx-auto">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={active.name}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className="rounded-2xl bg-white/[0.06] border border-white/10 p-5"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <AgentFace
+                    skinTone={active.skinTone}
+                    hairColor={active.hairColor}
+                    gradient={active.color}
+                    size={44}
+                    isActive
+                  />
+                  <div>
+                    <h3 className="text-lg font-bold text-white">{active.name}</h3>
+                    <p className="text-sm text-gray-400">{active.role}</p>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-300 leading-relaxed italic mb-4">
+                  &ldquo;{active.quote}&rdquo;
+                </p>
+                <div className="space-y-1.5">
+                  {active.tasks.map((task, t) => (
+                    <motion.div
+                      key={task}
+                      initial={{ opacity: 0, x: 12 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: t * 0.08, duration: 0.25 }}
+                      className="flex items-center gap-2 text-sm text-gray-300"
+                    >
+                      <svg className="w-4 h-4 text-success shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      {task}
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        )}
 
         <FadeUp delay={0.1} className="text-center mb-16">
           <p className="text-sm text-gray-500">

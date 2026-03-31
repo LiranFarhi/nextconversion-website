@@ -932,8 +932,8 @@ function PersonaCarousel() {
               <span className="text-[9px] font-semibold text-foreground">{persona.demo}</span>
             </div>
           </div>
-          <div className="flex items-center gap-1 bg-primary/5 border border-primary/10 rounded-full px-2 py-0.5">
-            <span className="text-[8px] text-primary font-medium">→ {persona.intent}</span>
+          <div className="flex items-center gap-1 bg-primary/5 border border-primary/10 rounded-full px-2 py-0.5 min-w-0 shrink">
+            <span className="text-[8px] text-primary font-medium truncate max-w-[120px] sm:max-w-none">→ {persona.intent}</span>
           </div>
         </motion.div>
       </AnimatePresence>
@@ -958,13 +958,13 @@ function PersonaCarousel() {
 
       {/* Persona dot-tabs — shows all 9 store variants */}
       <div className="flex items-center justify-between mt-3">
-        <div className="flex items-center gap-1.5 flex-wrap">
+        <div className="flex items-center gap-0.5 sm:gap-1.5 flex-wrap">
           {personas.map((p, i) => (
             <button
               key={p.id}
               onClick={() => setActiveIndex(i)}
               title={`${p.theme.store} · ${p.demo}`}
-              className={`transition-all duration-200 rounded-full font-bold text-[7px] flex items-center justify-center ${
+              className={`transition-all duration-200 rounded-full font-bold text-[7px] flex items-center justify-center p-1.5 sm:p-0 ${
                 i === activeIndex
                   ? "w-5 h-5 text-white shadow-md"
                   : "w-4 h-4 bg-gray-100 text-gray-400 hover:bg-gray-200"
@@ -978,7 +978,7 @@ function PersonaCarousel() {
         <div className="flex items-center gap-1.5">
           <button
             onClick={prev}
-            className="w-6 h-6 rounded-full bg-white border border-border flex items-center justify-center text-muted hover:text-foreground hover:border-primary/30 transition-all shadow-sm"
+            className="w-8 h-8 sm:w-6 sm:h-6 rounded-full bg-white border border-border flex items-center justify-center text-muted hover:text-foreground hover:border-primary/30 transition-all shadow-sm"
             aria-label="Previous persona"
           >
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -987,7 +987,7 @@ function PersonaCarousel() {
           </button>
           <button
             onClick={next}
-            className="w-6 h-6 rounded-full bg-white border border-border flex items-center justify-center text-muted hover:text-foreground hover:border-primary/30 transition-all shadow-sm"
+            className="w-8 h-8 sm:w-6 sm:h-6 rounded-full bg-white border border-border flex items-center justify-center text-muted hover:text-foreground hover:border-primary/30 transition-all shadow-sm"
             aria-label="Next persona"
           >
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">

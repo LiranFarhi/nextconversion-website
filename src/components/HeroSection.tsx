@@ -313,61 +313,23 @@ interface ProductItem {
 const U = (id: string) =>
   `https://images.unsplash.com/${id}?w=400&h=400&fit=crop&auto=format&q=80`;
 
+const FASHION_PRODUCTS: ProductItem[] = [
+  { name: "Linen Midi Dress", price: "$185", rating: 4.9, count: 892, img: U("photo-1595777457583-95e059d581b8"), bg: "radial-gradient(ellipse at 40% 20%, rgba(255,255,255,0.48) 0%, transparent 55%), linear-gradient(155deg, #e8d5b2 0%, #c9a87a 100%)" },
+  { name: "Cotton Wrap Top", price: "$95", rating: 4.8, count: 643, img: U("photo-1564257631407-4deb1f99d992"), bg: "radial-gradient(ellipse at 38% 22%, rgba(255,255,255,0.44) 0%, transparent 55%), linear-gradient(155deg, #fef3c7 0%, #fcd34d 100%)" },
+  { name: "Tailored Blazer", price: "$145", rating: 4.7, count: 534, img: U("photo-1594938298603-c8148c4dae35"), bg: "radial-gradient(ellipse at 40% 18%, rgba(255,255,255,0.52) 0%, transparent 58%), linear-gradient(155deg, #f5f0eb 0%, #d6cfc5 100%)" },
+  { name: "Silk Camisole", price: "$120", rating: 4.8, count: 421, img: U("photo-1515886657613-9f3515b0c78f"), bg: "radial-gradient(ellipse at 38% 20%, rgba(255,255,255,0.40) 0%, transparent 55%), linear-gradient(155deg, #fce7f3 0%, #f9a8d4 100%)" },
+];
+
 const PERSONA_PRODUCTS: Record<string, ProductItem[]> = {
-  sportswear: [
-    { name: "Velocity Tee", price: "$68", rating: 4.8, count: 312, img: U("photo-1521572163474-6864f9cf17ab"), bg: "radial-gradient(ellipse at 35% 15%, rgba(255,255,255,0.30) 0%, transparent 55%), linear-gradient(155deg, #6366f1 0%, #4338ca 100%)" },
-    { name: "Sprint Shorts", price: "$84", rating: 4.7, count: 228, img: U("photo-1591195853828-11db59a44f6b"), bg: "radial-gradient(ellipse at 40% 18%, rgba(255,255,255,0.28) 0%, transparent 52%), linear-gradient(160deg, #818cf8 0%, #6366f1 100%)" },
-    { name: "Power Sports Bra", price: "$72", rating: 4.9, count: 441, img: U("photo-1571945153237-4929e783af4a"), bg: "radial-gradient(ellipse at 38% 20%, rgba(255,255,255,0.32) 0%, transparent 55%), linear-gradient(155deg, #a78bfa 0%, #7c3aed 100%)" },
-    { name: "Endurance Tights", price: "$128", rating: 4.8, count: 189, img: U("photo-1506629082955-511b1aa562c8"), bg: "radial-gradient(ellipse at 32% 15%, rgba(255,255,255,0.18) 0%, transparent 50%), linear-gradient(160deg, #3730a3 0%, #1e1b4b 100%)" },
-  ],
-  hiking: [
-    { name: "Summit Fleece", price: "$178", rating: 4.9, count: 534, img: U("photo-1591047139829-d91aecb6caea"), bg: "radial-gradient(ellipse at 35% 18%, rgba(255,255,255,0.28) 0%, transparent 52%), linear-gradient(150deg, #3d6b3a 0%, #1e3a1a 100%)" },
-    { name: "Trail Pants", price: "$134", rating: 4.7, count: 298, img: U("photo-1624378439575-d8705ad7ae80"), bg: "radial-gradient(ellipse at 40% 18%, rgba(255,255,255,0.22) 0%, transparent 50%), linear-gradient(155deg, #854d0e 0%, #451a03 100%)" },
-    { name: "Merino Base Layer", price: "$68", rating: 4.8, count: 412, img: U("photo-1556906781-9a412961c28c"), bg: "radial-gradient(ellipse at 38% 20%, rgba(255,255,255,0.28) 0%, transparent 52%), linear-gradient(155deg, #0d9488 0%, #134e4a 100%)" },
-    { name: "Wind Jacket", price: "$224", rating: 4.9, count: 187, img: U("photo-1551028719-00167b16eac5"), bg: "radial-gradient(ellipse at 35% 18%, rgba(255,255,255,0.22) 0%, transparent 50%), linear-gradient(150deg, #475569 0%, #1e293b 100%)" },
-  ],
-  "luxury-coats": [
-    { name: "Heritage Coat", price: "$890", rating: 4.9, count: 87, img: U("photo-1539533113208-f6df8cc8b543"), bg: "radial-gradient(ellipse at 40% 18%, rgba(255,255,255,0.38) 0%, transparent 55%), linear-gradient(160deg, #c8a830 0%, #7c5c10 100%)" },
-    { name: "Cashmere Blazer", price: "$1,240", rating: 4.8, count: 63, img: U("photo-1594938298603-c8148c4dae35"), bg: "radial-gradient(ellipse at 42% 20%, rgba(255,255,255,0.48) 0%, transparent 58%), linear-gradient(155deg, #fef3c7 0%, #fcd34d 100%)" },
-    { name: "Merino Coat", price: "$1,580", rating: 4.9, count: 34, img: U("photo-1548624313-0396c75e4b1a"), bg: "radial-gradient(ellipse at 35% 18%, rgba(255,255,255,0.28) 0%, transparent 52%), linear-gradient(155deg, #881337 0%, #4c0519 100%)" },
-    { name: "Silk Wrap Dress", price: "$740", rating: 4.8, count: 52, img: U("photo-1595777457583-95e059d581b8"), bg: "radial-gradient(ellipse at 38% 20%, rgba(255,255,255,0.35) 0%, transparent 55%), linear-gradient(155deg, #7c3aed 0%, #4c1d95 100%)" },
-  ],
-  streetwear: [
-    { name: "Box Logo Hoodie", price: "$168", rating: 4.9, count: 1204, img: U("photo-1556821840-3a63f95609a7"), bg: "radial-gradient(ellipse at 35% 15%, rgba(255,255,255,0.10) 0%, transparent 50%), linear-gradient(160deg, #374151 0%, #111827 100%)" },
-    { name: "Cargo Pants", price: "$248", rating: 4.7, count: 876, img: U("photo-1552902865-b72c031ac5ea"), bg: "radial-gradient(ellipse at 40% 18%, rgba(255,255,255,0.08) 0%, transparent 48%), linear-gradient(155deg, #4b5563 0%, #1f2937 100%)" },
-    { name: "Collab Drop Tee", price: "$98", rating: 4.8, count: 2341, img: U("photo-1576566588028-4147f3842f27"), bg: "radial-gradient(ellipse at 40% 18%, rgba(255,255,255,0.14) 0%, transparent 50%), linear-gradient(155deg, #dc2626 0%, #7f1d1d 100%)" },
-    { name: "Oversized Bomber", price: "$310", rating: 4.8, count: 643, img: U("photo-1591047139829-d91aecb6caea"), bg: "radial-gradient(ellipse at 38% 18%, rgba(255,255,255,0.10) 0%, transparent 48%), linear-gradient(155deg, #1f2937 0%, #0f172a 100%)" },
-  ],
-  skincare: [
-    { name: "Vitamin C Serum", price: "$62", rating: 4.9, count: 2847, img: U("photo-1620916566398-39f1143ab7be"), bg: "radial-gradient(ellipse at 40% 20%, rgba(255,255,255,0.48) 0%, transparent 55%), linear-gradient(155deg, #fde68a 0%, #f59e0b 100%)" },
-    { name: "Hydrating Cream", price: "$48", rating: 4.8, count: 1923, img: U("photo-1611930022073-b7a4ba5fcccd"), bg: "radial-gradient(ellipse at 38% 22%, rgba(255,255,255,0.44) 0%, transparent 55%), linear-gradient(155deg, #e0f2fe 0%, #7dd3fc 100%)" },
-    { name: "Gentle Cleanser", price: "$34", rating: 4.7, count: 3412, img: U("photo-1556228578-0d85b1a4d571"), bg: "radial-gradient(ellipse at 40% 18%, rgba(255,255,255,0.52) 0%, transparent 58%), linear-gradient(155deg, #d1fae5 0%, #6ee7b7 100%)" },
-    { name: "Retinol Eye Cream", price: "$78", rating: 4.8, count: 1156, img: U("photo-1596462502278-27bfdc403348"), bg: "radial-gradient(ellipse at 38% 20%, rgba(255,255,255,0.40) 0%, transparent 55%), linear-gradient(155deg, #fce7f3 0%, #f9a8d4 100%)" },
-  ],
-  vintage: [
-    { name: "90s Denim Jacket", price: "$89", rating: 4.7, count: 234, img: U("photo-1576995853123-5a10305d93c0"), bg: "radial-gradient(ellipse at 35% 18%, rgba(255,255,255,0.28) 0%, transparent 52%), linear-gradient(155deg, #5878a8 0%, #2d4070 100%)" },
-    { name: "Oversized Flannel", price: "$54", rating: 4.6, count: 178, img: U("photo-1588117305388-c2631a279f82"), bg: "radial-gradient(ellipse at 40% 20%, rgba(255,255,255,0.42) 0%, transparent 58%), linear-gradient(155deg, #e8d4a8 0%, #c4a87a 100%)" },
-    { name: "Vintage Corduroy", price: "$72", rating: 4.8, count: 145, img: U("photo-1594938298603-c8148c4dae35"), bg: "radial-gradient(ellipse at 38% 18%, rgba(255,255,255,0.28) 0%, transparent 52%), linear-gradient(155deg, #a0622a 0%, #6b3a18 100%)" },
-    { name: "Silk Blouse", price: "$62", rating: 4.6, count: 112, img: U("photo-1564257631407-4deb1f99d992"), bg: "radial-gradient(ellipse at 40% 18%, rgba(255,255,255,0.38) 0%, transparent 55%), linear-gradient(155deg, #d4a8c0 0%, #a0688a 100%)" },
-  ],
-  jewelry: [
-    { name: "Diamond Pendant", price: "$480", rating: 4.9, count: 312, img: U("photo-1599643478518-a784e5dc4c8f"), bg: "radial-gradient(ellipse at 40% 20%, rgba(255,255,255,0.58) 0%, transparent 55%), linear-gradient(155deg, #c8a534 0%, #6b4f10 100%)" },
-    { name: "Gold Cuff Bracelet", price: "$310", rating: 4.8, count: 187, img: U("photo-1611591437281-460bfbe1220a"), bg: "radial-gradient(ellipse at 40% 20%, rgba(255,255,255,0.52) 0%, transparent 55%), linear-gradient(155deg, #b8972a 0%, #7a5c10 100%)" },
-    { name: "Pearl Earrings", price: "$195", rating: 4.7, count: 456, img: U("photo-1535632066927-ab7c9ab60908"), bg: "radial-gradient(ellipse at 40% 20%, rgba(255,255,255,0.58) 0%, transparent 55%), linear-gradient(155deg, #f5f5f4 0%, #d6d3d1 100%)" },
-    { name: "Sapphire Ring", price: "$650", rating: 4.9, count: 89, img: U("photo-1605100804763-247f67b3557e"), bg: "radial-gradient(ellipse at 40% 20%, rgba(255,255,255,0.62) 0%, transparent 58%), linear-gradient(155deg, #1e3a5f 0%, #0c1929 100%)" },
-  ],
-  outerwear: [
-    { name: "Arctic Puffer", price: "$59", orig: "$89", rating: 4.7, count: 1243, img: U("photo-1544441893-675973e31985"), bg: "radial-gradient(ellipse at 35% 18%, rgba(255,255,255,0.28) 0%, transparent 52%), linear-gradient(155deg, #3b82f6 0%, #1d4ed8 100%)" },
-    { name: "Wool Coat", price: "$79", orig: "$119", rating: 4.6, count: 876, img: U("photo-1539533113208-f6df8cc8b543"), bg: "radial-gradient(ellipse at 40% 18%, rgba(255,255,255,0.22) 0%, transparent 50%), linear-gradient(155deg, #0891b2 0%, #075985 100%)" },
-    { name: "Fleece Jacket", price: "$49", orig: "$69", rating: 4.8, count: 934, img: U("photo-1551028719-00167b16eac5"), bg: "radial-gradient(ellipse at 40% 20%, rgba(255,255,255,0.22) 0%, transparent 50%), linear-gradient(155deg, #94a3b8 0%, #334155 100%)" },
-    { name: "Rain Parka", price: "$69", orig: "$99", rating: 4.7, count: 621, img: U("photo-1545594861-3bef43ff2fc8"), bg: "radial-gradient(ellipse at 38% 18%, rgba(255,255,255,0.22) 0%, transparent 50%), linear-gradient(155deg, #ef4444 0%, #991b1b 100%)" },
-  ],
-  resort: [
-    { name: "Linen Midi Dress", price: "$185", rating: 4.9, count: 892, img: U("photo-1595777457583-95e059d581b8"), bg: "radial-gradient(ellipse at 40% 20%, rgba(255,255,255,0.48) 0%, transparent 55%), linear-gradient(155deg, #e8d5b2 0%, #c9a87a 100%)" },
-    { name: "Cotton Wrap Top", price: "$95", rating: 4.8, count: 643, img: U("photo-1564257631407-4deb1f99d992"), bg: "radial-gradient(ellipse at 38% 22%, rgba(255,255,255,0.44) 0%, transparent 55%), linear-gradient(155deg, #fef3c7 0%, #fcd34d 100%)" },
-    { name: "Wide Leg Trousers", price: "$145", rating: 4.7, count: 534, img: U("photo-1594938298603-c8148c4dae35"), bg: "radial-gradient(ellipse at 40% 18%, rgba(255,255,255,0.52) 0%, transparent 58%), linear-gradient(155deg, #f5f0eb 0%, #d6cfc5 100%)" },
-    { name: "Silk Camisole", price: "$120", rating: 4.8, count: 421, img: U("photo-1515886657613-9f3515b0c78f"), bg: "radial-gradient(ellipse at 38% 20%, rgba(255,255,255,0.40) 0%, transparent 55%), linear-gradient(155deg, #fce7f3 0%, #f9a8d4 100%)" },
-  ],
+  sportswear: FASHION_PRODUCTS,
+  hiking: FASHION_PRODUCTS,
+  "luxury-coats": FASHION_PRODUCTS,
+  streetwear: FASHION_PRODUCTS,
+  skincare: FASHION_PRODUCTS,
+  vintage: FASHION_PRODUCTS,
+  jewelry: FASHION_PRODUCTS,
+  outerwear: FASHION_PRODUCTS.map((p) => ({ ...p, orig: "$" + (parseInt(p.price.replace("$", "")) + 40) })),
+  resort: FASHION_PRODUCTS,
 };
 
 // ─── Product Card ─────────────────────────────────────────────────────────────

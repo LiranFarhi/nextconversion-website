@@ -257,10 +257,10 @@ function PhoneScreen1() {
 const MOBILE_STOREFRONT_PRODUCTS = [
   { name: "Linen Midi Dress", price: "$185", img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=300&h=400&fit=crop&auto=format&q=80", badge: "New" },
   { name: "Cotton Wrap Top", price: "$95", img: "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?w=300&h=400&fit=crop&auto=format&q=80" },
-  { name: "Wide Leg Trousers", price: "$145", img: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=300&h=400&fit=crop&auto=format&q=80" },
+  { name: "Tailored Blazer", price: "$145", img: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=300&h=400&fit=crop&auto=format&q=80" },
   { name: "Silk Camisole", price: "$120", img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300&h=400&fit=crop&auto=format&q=80", badge: "Trending" },
-  { name: "Knit Cardigan", price: "$165", img: "https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?w=300&h=400&fit=crop&auto=format&q=80" },
-  { name: "Relaxed Blazer", price: "$210", img: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=300&h=400&fit=crop&auto=format&q=80" },
+  { name: "Linen Midi Dress", price: "$185", img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=300&h=400&fit=crop&auto=format&q=80" },
+  { name: "Cotton Wrap Top", price: "$95", img: "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?w=300&h=400&fit=crop&auto=format&q=80" },
 ];
 
 function MobileStorefrontContent() {

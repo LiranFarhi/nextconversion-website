@@ -641,10 +641,8 @@ export default function ScrollDemoSection() {
     return () => clearInterval(id);
   }, [isPaused]);
 
-  // Scroll-driven navigation — desktop only
+  // Scroll-driven navigation — all screen sizes
   useEffect(() => {
-    if (!isLg) return;
-
     const handleScroll = () => {
       const section = sectionRef.current;
       if (!section) return;
@@ -673,7 +671,7 @@ export default function ScrollDemoSection() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [isLg]);
+  }, []);
 
   const goToStep = useCallback((i: number) => {
     setActiveStep(i);
@@ -687,9 +685,9 @@ export default function ScrollDemoSection() {
       id="demo"
       ref={sectionRef}
       className="relative bg-white"
-      style={isLg ? { height: `${(STEP_COUNT + 1) * 70}vh` } : undefined}
+      style={{ height: `${(STEP_COUNT + 1) * 70}vh` }}
     >
-      <div className={isLg ? "sticky top-0 h-screen flex flex-col justify-center overflow-hidden" : "flex flex-col justify-center overflow-hidden py-12 sm:py-16"}>
+      <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
         {/* Section header — always visible */}
         <div className="text-center pt-6 pb-4 px-4">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-display text-foreground">

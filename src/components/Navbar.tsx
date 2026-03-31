@@ -1,9 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Navbar({ onBookDemo }: { onBookDemo: () => void }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const scrollY = window.scrollY;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.overflow = "";
+      window.scrollTo(0, scrollY);
+    };
+  }, [mobileOpen]);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-lg border-b border-border/50" style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}>
@@ -84,9 +102,12 @@ export default function Navbar({ onBookDemo }: { onBookDemo: () => void }) {
           </button>
         </div>
 
-        {/* Mobile menu */}
-        {mobileOpen && (
-          <div className="md:hidden border-t border-border py-3 space-y-1 animate-fade-in">
+      </div>
+
+      {/* Mobile menu — fixed overlay below navbar */}
+      {mobileOpen && (
+        <div className="fixed inset-x-0 top-16 bottom-0 z-40 bg-white/95 backdrop-blur-lg md:hidden animate-fade-in" style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}>
+          <div className="px-4 py-3 space-y-1">
             <a
               href="#problem"
               className="block text-sm text-muted hover:text-foreground px-3 py-2.5 rounded-lg active:bg-surface"
@@ -125,8 +146,8 @@ export default function Navbar({ onBookDemo }: { onBookDemo: () => void }) {
               Book a Demo
             </button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </nav>
   );
 }

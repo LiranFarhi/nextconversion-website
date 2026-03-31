@@ -21,6 +21,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
 }
 
 body {
@@ -257,3 +258,8 @@ body {
 html, body {
   overflow-x: hidden;
 }
+
+/* ===== Hide scrollbar for horizontal scroll containers ===== */
+
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }

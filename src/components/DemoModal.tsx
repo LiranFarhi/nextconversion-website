@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface DemoModalProps {
   isOpen: boolean;
@@ -13,6 +13,24 @@ export default function DemoModal({ isOpen, onClose }: DemoModalProps) {
   const [website, setWebsite] = useState("");
   const [notes, setNotes] = useState("");
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const scrollY = window.scrollY;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.overflow = "";
+      window.scrollTo(0, scrollY);
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -29,7 +47,7 @@ export default function DemoModal({ isOpen, onClose }: DemoModalProps) {
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
       <div
-        className="relative w-full max-w-md rounded-2xl bg-white p-5 sm:p-8 shadow-2xl animate-fade-in-up max-h-[90vh] overflow-y-auto"
+        className="relative w-full max-w-md rounded-2xl bg-white p-5 sm:p-8 shadow-2xl animate-fade-in-up max-h-[90dvh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <button

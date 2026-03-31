@@ -31,7 +31,7 @@ interface Step {
 function PhoneFrame({ children }: { children: React.ReactNode }) {
   return (
     <motion.div
-      className="relative mx-auto w-[270px] sm:w-[290px]"
+      className="relative mx-auto w-[290px] sm:w-[320px]"
       animate={{ y: [0, -6, 0] }}
       transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
     >
@@ -49,7 +49,7 @@ function PhoneFrame({ children }: { children: React.ReactNode }) {
         {/* Notch */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-gray-900 rounded-b-2xl z-10" />
         {/* Screen */}
-        <div className="rounded-[2rem] bg-white overflow-hidden h-[490px] relative">
+        <div className="rounded-[2rem] bg-white overflow-hidden h-[530px] relative">
           {children}
         </div>
       </div>
@@ -78,8 +78,12 @@ function GottexProductCard({
   imageUrl?: string;
   isVideo?: boolean;
 }) {
+  // Parse numeric price for strikethrough calculation
+  const numericPrice = parseFloat(price.replace(/[^0-9.]/g, "")) || 39.99;
+  const beforePrice = `$${(numericPrice * 1.25).toFixed(2)}`;
+
   return (
-    <div className="rounded-lg overflow-hidden border border-gray-100 bg-white shadow-sm">
+    <div className="rounded-lg overflow-hidden border border-gray-100 bg-white shadow-sm flex flex-col">
       <div className={`aspect-[3/4] relative ${imageUrl ? "" : `bg-gradient-to-b ${gradient}`}`}>
         {imageUrl && !isVideo && (
           <img
@@ -101,7 +105,8 @@ function GottexProductCard({
           />
         )}
         {badge && (
-          <div className="absolute top-1.5 left-1.5 bg-white/80 text-[7px] font-bold tracking-wider text-gray-700 uppercase px-1.5 py-0.5 rounded z-10">
+          <div className="absolute top-1.5 left-1.5 text-[6px] font-bold tracking-wider uppercase px-1.5 py-0.5 rounded z-10"
+            style={{ background: "#0A886F", color: "#fff" }}>
             {badge}
           </div>
         )}
@@ -111,19 +116,35 @@ function GottexProductCard({
           </div>
         )}
       </div>
-      <div className="p-1.5">
-        <p className="text-[8px] font-bold tracking-widest uppercase text-gray-800 leading-tight">{name}</p>
-        <p className="text-[8px] text-gray-500 mt-0.5">{price}</p>
-        <div className="flex gap-0.5 mt-1">
-          {["XS", "S", "M", "L"].map((s) => (
-            <span
-              key={s}
-              className="w-3.5 h-3.5 rounded-full border border-gray-200 text-[6px] flex items-center justify-center text-gray-500"
-            >
-              {s}
-            </span>
+      <div className="p-1.5 flex flex-col gap-0.5 flex-1">
+        <p className="text-[7px] font-bold text-gray-800 leading-tight line-clamp-2">{name}</p>
+        {/* Star rating */}
+        <div className="flex items-center gap-0.5">
+          <div className="flex">
+            {[1,2,3,4,5].map(i => (
+              <svg key={i} className="w-2 h-2 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+            ))}
+          </div>
+          <span className="text-[6px] text-gray-400">(106)</span>
+        </div>
+        {/* Price */}
+        <div className="flex items-center gap-1">
+          <span className="text-[8px] font-black text-gray-900">{price}</span>
+          <span className="text-[6px] text-gray-400 line-through">{beforePrice}</span>
+        </div>
+        {/* Color dots */}
+        <div className="flex gap-0.5 mt-0.5">
+          {["#62B1B4","#123840","#f9a8d4","#fcd34d","#d1d5db"].map((c,i) => (
+            <div key={i} className={`w-2.5 h-2.5 rounded-full border ${i===0?"border-gray-400":"border-transparent"}`} style={{ background: c }} />
           ))}
         </div>
+        {/* Add to bag */}
+        <button className="w-full mt-1 py-1 rounded text-[7px] font-bold text-white text-center"
+          style={{ background: "#0A886F" }}>
+          Add to Bag
+        </button>
       </div>
     </div>
   );
@@ -133,70 +154,96 @@ function GottexProductCard({
 
 function PhoneScreen1() {
   const signals = [
-    { label: "Past browsing",    value: "One-piece suits, resort wear",     conf: 94, color: "#6366f1" },
-    { label: "Price sensitivity",value: "Premium — $200–$400",              conf: 88, color: "#a855f7" },
-    { label: "Trend signal",     value: "Riviera · Mediterranean resort",   conf: 96, color: "#ec4899" },
-    { label: "Device context",   value: "Mobile · High-scroll velocity",    conf: 79, color: "#3b82f6" },
+    { label: "Past browsing",    icon: "👗", value: "Dresses, minimalist fashion",    conf: 94, color: "#62B1B4" },
+    { label: "Price sensitivity",icon: "💳", value: "Mid-premium · $120–$340",        conf: 88, color: "#a855f7" },
+    { label: "Trend signal",     icon: "✦",  value: "Contemporary · Editorial",       conf: 96, color: "#ec4899" },
+    { label: "Device context",   icon: "📱", value: "Mobile · High-scroll velocity",  conf: 79, color: "#6366f1" },
   ];
 
   return (
-    <div className="h-full flex flex-col" style={{ background: "#0f0f1a" }}>
-      {/* Header */}
-      <div className="px-4 py-4 pt-8" style={{ background: "linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #1e1b4b 100%)" }}>
-        <div className="flex items-center gap-2 mb-2">
+    <div className="h-full flex flex-col" style={{ background: "#0a0a14" }}>
+      {/* Header with ambient glow */}
+      <div className="relative px-4 py-3 pt-8 overflow-hidden" style={{ background: "linear-gradient(135deg, #0d0b2e 0%, #1e1b4b 50%, #0d0b2e 100%)" }}>
+        {/* Radial pulse glow */}
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          animate={{ opacity: [0.3, 0.6, 0.3] }}
+          transition={{ duration: 2.5, repeat: Infinity }}
+          style={{ background: "radial-gradient(circle at 50% 50%, rgba(99,102,241,0.25) 0%, transparent 70%)" }}
+        />
+        <div className="relative flex items-center justify-between mb-2">
           <motion.span
-            className="inline-flex items-center gap-1 bg-green-400/20 border border-green-400/40 rounded-full px-2 py-0.5"
-            animate={{ opacity: [1, 0.6, 1] }}
-            transition={{ duration: 1.2, repeat: Infinity }}
+            className="inline-flex items-center gap-1 bg-green-400/20 border border-green-400/30 rounded-full px-2 py-0.5"
+            animate={{ opacity: [1, 0.5, 1] }}
+            transition={{ duration: 1.4, repeat: Infinity }}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
-            <span className="text-green-300 text-[7px] font-bold tracking-widest uppercase">Live</span>
+            <span className="text-green-300 text-[7px] font-bold tracking-widest uppercase">Live Analysis</span>
           </motion.span>
-          <span className="text-indigo-300/70 text-[8px] tracking-wider uppercase">Danny · Signal Analysis</span>
+          <span className="text-indigo-400/60 text-[7px] tracking-wider">Danny</span>
         </div>
-        <p className="text-white text-sm font-bold leading-tight">
-          &ldquo;Spring Resort Swimwear&rdquo;
+        <p className="relative text-white text-[13px] font-black leading-tight mb-2">
+          &ldquo;Premium Fashion Edit&rdquo;
         </p>
-        <div className="flex gap-1.5 mt-2 flex-wrap">
-          {["Female, 32", "Mobile", "High intent"].map((tag) => (
-            <span key={tag} className="bg-white/10 border border-white/10 text-white/80 text-[7px] px-2 py-0.5 rounded-full">{tag}</span>
+        <div className="relative flex gap-1.5 flex-wrap">
+          {["Female · 29", "Mobile", "High intent", "First visit"].map((tag) => (
+            <span key={tag} className="bg-white/8 border border-white/10 text-white/75 text-[7px] px-2 py-0.5 rounded-full">{tag}</span>
           ))}
         </div>
       </div>
 
       {/* Confidence meters */}
-      <div className="flex-1 p-3 space-y-2.5" style={{ background: "#0f0f1a" }}>
-        <p className="text-[8px] font-bold uppercase tracking-widest text-gray-500 mb-1">Intent Signals Mapped</p>
+      <div className="flex-1 px-3 py-2.5 space-y-2" style={{ background: "#0a0a14" }}>
+        <div className="flex items-center justify-between mb-1">
+          <p className="text-[7px] font-bold uppercase tracking-widest text-gray-600">Intent Signals</p>
+          <span className="text-[7px] text-gray-600">4 signals mapped</span>
+        </div>
         {signals.map((s, i) => (
-          <div key={s.label}>
-            <div className="flex items-center justify-between mb-0.5">
-              <span className="text-[8px] text-gray-400">{s.label}</span>
-              <span className="text-[8px] font-bold" style={{ color: s.color }}>{s.conf}%</span>
+          <div key={s.label} className="rounded-lg p-2" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
+            <div className="flex items-start justify-between mb-1.5">
+              <div className="flex items-center gap-1.5">
+                <span className="text-[10px]">{s.icon}</span>
+                <div>
+                  <div className="text-[7px] font-bold text-gray-400 uppercase tracking-wider">{s.label}</div>
+                  <div className="text-[8px] text-gray-200 leading-tight">{s.value}</div>
+                </div>
+              </div>
+              <span className="text-[9px] font-black tabular-nums shrink-0" style={{ color: s.color }}>{s.conf}%</span>
             </div>
-            <p className="text-[9px] text-gray-200 mb-1">{s.value}</p>
-            <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+            <div className="h-0.5 bg-white/5 rounded-full overflow-hidden">
               <motion.div
                 className="h-full rounded-full"
-                style={{ background: s.color }}
+                style={{ background: `linear-gradient(90deg, ${s.color}80, ${s.color})` }}
                 initial={{ width: 0 }}
                 animate={{ width: `${s.conf}%` }}
-                transition={{ delay: i * 0.15, duration: 0.8, ease: "easeOut" }}
+                transition={{ delay: i * 0.12, duration: 0.9, ease: "easeOut" }}
               />
             </div>
           </div>
         ))}
 
-        {/* AI summary */}
+        {/* AI generating */}
         <motion.div
-          className="rounded-xl p-3 mt-1 border"
-          style={{ background: "linear-gradient(135deg, #312e81/20, #1e1b4b)", borderColor: "#6366f1/30", backgroundColor: "rgba(49,46,129,0.25)" }}
-          animate={{ borderColor: ["rgba(99,102,241,0.2)", "rgba(99,102,241,0.5)", "rgba(99,102,241,0.2)"] }}
-          transition={{ duration: 2, repeat: Infinity }}
+          className="rounded-xl p-2.5 mt-1 relative overflow-hidden border"
+          style={{ background: "rgba(18,56,64,0.4)", borderColor: "rgba(98,177,180,0.2)" }}
+          animate={{ borderColor: ["rgba(98,177,180,0.15)", "rgba(98,177,180,0.5)", "rgba(98,177,180,0.15)"] }}
+          transition={{ duration: 1.8, repeat: Infinity }}
         >
-          <p className="text-[9px] text-indigo-300 font-bold mb-1">→ Generating personalized storefront</p>
+          <div className="flex items-center gap-1.5 mb-1.5">
+            <motion.span
+              className="w-1.5 h-1.5 rounded-full"
+              style={{ background: "#62B1B4" }}
+              animate={{ opacity: [1, 0.3, 1] }}
+              transition={{ duration: 0.8, repeat: Infinity }}
+            />
+            <p className="text-[9px] font-bold" style={{ color: "#62B1B4" }}>Generating personalized storefront</p>
+          </div>
           <div className="flex gap-1 flex-wrap">
-            {["Luxury resort", "One-piece focus", "Coral palette"].map((tag) => (
-              <span key={tag} className="text-[7px] bg-indigo-500/20 text-indigo-300 border border-indigo-500/20 rounded px-1.5 py-0.5">{tag}</span>
+            {["Editorial fashion", "Dress focus", "Neutral palette", "Mobile layout"].map((tag) => (
+              <span key={tag} className="text-[6.5px] rounded px-1.5 py-0.5 font-medium"
+                style={{ background: "rgba(98,177,180,0.15)", color: "#62B1B4", border: "1px solid rgba(98,177,180,0.2)" }}>
+                {tag}
+              </span>
             ))}
           </div>
         </motion.div>
@@ -205,94 +252,62 @@ function PhoneScreen1() {
   );
 }
 
-// Rich product data for PhoneScreen2 fallback
-const FALLBACK_CARDS = [
-  { name: "Riviera One-Piece", price: "$285", badge: "New In",    bg: "linear-gradient(160deg,#f9a8d4 0%,#ec4899 45%,#be185d 100%)" },
-  { name: "Santorini Bikini",  price: "$195", badge: "Trending",  bg: "linear-gradient(160deg,#fcd34d 0%,#f97316 45%,#c2410c 100%)" },
-  { name: "Cannes Cover-Up",   price: "$165", badge: undefined,   bg: "linear-gradient(160deg,#fda4af 0%,#fb7185 45%,#e11d48 100%)" },
-  { name: "Nice Sarong",       price: "$125", badge: undefined,   bg: "linear-gradient(160deg,#c4b5fd 0%,#a78bfa 45%,#7c3aed 100%)" },
-];
 
-function PhoneScreen2({ products }: { products: DemoProduct[] }) {
+function PhoneScreen2({ products: _products }: { products: DemoProduct[] }) {
   return (
-    <div className="h-full flex flex-col bg-white">
-      {/* Brand header */}
-      <div className="px-4 py-2 pt-7 flex items-center justify-between border-b border-gray-100"
-        style={{ background: "linear-gradient(135deg, #fff1f2 0%, #fff 60%)" }}>
-        <div>
-          <span className="text-[13px] font-black tracking-[0.2em] text-gray-900 uppercase">GOTTEX</span>
+    <div className="h-full overflow-hidden relative bg-white">
+      {/* Slow scroll through the mobile storefront — uses the 390px-wide mobile Figma screenshot */}
+      <motion.div
+        className="absolute inset-x-0 top-0"
+        animate={{ y: [0, -180, -180, 0] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", times: [0, 0.45, 0.7, 1] }}
+      >
+        {/* Mobile-optimised storefront image — fits the phone frame naturally */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/figma-screens/mobile-storefront.png" alt="" className="w-full block" loading="eager" decoding="async" />
+        {/* Repeat so scroll never hits blank space */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/figma-screens/mobile-storefront.png" alt="" className="w-full block" loading="eager" decoding="async" />
+      </motion.div>
+
+      {/* Top teal nav bar overlay to match Figma brand */}
+      <div className="absolute top-0 inset-x-0 h-8 flex items-center justify-between px-3 z-10"
+        style={{ background: "linear-gradient(to bottom, rgba(18,56,64,0.92) 0%, transparent 100%)" }}>
+        <span className="text-white text-[9px] font-black tracking-widest uppercase">LUMA</span>
+        <div className="flex items-center gap-1.5">
+          <svg className="w-3 h-3 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+          <svg className="w-3 h-3 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
         </div>
-        <span className="text-[7px] font-bold text-rose-500 tracking-wider uppercase bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">
-          For You
+      </div>
+
+      {/* Bottom scrim */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-20 pointer-events-none"
+        style={{ background: "linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0.7) 50%, transparent 100%)" }}
+      />
+      {/* Floating "Curated for Her" pill */}
+      <motion.div
+        className="absolute bottom-4 left-0 right-0 flex justify-center"
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5, duration: 0.45 }}
+      >
+        <span
+          className="inline-flex items-center gap-1.5 text-white text-[8px] font-bold px-3 py-1 rounded-full tracking-widest uppercase shadow-xl"
+          style={{ background: "#123840" }}
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-white/80 animate-pulse" />
+          Curated Just for Her
         </span>
-      </div>
-
-      {/* Hero collection strip */}
-      <div className="px-4 py-2.5 flex items-center justify-between"
-        style={{ background: "linear-gradient(135deg, #fff1f2 0%, #fce7f3 100%)" }}>
-        <div>
-          <p className="text-[8px] font-bold tracking-widest uppercase text-rose-400">Spring Resort &apos;26</p>
-          <p className="text-[11px] font-bold text-gray-900 leading-tight">Curated for Women 25–35</p>
-        </div>
-        <div className="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center">
-          <span className="text-[10px]">✦</span>
-        </div>
-      </div>
-
-      {/* Product grid */}
-      <div className="flex-1 p-2 overflow-hidden">
-        <div className="grid grid-cols-2 gap-2 h-full">
-          {FALLBACK_CARDS.map((card, i) => {
-            const p = products[i];
-            const hasMedia = !!p?.imageUrl;
-            return (
-              <div key={card.name} className="rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col">
-                {/* Image / gradient */}
-                <div className="relative flex-1 min-h-[90px]">
-                  {hasMedia && !p.isVideo && (
-                    <img src={p.imageUrl} alt="" className="absolute inset-0 w-full h-full object-cover" />
-                  )}
-                  {hasMedia && p.isVideo && (
-                    <video src={p.imageUrl} autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" />
-                  )}
-                  {!hasMedia && (
-                    <div className="absolute inset-0" style={{ background: card.bg }} />
-                  )}
-                  {/* Gradient overlay for text */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-                  {(p?.badge ?? card.badge) && (
-                    <span className="absolute top-1.5 left-1.5 text-[6px] font-bold bg-white/90 text-gray-800 px-1.5 py-0.5 rounded uppercase tracking-wide z-10">
-                      {p?.badge ?? card.badge}
-                    </span>
-                  )}
-                  <div className="absolute bottom-1.5 left-1.5 right-1.5">
-                    <p className="text-white text-[8px] font-bold leading-tight drop-shadow-sm">
-                      {p?.name ?? card.name}
-                    </p>
-                  </div>
-                </div>
-                {/* Price row */}
-                <div className="bg-white px-2 py-1.5 flex items-center justify-between">
-                  <span className="text-[9px] font-bold text-gray-900">
-                    {p?.price ? `$${p.price}` : card.price}
-                  </span>
-                  <button className="w-5 h-5 rounded-full bg-gray-900 flex items-center justify-center">
-                    <span className="text-white text-[8px] leading-none">+</span>
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
 
 function PhoneScreen3({ products }: { products: DemoProduct[] }) {
   const hero = products[0];
-  const heroPrice = hero?.price ? `$${hero.price}` : "$285";
-  const heroName = hero?.name ?? "Riviera One-Piece";
+  const heroPrice = hero?.price ? `$${hero.price}` : "$265";
+  const heroName = hero?.name ?? "Linen Midi Dress";
 
   return (
     <div className="h-full flex flex-col bg-white">
@@ -311,14 +326,14 @@ function PhoneScreen3({ products }: { products: DemoProduct[] }) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
         {/* Top badge */}
         <div className="absolute top-8 left-3 right-3 flex items-center justify-between">
-          <span className="text-white/80 text-[10px] font-bold tracking-[0.25em] uppercase">GOTTEX</span>
+          <span className="text-white/80 text-[10px] font-bold tracking-[0.25em] uppercase">NEW IN</span>
           <span className="bg-rose-600 text-white text-[7px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">
             {hero?.badge ?? "New Drop"}
           </span>
         </div>
         {/* Bottom text */}
         <div className="absolute bottom-3 left-3 right-3">
-          <p className="text-white/60 text-[7px] font-bold tracking-widest uppercase mb-0.5">Riviera Collection</p>
+          <p className="text-white/60 text-[7px] font-bold tracking-widest uppercase mb-0.5">New Collection</p>
           <p className="text-white text-base font-black leading-tight">{heroName}</p>
           <div className="flex items-center gap-2 mt-1">
             <div className="flex">
@@ -367,9 +382,9 @@ function PhoneScreen3({ products }: { products: DemoProduct[] }) {
 }
 
 const BUNDLE_FALLBACKS = [
-  { bg: "linear-gradient(160deg,#fda4af 0%,#f43f5e 60%,#9f1239 100%)", label: "Riviera One-Piece" },
-  { bg: "linear-gradient(160deg,#fcd34d 0%,#f97316 60%,#c2410c 100%)", label: "Cannes Cover-Up"   },
-  { bg: "linear-gradient(160deg,#c4b5fd 0%,#a78bfa 60%,#6d28d9 100%)", label: "Nice Sarong"       },
+  { bg: "linear-gradient(160deg,#fda4af 0%,#f43f5e 60%,#9f1239 100%)", label: "Linen Midi Dress"  },
+  { bg: "linear-gradient(160deg,#fcd34d 0%,#f97316 60%,#c2410c 100%)", label: "Cotton Cover-Up"   },
+  { bg: "linear-gradient(160deg,#c4b5fd 0%,#a78bfa 60%,#6d28d9 100%)", label: "Silk Sarong"       },
 ];
 
 function PhoneScreen4({ products }: { products: DemoProduct[] }) {
@@ -393,7 +408,7 @@ function PhoneScreen4({ products }: { products: DemoProduct[] }) {
         {/* Donna's message */}
         <div className="bg-white rounded-2xl rounded-tl-none p-2.5 shadow-sm max-w-[90%] border border-gray-100">
           <p className="text-[9px] text-gray-700 leading-relaxed">
-            Love the Riviera One-Piece choice! I noticed you&apos;ve been browsing resort wear. Here&apos;s a bundle that completes the look:
+            Love the Linen Midi Dress choice! I noticed you&apos;ve been browsing editorial fashion. Here&apos;s a bundle that completes the look:
           </p>
         </div>
 
@@ -468,9 +483,9 @@ function buildSteps(products: DemoProduct[]): Step[] {
       phase: "The Trigger",
       agent: "Danny",
       agentColor: "text-blue-400",
-      title: "A shopper clicks an ad for Gottex Resort Wear",
+      title: "A shopper clicks an ad for premium fashion",
       description:
-        "A 32-year-old shopper arrives from a resort wear ad. Danny instantly maps her intent signals, browsing history, and purchase context.",
+        "A 29-year-old shopper arrives from a fashion ad. Danny instantly maps her intent signals, browsing history, and purchase context.",
       tasks: ["Maps Intent Signals", "Forecasts Trends", "Identifies Hidden Patterns"],
       phoneContent: <PhoneScreen1 />,
     },
@@ -478,9 +493,9 @@ function buildSteps(products: DemoProduct[]): Step[] {
       phase: "The Evolution",
       agent: "Emilia",
       agentColor: "text-purple-400",
-      title: "A full Spring Resort experience generates",
+      title: "A curated editorial experience generates",
       description:
-        "Emilia builds a complete luxury shopping experience — Spring Resort collection, coral palette, tailored for Women 25–35.",
+        "Emilia builds a complete luxury shopping experience — editorial collection, neutral palette, tailored for the shopper's taste.",
       tasks: ["Personalizes UX Layouts", "Adapts Merchandising", "Removes Friction"],
       phoneContent: <PhoneScreen2 products={products} />,
     },
@@ -490,7 +505,7 @@ function buildSteps(products: DemoProduct[]): Step[] {
       agentColor: "text-emerald-400",
       title: "Editorial content shifts to match her world",
       description:
-        "Product pages shift to an editorial Riviera theme — warm photography tones, sustainability copy, lifestyle-driven descriptions.",
+        "Product pages shift to an editorial theme — warm photography tones, sustainability copy, lifestyle-driven descriptions.",
       tasks: ["Iterates Creative Assets", "A/B Tests Copy Styles", "Prevents Fatigue"],
       phoneContent: <PhoneScreen3 products={products} />,
     },
@@ -500,7 +515,7 @@ function buildSteps(products: DemoProduct[]): Step[] {
       agentColor: "text-orange-400",
       title: "Smart bundling at the right moment",
       description:
-        "Donna suggests complementary pieces at the moment of highest intent — turning a $285 item into a $489 resort bundle.",
+        "Donna suggests complementary pieces at the moment of highest intent — turning a $265 item into a $489 curated bundle.",
       tasks: ["Pairs Products Smartly", "Offers Dynamically", "Optimizes Carts"],
       phoneContent: <PhoneScreen4 products={products} />,
     },
@@ -595,7 +610,7 @@ export default function ScrollDemoSection() {
             Watch a Storefront{" "}
             <span className="gradient-text">Evolve in Real-Time</span>
           </h2>
-          <p className="text-sm text-muted mt-1">Following a real Gottex shopper from ad click to purchase</p>
+          <p className="text-sm text-muted mt-1">Following a shopper from ad click to purchase</p>
         </div>
 
         <div className="flex-1 flex items-center">
@@ -603,7 +618,7 @@ export default function ScrollDemoSection() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
 
               {/* Left: Description + step nav */}
-              <div className="lg:col-span-4 order-3 lg:order-1">
+              <div className="lg:col-span-4 order-3 lg:order-1 min-w-0">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={activeStep}
@@ -628,22 +643,32 @@ export default function ScrollDemoSection() {
                   </motion.div>
                 </AnimatePresence>
 
-                {/* Step navigation buttons */}
-                <div className="flex items-center gap-3 mt-6">
-                  {stepsData.map((step, i) => (
-                    <button
-                      key={i}
-                      onClick={() => goToStep(i)}
-                      className={`text-left transition-all duration-300 rounded-lg px-2.5 py-1.5 border ${
-                        i === activeStep
-                          ? "bg-primary/5 border-primary/20 text-primary"
-                          : "border-transparent text-muted hover:text-foreground"
-                      }`}
-                    >
-                      <p className="text-[9px] font-bold uppercase tracking-wider">{step.phase}</p>
-                      <p className={`text-[8px] ${i === activeStep ? "text-primary/70" : "text-gray-400"}`}>{step.agent}</p>
-                    </button>
-                  ))}
+                {/* Step navigation pills */}
+                <div className="grid grid-cols-2 gap-2 mt-6">
+                  {stepsData.map((step, i) => {
+                    const agentColors: Record<string, { bg: string; border: string; dot: string }> = {
+                      "text-blue-400":    { bg: "rgba(59,130,246,0.08)",  border: "rgba(59,130,246,0.25)",  dot: "#3b82f6" },
+                      "text-purple-400":  { bg: "rgba(168,85,247,0.08)",  border: "rgba(168,85,247,0.25)",  dot: "#a855f7" },
+                      "text-emerald-400": { bg: "rgba(52,211,153,0.08)",  border: "rgba(52,211,153,0.25)",  dot: "#34d399" },
+                      "text-orange-400":  { bg: "rgba(251,146,60,0.08)",  border: "rgba(251,146,60,0.25)",  dot: "#fb923c" },
+                    };
+                    const c = agentColors[step.agentColor] ?? agentColors["text-blue-400"];
+                    const isActive = i === activeStep;
+                    return (
+                      <button
+                        key={i}
+                        onClick={() => goToStep(i)}
+                        className="text-left transition-all duration-300 rounded-xl px-3 py-2 border"
+                        style={isActive ? { background: c.bg, borderColor: c.border } : { background: "transparent", borderColor: "transparent" }}
+                      >
+                        <div className="flex items-center gap-1.5 mb-0.5">
+                          <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: isActive ? c.dot : "#d1d5db" }} />
+                          <p className="text-[8px] font-black uppercase tracking-wider" style={isActive ? { color: c.dot } : { color: "#9ca3af" }}>{step.phase}</p>
+                        </div>
+                        <p className="text-[9px] font-medium text-gray-500 pl-3">{step.agent}</p>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -689,33 +714,45 @@ export default function ScrollDemoSection() {
                 </div>
               </div>
 
-              {/* Right: Terminal — compact, attached to phone visually */}
+              {/* Right: Agent Activity card */}
               <div className="lg:col-span-3 order-2 lg:order-3">
-                <div className="bg-gray-950 rounded-xl border border-gray-800 p-3 font-mono text-[10px] overflow-hidden">
-                  <div className="flex items-center gap-1.5 mb-3 pb-2.5 border-b border-gray-800">
-                    <div className="w-2 h-2 rounded-full bg-red-500" />
-                    <div className="w-2 h-2 rounded-full bg-yellow-500" />
-                    <div className="w-2 h-2 rounded-full bg-green-500" />
-                    <span className="text-gray-600 ml-1 text-[9px]">nc-agents</span>
+                <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-3 overflow-hidden">
+                  <div className="flex items-center gap-2 mb-3 pb-2.5 border-b border-gray-100">
+                    <motion.span
+                      className="w-2 h-2 rounded-full bg-green-400"
+                      animate={{ opacity: [1, 0.4, 1] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    />
+                    <span className="text-[10px] font-bold text-gray-700 uppercase tracking-wider">Agent Activity</span>
                   </div>
 
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {stepsData.map((step, i) => {
                       const isActive = i === activeStep;
                       const isPastStep = i < activeStep;
                       const isFuture = i > activeStep;
+                      const agentDotColors: Record<string, string> = {
+                        "text-blue-400": "#3b82f6",
+                        "text-purple-400": "#a855f7",
+                        "text-emerald-400": "#34d399",
+                        "text-orange-400": "#fb923c",
+                      };
+                      const dotColor = agentDotColors[step.agentColor] ?? "#6366f1";
 
                       return (
                         <motion.div
                           key={step.phase}
-                          animate={{ opacity: isPastStep ? 0.35 : isFuture ? 0.15 : 1 }}
+                          animate={{ opacity: isPastStep ? 0.45 : isFuture ? 0.2 : 1 }}
                           transition={{ duration: 0.35 }}
+                          className="rounded-lg overflow-hidden"
+                          style={isActive ? { background: `${dotColor}08`, borderLeft: `2px solid ${dotColor}`, paddingLeft: "6px" } : { paddingLeft: "8px" }}
                         >
-                          <div className={`mb-1 ${isFuture ? "text-gray-700" : "text-green-400"}`}>
-                            <span className="text-gray-600">$</span>{" "}
-                            <span className="text-[9px]">{`${step.agent}:${step.phase}`}</span>
+                          <div className="flex items-center gap-1.5 mb-1">
+                            <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: isFuture ? "#e5e7eb" : dotColor }} />
+                            <span className="text-[9px] font-bold" style={{ color: isActive ? dotColor : isFuture ? "#d1d5db" : "#9ca3af" }}>{step.agent}</span>
+                            <span className={`text-[8px] ${isFuture ? "text-gray-200" : "text-gray-400"}`}>· {step.phase}</span>
                           </div>
-                          <div className="pl-2 space-y-0.5">
+                          <div className="pl-3 space-y-0.5">
                             {step.tasks.map((task, t) => {
                               const isCompleted = isPastStep || (isActive && (completedTasks[i]?.includes(t) ?? false));
                               const isCurrentTask = isActive && t === (completedTasks[i]?.length ?? 0) && !isCompleted;
@@ -723,17 +760,18 @@ export default function ScrollDemoSection() {
                                 <div
                                   key={task}
                                   className={`flex items-center gap-1.5 ${
-                                    isFuture ? "text-gray-700" : isCompleted ? "text-green-400" : isActive ? "text-gray-400" : "text-gray-600"
+                                    isFuture ? "text-gray-200" : isCompleted ? "text-emerald-500" : isActive ? "text-gray-600" : "text-gray-400"
                                   }`}
                                 >
-                                  <span className="shrink-0 text-[9px]">{isCompleted ? "✓" : "›"}</span>
-                                  <span className="text-[9px]">{task}</span>
+                                  <span className="shrink-0 text-[9px]">{isCompleted ? "✓" : "·"}</span>
+                                  <span className="text-[9px] leading-tight">{task}</span>
                                   {isCurrentTask && (
                                     <motion.span
-                                      className="text-green-400"
+                                      className="w-1 h-1 rounded-full shrink-0"
+                                      style={{ background: dotColor }}
                                       animate={{ opacity: [1, 0, 1] }}
                                       transition={{ duration: 0.75, repeat: Infinity }}
-                                    >▌</motion.span>
+                                    />
                                   )}
                                 </div>
                               );

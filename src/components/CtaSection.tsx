@@ -93,6 +93,22 @@ export default function CtaSection({
           No credit card required &middot; Personalized onboarding &middot; Cancel anytime
         </p>
 
+        {/* Platform compatibility strip */}
+        <div className="mb-10 pt-6 border-t border-white/10">
+          <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-widest mb-4">Works with your existing stack</p>
+          <div className="flex items-center justify-center gap-6 flex-wrap">
+            {[
+              { name: "Shopify", color: "#96bf48" },
+              { name: "Klaviyo", color: "#9ca3af" },
+              { name: "Meta Ads", color: "#6b7280" },
+              { name: "Google Ads", color: "#9ca3af" },
+              { name: "WooCommerce", color: "#a78bfa" },
+            ].map((p) => (
+              <span key={p.name} className="text-[12px] font-bold tracking-wide" style={{ color: p.color, opacity: 0.65 }}>{p.name}</span>
+            ))}
+          </div>
+        </div>
+
         {/* Founder quote card */}
         <div className="relative rounded-2xl bg-white/5 border border-white/10 p-6 text-left">
           <span className="absolute -top-4 left-6 text-5xl text-primary-light/25 font-serif leading-none select-none">&ldquo;</span>

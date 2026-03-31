@@ -390,7 +390,7 @@ function PersonaStorefront({
     const prods = PERSONA_PRODUCTS.sportswear ?? [];
     const [hero, ...rest] = prods;
     return (
-      <div className="rounded-2xl overflow-hidden shadow-xl w-full bg-white" style={{ border: "1px solid #dbdbdb" }}>
+      <div className="rounded-2xl overflow-hidden shadow-xl w-full h-full bg-white" style={{ border: "1px solid #dbdbdb" }}>
         {/* Instagram-style nav bar */}
         <div className="px-3 py-2.5 flex items-center justify-between bg-white" style={{ borderBottom: "1px solid #efefef" }}>
           <p className="font-bold text-[16px] text-[#262626] italic">APEX</p>
@@ -468,7 +468,7 @@ function PersonaStorefront({
   if (theme.layout === "marketplace") {
     const prods = PERSONA_PRODUCTS.hiking ?? [];
     return (
-      <div className="rounded-2xl overflow-hidden shadow-xl w-full" style={{ border: "1px solid #E4E6EB" }}>
+      <div className="rounded-2xl overflow-hidden shadow-xl w-full h-full" style={{ border: "1px solid #E4E6EB" }}>
         {/* Facebook blue header */}
         <div style={{ background: "#1877F2" }} className="px-3 py-2.5">
           <div className="flex items-center gap-2">
@@ -527,7 +527,7 @@ function PersonaStorefront({
     const prods = PERSONA_PRODUCTS["luxury-coats"] ?? [];
     const [hero, ...rest] = prods;
     return (
-      <div className="rounded-2xl overflow-hidden shadow-xl w-full" style={{ border: "1px solid #d2d2d7" }}>
+      <div className="rounded-2xl overflow-hidden shadow-xl w-full h-full" style={{ border: "1px solid #d2d2d7" }}>
         {/* Ultra-minimal nav */}
         <div style={{ background: "#f5f5f7" }} className="px-4 py-2.5">
           <div className="flex items-center justify-between">
@@ -585,7 +585,7 @@ function PersonaStorefront({
   if (theme.layout === "netflix") {
     const prods = PERSONA_PRODUCTS.streetwear ?? [];
     return (
-      <div className="rounded-2xl overflow-hidden shadow-xl w-full" style={{ border: "1px solid #333" }}>
+      <div className="rounded-2xl overflow-hidden shadow-xl w-full h-full" style={{ border: "1px solid #333" }}>
         {/* Netflix-style dark header */}
         <div style={{ background: "#141414" }} className="px-4 py-3">
           <div className="flex items-center justify-between">
@@ -637,7 +637,7 @@ function PersonaStorefront({
   if (theme.layout === "zara") {
     const prods = PERSONA_PRODUCTS.skincare ?? [];
     return (
-      <div className="rounded-2xl overflow-hidden shadow-xl w-full bg-white" style={{ border: "1px solid #e5e5e5" }}>
+      <div className="rounded-2xl overflow-hidden shadow-xl w-full h-full bg-white" style={{ border: "1px solid #e5e5e5" }}>
         {/* Stark header — oversized brand name */}
         <div className="px-4 pt-5 pb-2 bg-white">
           <div className="flex items-center justify-between">
@@ -677,7 +677,7 @@ function PersonaStorefront({
   if (theme.layout === "amazon") {
     const prods = PERSONA_PRODUCTS.vintage ?? [];
     return (
-      <div className="rounded-2xl overflow-hidden shadow-xl w-full" style={{ border: "1px solid #DDD" }}>
+      <div className="rounded-2xl overflow-hidden shadow-xl w-full h-full" style={{ border: "1px solid #DDD" }}>
         {/* Amazon dark header with smile */}
         <div style={{ background: "#131921" }} className="px-3 py-2.5">
           <div className="flex items-center gap-1.5">
@@ -739,7 +739,7 @@ function PersonaStorefront({
     const prods = PERSONA_PRODUCTS.jewelry ?? [];
     const [first, second] = prods;
     return (
-      <div className="rounded-2xl overflow-hidden shadow-xl w-full" style={{ border: "1px solid #2a2a3a" }}>
+      <div className="rounded-2xl overflow-hidden shadow-xl w-full h-full" style={{ border: "1px solid #2a2a3a" }}>
         {/* Dark luxury header with gold accents */}
         <div style={{ background: "#0C0B1E" }} className="px-4 py-4">
           <p className="text-[15px] tracking-[0.4em] text-white/90 uppercase font-light">Atelier</p>
@@ -785,7 +785,7 @@ function PersonaStorefront({
   if (theme.layout === "pinterest") {
     const prods = PERSONA_PRODUCTS.resort ?? [];
     return (
-      <div className="rounded-2xl overflow-hidden shadow-xl w-full bg-white" style={{ border: "1px solid #e0e0e0" }}>
+      <div className="rounded-2xl overflow-hidden shadow-xl w-full h-full bg-white" style={{ border: "1px solid #e0e0e0" }}>
         {/* Pinterest-style header */}
         <div className="px-3 py-2.5 flex items-center justify-between bg-white" style={{ borderBottom: "1px solid #efefef" }}>
           <div className="flex items-center gap-2">
@@ -845,7 +845,7 @@ function PersonaStorefront({
   const claimPcts = [72, 58, 85, 41];
   const discounts = ["33%", "34%", "29%", "30%"];
   return (
-    <div className="rounded-2xl overflow-hidden shadow-xl w-full" style={{ border: "1px solid #DDD" }}>
+    <div className="rounded-2xl overflow-hidden shadow-xl w-full h-full" style={{ border: "1px solid #DDD" }}>
       {/* Prime blue header with deal badge */}
       <div style={{ background: "#00A8E1" }} className="px-3 py-2.5">
         <div className="flex items-center justify-between">
@@ -970,9 +970,9 @@ function PersonaCarousel() {
       if (isUserScrolling.current) return;
       const nextIdx = (activeIndex + 1) % personas.length;
       const card = cardRefs.current[nextIdx];
-      if (card) {
+      if (card && scrollContainerRef.current) {
         isAutoScrolling.current = true;
-        card.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+        scrollContainerRef.current.scrollTo({ left: card.offsetLeft, behavior: "smooth" });
         setTimeout(() => { isAutoScrolling.current = false; }, 500);
       }
     }, 3500);
@@ -981,9 +981,9 @@ function PersonaCarousel() {
 
   const scrollToCard = useCallback((i: number) => {
     const card = cardRefs.current[i];
-    if (card) {
+    if (card && scrollContainerRef.current) {
       isAutoScrolling.current = true;
-      card.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+      scrollContainerRef.current.scrollTo({ left: card.offsetLeft, behavior: "smooth" });
       setTimeout(() => { isAutoScrolling.current = false; }, 500);
     }
   }, []);

@@ -2,20 +2,20 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mountain, Leaf, Zap } from "lucide-react";
+import { Search, Heart, MessageCircle, Send, Bookmark, Clock, Zap, MapPin, Truck } from "lucide-react";
 
 // ─── Storefront layout variants ───────────────────────────────────────────────
 
 type StorefrontLayout =
-  | "athletic"   // APEX · Sportswear
-  | "outdoor"    // TrailCo · Hiking
-  | "editorial"  // MAISON · Luxury Coats
-  | "hype"       // DRIP · Streetwear
-  | "botanical"  // Botanica · Skincare
-  | "vintage"    // Archive · Vintage
-  | "artisan"    // Atelier · Jewelry
-  | "deals"      // CozyFit · Outerwear
-  | "resort";    // LUMA · Contemporary Fashion (Figma design)
+  | "instagram"    // APEX · Sportswear (Instagram aesthetic)
+  | "marketplace"  // TrailCo · Hiking (Facebook Marketplace aesthetic)
+  | "apple"        // MAISON · Luxury Coats (Apple.com aesthetic)
+  | "netflix"      // DRIP · Streetwear (Netflix aesthetic)
+  | "zara"         // Botanica · Skincare (Zara.com aesthetic)
+  | "amazon"       // Archive · Vintage (Amazon.com aesthetic)
+  | "artisan"      // Atelier · Jewelry (Tiffany & Co. aesthetic)
+  | "deals"        // CozyFit · Outerwear (Amazon Deals aesthetic)
+  | "pinterest";   // LUMA · Contemporary Fashion (Pinterest aesthetic)
 
 interface PersonaTheme {
   store: string;
@@ -57,11 +57,11 @@ const personas: Persona[] = [
       store: "APEX",
       tagline: "Performance Redefined",
       badge: "New Collection",
-      layout: "athletic",
+      layout: "instagram",
       dark: false,
-      ctaLabel: "Shop New Collection",
-      accentHex: "#6366f1",
-      headerClass: "bg-gradient-to-br from-purple-500 to-indigo-600",
+      ctaLabel: "Shop Now",
+      accentHex: "#E1306C",
+      headerClass: "bg-white",
     },
   },
   {
@@ -80,11 +80,11 @@ const personas: Persona[] = [
       store: "TrailCo",
       tagline: "Built for the Wild",
       badge: "Gear Drop",
-      layout: "outdoor",
+      layout: "marketplace",
       dark: false,
-      ctaLabel: "View Gear",
-      accentHex: "#059669",
-      headerClass: "bg-gradient-to-br from-emerald-500 to-teal-600",
+      ctaLabel: "See All",
+      accentHex: "#1877F2",
+      headerClass: "bg-[#1877F2]",
     },
   },
   {
@@ -102,12 +102,12 @@ const personas: Persona[] = [
     theme: {
       store: "MAISON",
       tagline: "Autumn / Winter \u201926",
-      badge: "Exclusive Edit",
-      layout: "editorial",
+      badge: "New",
+      layout: "apple",
       dark: false,
-      ctaLabel: "Explore the Edit",
-      accentHex: "#d97706",
-      headerClass: "bg-gradient-to-br from-amber-50 to-orange-100",
+      ctaLabel: "Shop Now",
+      accentHex: "#0071E3",
+      headerClass: "bg-[#f5f5f7]",
     },
   },
   {
@@ -124,13 +124,13 @@ const personas: Persona[] = [
     pronoun: "him",
     theme: {
       store: "DRIP",
-      tagline: "Limited Drop",
-      badge: "🔥 Live Now",
-      layout: "hype",
+      tagline: "Trending Now",
+      badge: "New",
+      layout: "netflix",
       dark: true,
       ctaLabel: "Add to Cart",
-      accentHex: "#f43f5e",
-      headerClass: "bg-gray-950",
+      accentHex: "#E50914",
+      headerClass: "bg-[#141414]",
     },
   },
   {
@@ -147,12 +147,12 @@ const personas: Persona[] = [
     pronoun: "her",
     theme: {
       store: "Botanica",
-      tagline: "Natural \u00b7 Minimal \u00b7 Yours",
-      badge: "New Arrivals",
-      layout: "botanical",
+      tagline: "New Season",
+      badge: "SS26",
+      layout: "zara",
       dark: false,
-      ctaLabel: "Shop the Collection",
-      accentHex: "#16a34a",
+      ctaLabel: "View All",
+      accentHex: "#000000",
       headerClass: "bg-white",
     },
   },
@@ -170,13 +170,13 @@ const personas: Persona[] = [
     pronoun: "him",
     theme: {
       store: "Archive",
-      tagline: "Curated Finds",
-      badge: "Rare Find",
-      layout: "vintage",
+      tagline: "Great Deals",
+      badge: "Best Seller",
+      layout: "amazon",
       dark: false,
-      ctaLabel: "Browse the Archive",
-      accentHex: "#92400e",
-      headerClass: "bg-gradient-to-br from-amber-100 to-stone-200",
+      ctaLabel: "Add to Cart",
+      accentHex: "#FF9900",
+      headerClass: "bg-[#131921]",
     },
   },
   {
@@ -194,12 +194,12 @@ const personas: Persona[] = [
     theme: {
       store: "Atelier",
       tagline: "Timeless Elegance",
-      badge: "Curated Edit",
+      badge: "Made to Order",
       layout: "artisan",
       dark: true,
-      ctaLabel: "View Collection",
-      accentHex: "#c026d3",
-      headerClass: "bg-gradient-to-br from-purple-900 to-fuchsia-900",
+      ctaLabel: "Discover",
+      accentHex: "#C5A572",
+      headerClass: "bg-[#0C0B1E]",
     },
   },
   {
@@ -216,13 +216,13 @@ const personas: Persona[] = [
     pronoun: "her",
     theme: {
       store: "CozyFit",
-      tagline: "Warm. Affordable.",
-      badge: "Up to 40% off",
+      tagline: "Deal of the Day",
+      badge: "Lightning Deal",
       layout: "deals",
       dark: false,
-      ctaLabel: "Shop Sale Now",
-      accentHex: "#0284c7",
-      headerClass: "bg-gradient-to-br from-sky-500 to-indigo-600",
+      ctaLabel: "See All Deals",
+      accentHex: "#00A8E1",
+      headerClass: "bg-[#00A8E1]",
     },
   },
   {
@@ -239,13 +239,13 @@ const personas: Persona[] = [
     pronoun: "her",
     theme: {
       store: "LUMA",
-      tagline: "Curated Just For You",
-      badge: "New Collection",
-      layout: "resort",
+      tagline: "Curated For You",
+      badge: "Saved",
+      layout: "pinterest",
       dark: false,
-      ctaLabel: "Shop New Collection",
-      accentHex: "#f43f5e",
-      headerClass: "bg-gradient-to-br from-rose-400 to-pink-600",
+      ctaLabel: "See More Ideas",
+      accentHex: "#E60023",
+      headerClass: "bg-white",
     },
   },
 ];
@@ -419,366 +419,498 @@ function PersonaStorefront({
 }) {
   const { theme } = persona;
 
-  // ── ATHLETIC — APEX (Nike / Lululemon aesthetic) ──────────────────────────
-  if (theme.layout === "athletic") {
+  // ── INSTAGRAM — APEX (Instagram Shopping aesthetic) ────────────────────────
+  if (theme.layout === "instagram") {
     const prods = PERSONA_PRODUCTS.sportswear ?? [];
-    return (
-      <div className="rounded-2xl overflow-hidden shadow-xl w-full" style={{ border: "1px solid #312e81" }}>
-        {/* Deep indigo header */}
-        <div style={{ background: "linear-gradient(135deg, #1e1b4b 0%, #312e81 55%, #4f46e5 100%)" }} className="px-4 py-4">
-          <div className="flex items-center justify-between mb-1.5">
-            <p className="text-white font-black text-[18px] tracking-[0.18em] uppercase">APEX</p>
-            <div className="flex items-center gap-1.5">
-              <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: "rgba(255,255,255,0.12)" }}>
-                <svg className="w-3 h-3 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
-              </div>
-            </div>
-          </div>
-          <p className="text-indigo-300 text-[9px] tracking-widest uppercase">Performance Redefined · FW26</p>
-          <div className="flex gap-1.5 mt-2">
-            <span className="inline-flex items-center gap-1 text-[8px] font-bold px-2 py-1 rounded-full" style={{ background: "rgba(99,102,241,0.30)", border: "1px solid rgba(165,180,252,0.35)", color: "#c7d2fe" }}>
-              <Zap className="w-2.5 h-2.5" />Performance
-            </span>
-            <span className="inline-flex items-center gap-1 text-[8px] font-medium px-2 py-1 rounded-full" style={{ background: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.18)", color: "rgba(255,255,255,0.65)" }}>
-              <Leaf className="w-2.5 h-2.5" />Eco
-            </span>
-          </div>
-        </div>
-        {/* 2×2 product grid — dark surface */}
-        <div style={{ background: "#06040f" }} className="p-3 grid grid-cols-2 gap-3">
-          {prods.map((p, i) => <PCard key={i} {...p} dark />)}
-        </div>
-        {/* CTA */}
-        <div style={{ background: "#4f46e5" }} className="px-4 py-2.5 flex items-center justify-between">
-          <span className="text-white text-[10px] font-bold tracking-wider uppercase">Shop New Collection</span>
-          <span className="text-indigo-200 text-[11px]">→</span>
-        </div>
-      </div>
-    );
-  }
-
-  // ── OUTDOOR — TrailCo (Patagonia aesthetic) ───────────────────────────────
-  if (theme.layout === "outdoor") {
-    const prods = PERSONA_PRODUCTS.hiking ?? [];
-    return (
-      <div className="rounded-2xl overflow-hidden shadow-xl w-full" style={{ border: "1px solid #064e3b" }}>
-        <div style={{ background: "linear-gradient(155deg, #022c22 0%, #064e3b 55%, #065f46 100%)" }} className="px-4 py-4">
-          <div className="flex items-center gap-2 mb-1.5">
-            <Mountain className="w-5 h-5 text-emerald-400" strokeWidth={1.5} />
-            <p className="text-white font-bold text-[16px] tracking-wider">TrailCo</p>
-          </div>
-          <p className="text-emerald-300/80 text-[9px] tracking-wide">Built for the Wild · Spring 2026</p>
-          <div className="flex gap-1.5 mt-2">
-            <span className="text-[8px] font-semibold px-2 py-1 rounded" style={{ background: "rgba(52,211,153,0.15)", border: "1px solid rgba(52,211,153,0.35)", color: "#6ee7b7" }}>1% for the Planet</span>
-            <span className="text-[8px] px-2 py-1 rounded" style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.14)", color: "rgba(255,255,255,0.55)" }}>B Corp</span>
-          </div>
-        </div>
-        <div style={{ background: "#f5f0eb" }} className="p-3 space-y-2.5">
-          <PCard {...prods[0]} imgAspect="aspect-[3/2]" />
-          <div className="grid grid-cols-3 gap-2">
-            {prods.slice(1).map((p, i) => <PCard key={i} {...p} />)}
-          </div>
-        </div>
-        <div style={{ background: "#064e3b" }} className="px-4 py-2.5">
-          <span className="text-emerald-100 text-[10px] font-semibold">View Gear Drop →</span>
-        </div>
-      </div>
-    );
-  }
-
-  // ── EDITORIAL — MAISON (Loro Piana / Burberry aesthetic) ─────────────────
-  if (theme.layout === "editorial") {
-    const prods = PERSONA_PRODUCTS["luxury-coats"] ?? [];
     const [hero, ...rest] = prods;
     return (
-      <div className="rounded-2xl overflow-hidden shadow-xl w-full" style={{ border: "1px solid #c8a534" }}>
-        {/* Editorial masthead */}
-        <div style={{ background: "#faf6ef", borderBottom: "1px solid #e8d8b0" }} className="px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-bold text-[15px] tracking-[0.42em] text-stone-800 uppercase">MAISON</p>
-              <div className="flex items-center gap-2 mt-1">
-                <div className="w-6 h-px" style={{ background: "#c8a534" }} />
-                <p className="text-[8px] text-stone-500 tracking-[0.2em] uppercase">Autumn / Winter &#39;26</p>
-                <div className="w-6 h-px" style={{ background: "#c8a534" }} />
-              </div>
-            </div>
-            <span className="text-[7px] text-stone-400 tracking-widest uppercase px-2.5 py-1 rounded" style={{ border: "1px solid #d4c4a0" }}>Est. 1924</span>
+      <div className="rounded-2xl overflow-hidden shadow-xl w-full bg-white" style={{ border: "1px solid #dbdbdb" }}>
+        {/* Instagram-style nav bar */}
+        <div className="px-3 py-2.5 flex items-center justify-between bg-white" style={{ borderBottom: "1px solid #efefef" }}>
+          <p className="font-bold text-[16px] text-[#262626] italic">APEX</p>
+          <div className="flex items-center gap-3">
+            <Heart className="w-4 h-4 text-[#262626]" strokeWidth={1.5} />
+            <Send className="w-4 h-4 text-[#262626]" strokeWidth={1.5} />
           </div>
         </div>
-        {/* Hero product — featured editorial layout */}
-        <div style={{ background: "#faf6ef" }} className="p-3 space-y-2.5">
-          <div className="flex gap-3">
-            <div className="w-24 shrink-0 rounded-md overflow-hidden aspect-[3/4]" style={hero?.img ? undefined : { background: hero?.bg }}>
-              {hero?.img && (
+        {/* Stories row — rainbow gradient rings */}
+        <div className="px-3 py-2.5 flex gap-2.5 bg-white" style={{ borderBottom: "1px solid #efefef" }}>
+          {prods.map((p, i) => (
+            <div key={i} className="flex flex-col items-center gap-1">
+              <div className="w-12 h-12 rounded-full p-[2px]" style={{ background: "linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)" }}>
+                <div className="w-full h-full rounded-full bg-white p-[2px]">
+                  <div className="w-full h-full rounded-full overflow-hidden" style={p.img ? undefined : { background: p.bg }}>
+                    {p.img && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                    )}
+                  </div>
+                </div>
+              </div>
+              <span className="text-[7px] text-[#262626] truncate w-12 text-center">{p.name.split(" ")[0]}</span>
+            </div>
+          ))}
+        </div>
+        {/* Main post image */}
+        <div className="relative">
+          <div className="aspect-square w-full overflow-hidden" style={hero?.img ? undefined : { background: hero?.bg }}>
+            {hero?.img && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={hero.img} alt={hero.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+            )}
+          </div>
+          {/* Double-tap heart overlay */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <Heart className="w-12 h-12 text-white/20" fill="white" strokeWidth={0} />
+          </div>
+        </div>
+        {/* Engagement row */}
+        <div className="px-3 py-2 flex items-center justify-between bg-white">
+          <div className="flex items-center gap-3.5">
+            <Heart className="w-4 h-4 text-[#ed4956]" fill="#ed4956" strokeWidth={0} />
+            <MessageCircle className="w-4 h-4 text-[#262626]" strokeWidth={1.5} />
+            <Send className="w-4 h-4 text-[#262626]" strokeWidth={1.5} />
+          </div>
+          <Bookmark className="w-4 h-4 text-[#262626]" strokeWidth={1.5} />
+        </div>
+        <div className="px-3 pb-1">
+          <p className="text-[9px] font-bold text-[#262626]">2,847 likes</p>
+          <p className="text-[8px] text-[#262626] mt-0.5"><span className="font-bold">apex_official</span> {hero?.name} — {hero?.price}</p>
+        </div>
+        {/* 3-col thumbnail grid */}
+        <div className="grid grid-cols-3 gap-[1px] bg-white mt-1.5">
+          {rest.map((p, i) => (
+            <div key={i} className="aspect-square overflow-hidden" style={p.img ? undefined : { background: p.bg }}>
+              {p.img && (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={hero.img} alt={hero.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
               )}
             </div>
-            <div className="flex-1 flex flex-col justify-center py-1.5 min-w-0">
-              <span className="text-[7px] tracking-[0.28em] uppercase font-semibold" style={{ color: "#c8a534" }}>Exclusive Edit</span>
-              <p className="text-[11px] font-bold text-stone-900 mt-1 leading-tight">{hero?.name}</p>
-              <p className="text-[7px] text-stone-400 mt-1 tracking-wide">Italian Merino · Handcrafted</p>
-              <div className="flex items-center gap-0.5 mt-1.5">
-                {Array.from({ length: 5 }, (_, i) => (
-                  <svg key={i} className="w-2.5 h-2.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
-                ))}
-                <span className="text-[7px] text-stone-400 ml-0.5">(87)</span>
-              </div>
-              <p className="text-[13px] font-black text-stone-900 mt-1">{hero?.price}</p>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-2.5">
-            {rest.map((p, i) => <PCard key={i} {...p} imgAspect="aspect-[3/4]" />)}
-          </div>
-        </div>
-        <div style={{ background: "#1c1410" }} className="px-4 py-2.5 text-center">
-          <span className="text-[9px] tracking-[0.28em] uppercase italic" style={{ color: "#c8a534" }}>Explore the Edit →</span>
+          ))}
         </div>
       </div>
     );
   }
 
-  // ── HYPE — DRIP (Supreme / Kith aesthetic) ────────────────────────────────
-  if (theme.layout === "hype") {
-    const prods = PERSONA_PRODUCTS.streetwear ?? [];
+  // ── MARKETPLACE — TrailCo (Facebook Marketplace aesthetic) ─────────────────
+  if (theme.layout === "marketplace") {
+    const prods = PERSONA_PRODUCTS.hiking ?? [];
     return (
-      <div className="rounded-2xl overflow-hidden shadow-xl w-full" style={{ border: "1px solid #374151" }}>
-        <div style={{ background: "#000000" }} className="px-4 py-3.5">
-          <div className="flex items-center justify-between">
-            <p className="text-white font-black text-[26px] tracking-[-0.02em] leading-none">DRIP</p>
-            <motion.span
-              className="text-[8px] font-black px-2.5 py-1 rounded"
-              style={{ background: "#dc2626", color: "white" }}
-              animate={{ opacity: [1, 0.5, 1] }}
-              transition={{ duration: 1.2, repeat: Infinity }}
-            >
-              LIVE DROP
-            </motion.span>
-          </div>
-          <div className="flex items-center gap-2 mt-1.5">
-            <span className="text-[8px] text-gray-500 tracking-widest uppercase">Limited Supply</span>
-            <span className="text-[8px] text-gray-700">·</span>
-            <span className="text-[8px] text-gray-500">Ships 24h</span>
+      <div className="rounded-2xl overflow-hidden shadow-xl w-full" style={{ border: "1px solid #E4E6EB" }}>
+        {/* Facebook blue header */}
+        <div style={{ background: "#1877F2" }} className="px-3 py-2.5">
+          <div className="flex items-center gap-2">
+            <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path d="M9 22V12h6v10" fill="rgba(255,255,255,0.3)" /></svg>
+            <p className="text-white font-bold text-[14px]">Marketplace</p>
           </div>
         </div>
-        <div style={{ background: "#0a0a0a" }} className="p-3 space-y-2">
+        {/* Search bar */}
+        <div className="px-3 py-2 bg-white" style={{ borderBottom: "1px solid #E4E6EB" }}>
+          <div className="flex items-center gap-2 bg-[#F0F2F5] rounded-full px-3 py-1.5">
+            <Search className="w-3 h-3 text-[#65676B]" strokeWidth={2} />
+            <span className="text-[9px] text-[#65676B]">Search Marketplace</span>
+          </div>
+        </div>
+        {/* Category pills */}
+        <div className="px-3 py-1.5 bg-white flex gap-1.5" style={{ borderBottom: "1px solid #E4E6EB" }}>
+          {["All", "Outdoor", "Gear", "New"].map((c, i) => (
+            <span key={c} className="text-[8px] px-2.5 py-1 rounded-full font-medium" style={i === 0 ? { background: "#E7F3FF", color: "#1877F2" } : { background: "#F0F2F5", color: "#050505" }}>
+              {c}
+            </span>
+          ))}
+        </div>
+        {/* Product list — price-first layout */}
+        <div className="bg-white p-2 space-y-1.5">
           {prods.map((p, i) => (
-            <div key={i} className="flex gap-3 rounded-xl overflow-hidden" style={{ background: "#111827" }}>
-              <div className="w-18 shrink-0 relative overflow-hidden" style={{ minHeight: "60px" }}>
-                {p.img ? (
+            <div key={i} className="flex gap-2.5 p-1.5 rounded-lg hover:bg-[#F0F2F5]">
+              <div className="w-16 h-16 rounded-lg overflow-hidden shrink-0" style={p.img ? undefined : { background: p.bg }}>
+                {p.img && (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
-                ) : (
-                  <div className="w-full h-full" style={{ background: p.bg }} />
                 )}
               </div>
-              <div className="flex-1 flex flex-col justify-center py-2.5 pr-3">
-                <div className="flex items-center gap-1.5 mb-1">
-                  <span className="text-[7px] text-gray-500 tracking-widest uppercase">Drop #{i + 1}</span>
-                  {i === 0 && <span className="text-[7px] font-bold px-1.5 py-0.5 rounded" style={{ background: "#7f1d1d", color: "#fca5a5" }}>Almost Gone</span>}
+              <div className="flex-1 flex flex-col justify-center min-w-0">
+                <p className="text-[12px] font-bold text-[#050505] leading-tight">{p.price}</p>
+                <p className="text-[9px] text-[#050505] leading-tight mt-0.5 truncate">{p.name}</p>
+                <div className="flex items-center gap-1 mt-1">
+                  <MapPin className="w-2.5 h-2.5 text-[#65676B]" strokeWidth={2} />
+                  <span className="text-[8px] text-[#65676B]">Free Shipping</span>
                 </div>
-                <p className="text-white text-[9px] font-bold leading-tight">{p.name}</p>
-                <p className="text-[10px] font-black text-white mt-0.5">{p.price}</p>
               </div>
             </div>
           ))}
         </div>
-        <div style={{ background: "#dc2626" }} className="px-4 py-2.5 text-center">
-          <span className="text-white text-[10px] font-black tracking-widest uppercase">Add to Cart</span>
+        {/* CTA */}
+        <div className="px-3 py-2 bg-white" style={{ borderTop: "1px solid #E4E6EB" }}>
+          <span className="text-[10px] font-bold" style={{ color: "#1877F2" }}>See All in Marketplace →</span>
         </div>
       </div>
     );
   }
 
-  // ── BOTANICAL — Botanica (Glossier / Aesop skincare aesthetic) ─────────────
-  if (theme.layout === "botanical") {
-    const prods = PERSONA_PRODUCTS.skincare ?? [];
+  // ── APPLE — MAISON (Apple.com aesthetic) ──────────────────────────────────
+  if (theme.layout === "apple") {
+    const prods = PERSONA_PRODUCTS["luxury-coats"] ?? [];
+    const [hero, ...rest] = prods;
     return (
-      <div className="rounded-2xl overflow-hidden shadow-xl w-full" style={{ border: "1px solid #e8dcc8" }}>
-        <div style={{ background: "#f7f3ee", borderBottom: "1px solid #e8dcc8" }} className="px-4 py-4">
-          <p className="font-light text-[15px] tracking-[0.32em] text-stone-700 uppercase">Botanica</p>
-          <p className="text-[9px] text-stone-400 mt-1 tracking-wider">Science-Backed Skincare · Clean Beauty</p>
-          <div className="flex gap-1.5 mt-2">
-            <span className="inline-flex items-center gap-1 text-[8px] rounded-full px-2 py-1" style={{ border: "1px solid #8fad88", color: "#5a8050" }}>
-              <Leaf className="w-2.5 h-2.5" strokeWidth={1.75} />Dermatologist Tested
-            </span>
-            <span className="text-[8px] rounded-full px-2 py-1" style={{ border: "1px solid #d4c4a0", color: "#8a7060" }}>Vegan</span>
+      <div className="rounded-2xl overflow-hidden shadow-xl w-full" style={{ border: "1px solid #d2d2d7" }}>
+        {/* Ultra-minimal nav */}
+        <div style={{ background: "#f5f5f7" }} className="px-4 py-2.5">
+          <div className="flex items-center justify-between">
+            <p className="text-[14px] font-extralight tracking-[0.3em] text-[#1d1d1f] uppercase">MAISON</p>
+            <div className="flex items-center gap-3">
+              {["New", "Coats", "Cashmere"].map((l) => (
+                <span key={l} className="text-[8px] text-[#6e6e73]">{l}</span>
+              ))}
+            </div>
           </div>
         </div>
-        <div style={{ background: "#faf7f2" }} className="p-3">
-          <div className="grid grid-cols-2 gap-2.5">
-            {prods.map((p, i) => (
-              <div key={i} className="flex flex-col">
-                <div className="aspect-square rounded-xl w-full overflow-hidden relative" style={p.img ? undefined : { background: p.bg }}>
+        {/* Hero product — Apple pedestal style */}
+        <div style={{ background: "#ffffff" }} className="px-6 pt-6 pb-4 text-center">
+          <p className="text-[8px] text-[#bf4800] font-medium uppercase tracking-wider mb-1">New</p>
+          <p className="text-[18px] font-semibold text-[#1d1d1f] leading-tight">{hero?.name}</p>
+          <p className="text-[10px] text-[#6e6e73] mt-1">Italian craftsmanship. Timeless design.</p>
+          <p className="text-[11px] text-[#1d1d1f] font-medium mt-1.5">From {hero?.price}</p>
+          <div className="flex items-center justify-center gap-4 mt-2">
+            <span className="text-[9px] font-medium" style={{ color: "#0071E3" }}>Learn more &gt;</span>
+            <span className="text-[9px] font-medium" style={{ color: "#0071E3" }}>Buy &gt;</span>
+          </div>
+          <div className="mt-4 rounded-2xl overflow-hidden aspect-[4/3] mx-auto max-w-[200px]" style={hero?.img ? undefined : { background: hero?.bg }}>
+            {hero?.img && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={hero.img} alt={hero.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+            )}
+          </div>
+        </div>
+        {/* 3-column small product row */}
+        <div style={{ background: "#f5f5f7" }} className="px-3 py-3">
+          <div className="grid grid-cols-3 gap-2">
+            {rest.map((p, i) => (
+              <div key={i} className="bg-white rounded-xl p-2 text-center">
+                <div className="aspect-square rounded-lg overflow-hidden mb-1.5" style={p.img ? undefined : { background: p.bg }}>
                   {p.img && (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
                   )}
                 </div>
-                <div className="pt-2">
-                  <p className="text-[8.5px] text-stone-700 font-medium leading-tight truncate">{p.name}</p>
-                  <p className="text-[10px] font-black text-stone-900 mt-0.5">{p.price}</p>
+                <p className="text-[7px] font-medium text-[#1d1d1f] leading-tight truncate">{p.name}</p>
+                <p className="text-[7px] text-[#6e6e73] mt-0.5">From {p.price}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── NETFLIX — DRIP (Netflix aesthetic) ─────────────────────────────────────
+  if (theme.layout === "netflix") {
+    const prods = PERSONA_PRODUCTS.streetwear ?? [];
+    return (
+      <div className="rounded-2xl overflow-hidden shadow-xl w-full" style={{ border: "1px solid #333" }}>
+        {/* Netflix-style dark header */}
+        <div style={{ background: "#141414" }} className="px-4 py-3">
+          <div className="flex items-center justify-between">
+            <p className="font-black text-[22px] tracking-tight leading-none" style={{ color: "#E50914" }}>DRIP</p>
+            <div className="w-6 h-6 rounded bg-[#E50914] flex items-center justify-center">
+              <span className="text-white text-[8px] font-black">N</span>
+            </div>
+          </div>
+          <p className="text-[9px] text-[#808080] mt-1.5 tracking-wider uppercase font-medium">Trending Now</p>
+        </div>
+        {/* Top 4 ranked products — Netflix Top 10 style */}
+        <div style={{ background: "#141414" }} className="px-3 pb-3 grid grid-cols-2 gap-2.5">
+          {prods.map((p, i) => (
+            <div key={i} className="relative">
+              <div className="aspect-[3/4] rounded-md overflow-hidden relative" style={p.img ? undefined : { background: p.bg }}>
+                {p.img && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                {i === 0 && (
+                  <div className="absolute top-1.5 left-1.5 bg-[#E50914] text-white text-[7px] font-bold px-1.5 py-0.5 rounded">
+                    NEW
+                  </div>
+                )}
+                <div className="absolute bottom-1.5 left-1.5 right-1.5">
+                  <p className="text-white text-[8px] font-bold leading-tight truncate">{p.name}</p>
+                  <p className="text-white/70 text-[8px] mt-0.5">{p.price}</p>
+                </div>
+              </div>
+              {/* Large rank number */}
+              <div className="absolute -bottom-1 -left-1.5" style={{ fontSize: "36px", fontWeight: 900, color: "transparent", WebkitTextStroke: "2px #E50914", lineHeight: 1 }}>
+                {i + 1}
+              </div>
+            </div>
+          ))}
+        </div>
+        {/* CTA */}
+        <div style={{ background: "#E50914" }} className="px-4 py-2.5 text-center">
+          <span className="text-white text-[10px] font-black tracking-wider uppercase">Add to Cart</span>
+        </div>
+      </div>
+    );
+  }
+
+  // ── ZARA — Botanica (Zara.com editorial minimalism) ───────────────────────
+  if (theme.layout === "zara") {
+    const prods = PERSONA_PRODUCTS.skincare ?? [];
+    return (
+      <div className="rounded-2xl overflow-hidden shadow-xl w-full bg-white" style={{ border: "1px solid #e5e5e5" }}>
+        {/* Stark header — oversized brand name */}
+        <div className="px-4 pt-5 pb-2 bg-white">
+          <div className="flex items-center justify-between">
+            <p className="text-[28px] font-extralight tracking-[0.5em] text-black uppercase leading-none">BOTANICA</p>
+            <svg className="w-4 h-4 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg>
+          </div>
+          <p className="text-[8px] text-black tracking-[0.3em] uppercase mt-2">New Season</p>
+        </div>
+        {/* Full-width stacked tall product images */}
+        <div className="bg-white space-y-[1px]">
+          {prods.slice(0, 2).map((p, i) => (
+            <div key={i} className="relative">
+              <div className="aspect-[3/4] w-full overflow-hidden" style={p.img ? undefined : { background: p.bg }}>
+                {p.img && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                )}
+              </div>
+              <div className="px-4 py-2 bg-white">
+                <p className="text-[8px] tracking-[0.2em] text-black uppercase">{p.name}</p>
+                <p className="text-[8px] text-[#666] mt-0.5">{p.price}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        {/* Minimal CTA */}
+        <div className="px-4 py-3 bg-white text-center" style={{ borderTop: "1px solid #e5e5e5" }}>
+          <span className="text-[9px] text-black tracking-[0.2em] uppercase" style={{ textDecoration: "underline", textUnderlineOffset: "3px" }}>View All</span>
+        </div>
+      </div>
+    );
+  }
+
+  // ── AMAZON — Archive (Amazon.com aesthetic) ───────────────────────────────
+  if (theme.layout === "amazon") {
+    const prods = PERSONA_PRODUCTS.vintage ?? [];
+    return (
+      <div className="rounded-2xl overflow-hidden shadow-xl w-full" style={{ border: "1px solid #DDD" }}>
+        {/* Amazon dark header with smile */}
+        <div style={{ background: "#131921" }} className="px-3 py-2.5">
+          <div className="flex items-center gap-1.5">
+            <p className="text-white font-bold text-[16px] tracking-tight">Archive</p>
+            <svg className="w-8 h-3 mt-1" viewBox="0 0 40 12"><path d="M2 8 Q20 14 38 8" stroke="#FF9900" strokeWidth="2" fill="none" strokeLinecap="round" /><path d="M34 6 L38 8 L34 10" stroke="#FF9900" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          </div>
+        </div>
+        {/* Delivery bar */}
+        <div style={{ background: "#37475A" }} className="px-3 py-1.5 flex items-center gap-1.5">
+          <MapPin className="w-3 h-3 text-white" strokeWidth={2} />
+          <span className="text-[8px] text-white/80">Deliver to your location</span>
+        </div>
+        {/* Dense product grid */}
+        <div className="bg-white p-2.5 grid grid-cols-2 gap-2">
+          {prods.map((p, i) => (
+            <div key={i} className="border border-[#DDD] rounded p-1.5 relative">
+              {i === 0 && (
+                <div className="absolute top-0 left-0 text-[7px] font-bold text-white px-2 py-0.5 rounded-br" style={{ background: "#C45500" }}>Best Seller</div>
+              )}
+              <div className="aspect-square rounded overflow-hidden mb-1.5" style={p.img ? undefined : { background: p.bg }}>
+                {p.img && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                )}
+              </div>
+              {/* Blue product link */}
+              <p className="text-[8px] leading-tight truncate" style={{ color: "#007185" }}>{p.name}</p>
+              {/* Star rating */}
+              <div className="flex items-center gap-0.5 mt-0.5">
+                {Array.from({ length: 5 }, (_, j) => (
+                  <svg key={j} className={`w-2.5 h-2.5 ${j < Math.round(p.rating) ? "text-[#FFA41C]" : "text-gray-200"}`} fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                ))}
+                <span className="text-[7px] text-[#007185]">({p.count})</span>
+              </div>
+              {/* Price */}
+              <p className="text-[12px] font-bold text-[#0F1111] mt-0.5">{p.price}</p>
+              {/* Prime badge */}
+              <div className="flex items-center gap-1 mt-0.5">
+                <Truck className="w-2.5 h-2.5 text-[#007185]" strokeWidth={2} />
+                <span className="text-[7px] text-[#565959]">FREE Delivery</span>
+              </div>
+            </div>
+          ))}
+        </div>
+        {/* CTA */}
+        <div className="px-3 py-2 bg-white" style={{ borderTop: "1px solid #DDD" }}>
+          <div className="rounded-full py-1.5 text-center text-[10px] font-bold text-[#0F1111]" style={{ background: "#FFD814" }}>
+            Add to Cart
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── ARTISAN — Atelier (Tiffany & Co. aesthetic) ───────────────────────────
+  if (theme.layout === "artisan") {
+    const prods = PERSONA_PRODUCTS.jewelry ?? [];
+    const [first, second] = prods;
+    return (
+      <div className="rounded-2xl overflow-hidden shadow-xl w-full" style={{ border: "1px solid #2a2a3a" }}>
+        {/* Dark luxury header with gold accents */}
+        <div style={{ background: "#0C0B1E" }} className="px-4 py-4">
+          <p className="text-[15px] tracking-[0.4em] text-white/90 uppercase font-light">Atelier</p>
+          <div className="w-12 h-px mt-2 mb-2" style={{ background: "#C5A572" }} />
+          <p className="text-[9px] tracking-[0.15em]" style={{ color: "#C5A572" }}>Fine Jewelry · Handcrafted</p>
+          <span className="inline-flex items-center gap-1 mt-2.5 text-[8px] px-2.5 py-1 rounded" style={{ border: "1px solid rgba(197,165,114,0.30)", color: "#C5A572" }}>
+            Made to Order · Limited Pieces
+          </span>
+        </div>
+        {/* 2 large circular product showcases */}
+        <div style={{ background: "#0C0B1E" }} className="px-6 py-4 space-y-4">
+          {[first, second].filter(Boolean).map((p, i) => (
+            <div key={i} className="flex items-center gap-4">
+              <div className="w-24 h-24 rounded-full overflow-hidden shrink-0" style={{ border: "1px solid rgba(197,165,114,0.30)", boxShadow: "0 0 20px rgba(197,165,114,0.10)" }}>
+                {p.img ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                ) : (
+                  <div className="w-full h-full" style={{ background: p.bg }} />
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[9px] tracking-wider text-white/60 uppercase">{i === 0 ? "Signature" : "Collection"}</p>
+                <p className="text-[11px] font-medium text-white mt-1 leading-tight">{p.name}</p>
+                <p className="text-[12px] font-bold mt-1" style={{ color: "#C5A572" }}>{p.price}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        {/* Gold-outlined CTA */}
+        <div style={{ background: "#0C0B1E" }} className="px-4 pb-4 pt-1">
+          <div className="text-center py-2 rounded" style={{ border: "1px solid #C5A572" }}>
+            <span className="text-[10px] tracking-[0.2em]" style={{ color: "#C5A572" }}>Discover →</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── PINTEREST — LUMA (Pinterest aesthetic) ────────────────────────────────
+  if (theme.layout === "pinterest") {
+    const prods = PERSONA_PRODUCTS.resort ?? [];
+    return (
+      <div className="rounded-2xl overflow-hidden shadow-xl w-full bg-white" style={{ border: "1px solid #e0e0e0" }}>
+        {/* Pinterest-style header */}
+        <div className="px-3 py-2.5 flex items-center justify-between bg-white" style={{ borderBottom: "1px solid #efefef" }}>
+          <div className="flex items-center gap-2">
+            <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: "#E60023" }}>
+              <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z" /></svg>
+            </div>
+            <p className="font-bold text-[14px] text-[#211922]">LUMA</p>
+          </div>
+          <Search className="w-4 h-4 text-[#767676]" strokeWidth={2} />
+        </div>
+        {/* Board title */}
+        <div className="px-3 pt-2 pb-1 bg-white">
+          <p className="text-[10px] font-bold text-[#211922]">Curated For You</p>
+          <p className="text-[8px] text-[#767676] mt-0.5">4 Pins</p>
+        </div>
+        {/* Masonry-style 2-column layout with varied heights */}
+        <div className="px-2 pb-2 bg-white">
+          <div className="grid grid-cols-2 gap-2">
+            {prods.map((p, i) => (
+              <div key={i} className="relative" style={{ marginTop: i % 2 === 1 ? "12px" : "0" }}>
+                <div className={`${i % 2 === 0 ? "aspect-[3/4]" : "aspect-square"} rounded-2xl overflow-hidden relative`} style={{ boxShadow: "0 1px 6px rgba(0,0,0,0.08)" }}>
+                  {p.img ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                  ) : (
+                    <div className="w-full h-full" style={{ background: p.bg }} />
+                  )}
+                  {/* Save pin button overlay */}
+                  <div className="absolute top-1.5 right-1.5">
+                    <div className="rounded-full px-2.5 py-1 text-[8px] font-bold text-white" style={{ background: "#E60023" }}>
+                      Save
+                    </div>
+                  </div>
+                </div>
+                <div className="px-0.5 pt-1.5">
+                  <p className="text-[8px] font-medium text-[#211922] leading-tight truncate">{p.name}</p>
+                  <p className="text-[8px] text-[#767676] mt-0.5">{p.price}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
-        <div style={{ background: "#e8dcc8" }} className="px-4 py-2.5 text-center">
-          <span className="text-[10px] italic text-stone-600">Discover Your Routine →</span>
+        {/* CTA */}
+        <div className="px-3 py-2 bg-white" style={{ borderTop: "1px solid #efefef" }}>
+          <div className="rounded-full py-1.5 text-center text-[10px] font-bold text-white" style={{ background: "#E60023" }}>
+            See More Ideas
+          </div>
         </div>
       </div>
     );
   }
 
-  // ── VINTAGE — Archive (Depop / thrift aesthetic) ──────────────────────────
-  if (theme.layout === "vintage") {
-    const prods = PERSONA_PRODUCTS.vintage ?? [];
-    return (
-      <div className="rounded-2xl overflow-hidden shadow-xl w-full" style={{ border: "1px solid #c4a882" }}>
-        <div style={{ background: "linear-gradient(155deg, #f5ebd8 0%, #eddfc4 100%)", borderBottom: "1px solid #d4b890" }} className="px-4 py-3.5">
-          <p className="font-bold text-[15px] tracking-[0.3em] text-stone-700 uppercase">Archive</p>
-          <p className="text-[9px] text-stone-500 italic mt-0.5">Curated Secondhand Finds</p>
-          <div className="flex items-center gap-2 mt-1.5">
-            <div className="h-px flex-1" style={{ background: "#c4a882" }} />
-            <span className="text-[7px] text-stone-500 tracking-wider">Est. 1972 · 4,200+ Items</span>
-            <div className="h-px flex-1" style={{ background: "#c4a882" }} />
-          </div>
-        </div>
-        <div style={{ background: "#fdf8f0" }} className="p-3 grid grid-cols-2 gap-3">
-          {prods.map((p, i) => (
-            <div key={i}>
-              <div className="aspect-square rounded-md overflow-hidden relative" style={{ border: "2px solid white", boxShadow: "0 2px 6px rgba(0,0,0,0.10)" }}>
-                {p.img ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
-                ) : (
-                  <div className="w-full h-full" style={{ background: p.bg }} />
-                )}
-              </div>
-              <div className="mt-1.5 px-0.5">
-                <p className="text-[8.5px] font-medium text-stone-700 leading-tight truncate">{p.name}</p>
-                <p className="text-[10px] font-black text-stone-900 mt-0.5">{p.price}</p>
-                <p className="text-[7px] text-stone-400">Size: M · Condition: 9/10</p>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div style={{ background: "#8b6040" }} className="px-4 py-2.5 text-center">
-          <span className="text-amber-100 text-[10px] font-semibold">Browse the Archive →</span>
-        </div>
-      </div>
-    );
-  }
-
-  // ── ARTISAN — Atelier (Tiffany / Cartier aesthetic) ───────────────────────
-  if (theme.layout === "artisan") {
-    const prods = PERSONA_PRODUCTS.jewelry ?? [];
-    return (
-      <div className="rounded-2xl overflow-hidden shadow-xl w-full" style={{ border: "1px solid #4a1d8c" }}>
-        <div style={{ background: "linear-gradient(155deg, #0d0820 0%, #1a0d30 60%, #2d1050 100%)" }} className="px-4 py-3.5">
-          <p className="text-[15px] tracking-[0.38em] text-white/90 uppercase" style={{ borderBottom: "1px solid rgba(168,85,247,0.30)", paddingBottom: "8px", marginBottom: "6px" }}>Atelier</p>
-          <p className="text-[9px] tracking-wider" style={{ color: "rgba(240,171,252,0.65)" }}>Fine Jewelry · Handcrafted</p>
-          <span className="inline-flex items-center gap-1 mt-2 text-[8px] px-2.5 py-1 rounded" style={{ background: "rgba(168,85,247,0.15)", border: "1px solid rgba(168,85,247,0.30)", color: "#e879f9" }}>
-            ✦ Artisan Made · Limited Pieces
-          </span>
-        </div>
-        <div style={{ background: "#07040f" }} className="p-3 grid grid-cols-2 gap-3">
-          {prods.map((p, i) => (
-            <div key={i} className="flex flex-col items-center">
-              <div className="aspect-square w-full rounded-full overflow-hidden relative" style={{ border: "1px solid rgba(168,85,247,0.20)" }}>
-                {p.img ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
-                ) : (
-                  <div className="w-full h-full" style={{ background: p.bg }} />
-                )}
-              </div>
-              <div className="px-1 pt-2 pb-1 text-center w-full">
-                <p className="text-[8px] leading-tight truncate" style={{ color: "rgba(240,171,252,0.65)" }}>{p.name}</p>
-                <p className="text-[10px] font-bold text-white mt-0.5">{p.price}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div style={{ background: "linear-gradient(90deg, #581c87, #6b21a8)" }} className="px-4 py-2.5 text-center">
-          <span className="text-[10px] tracking-widest" style={{ color: "#f0abfc" }}>View Collection →</span>
-        </div>
-      </div>
-    );
-  }
-
-  // ── RESORT (LUMA — Contemporary Fashion / COS aesthetic) ─────────────────
-  if (theme.layout === "resort") {
-    const prods = PERSONA_PRODUCTS.resort ?? [];
-    const [hero, ...rest] = prods;
-    return (
-      <div className="rounded-2xl overflow-hidden shadow-xl w-full" style={{ border: "1px solid #e4d5c9" }}>
-        {/* Warm minimal header */}
-        <div style={{ background: "#f8f4f0" }} className="px-4 py-4">
-          <div className="flex items-center justify-between mb-1.5">
-            <p className="text-stone-900 text-[18px] font-black tracking-[0.22em] uppercase">LUMA</p>
-            <div className="flex items-center gap-1.5 rounded-full px-2.5 py-1" style={{ background: "rgba(18,56,64,0.08)" }}>
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-[8px] font-bold tracking-widest uppercase" style={{ color: "#123840" }}>Live</span>
-            </div>
-          </div>
-          <p className="text-[9px] text-stone-500 tracking-wider uppercase">{theme.badge} · Contemporary Fashion</p>
-        </div>
-        {/* Hero product + grid */}
-        <div style={{ background: "#faf7f4" }} className="p-3 space-y-2.5">
-          {/* Featured product */}
-          <div className="relative rounded-xl overflow-hidden aspect-[16/9]" style={hero?.img ? undefined : { background: hero?.bg }}>
-            {hero?.img && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={hero.img} alt={hero.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-            <div className="absolute bottom-2.5 left-3 right-3">
-              <p className="text-white text-[10px] font-bold">{hero?.name}</p>
-              <p className="text-white/80 text-[12px] font-black mt-0.5">{hero?.price}</p>
-            </div>
-          </div>
-          {/* Product grid */}
-          <div className="grid grid-cols-3 gap-2">
-            {rest.map((p, i) => <PCard key={i} {...p} />)}
-          </div>
-        </div>
-        {/* CTA strip */}
-        <div className="bg-white px-4 py-2.5 border-t" style={{ borderColor: "#e4d5c9" }}>
-          <span className="text-[10px] font-bold tracking-wider" style={{ color: theme.accentHex }}>
-            {theme.ctaLabel} →
-          </span>
-        </div>
-      </div>
-    );
-  }
-
-  // ── DEALS — CozyFit (Uniqlo sale / TJ Maxx aesthetic) ────────────────────
+  // ── DEALS — CozyFit (Amazon Deals / Prime Day aesthetic) ─────────────────
   const prods = PERSONA_PRODUCTS.outerwear ?? [];
+  const claimPcts = [72, 58, 85, 41];
   const discounts = ["33%", "34%", "29%", "30%"];
   return (
-    <div className="rounded-2xl overflow-hidden shadow-xl w-full" style={{ border: "1px solid #bfdbfe" }}>
-      {/* Sale banner */}
-      <div style={{ background: "#15803d" }} className="px-4 py-1.5 text-center">
-        <span className="text-white text-[9px] font-bold tracking-widest uppercase">Up to 40% Off — Winter Clearance</span>
+    <div className="rounded-2xl overflow-hidden shadow-xl w-full" style={{ border: "1px solid #DDD" }}>
+      {/* Prime blue header with deal badge */}
+      <div style={{ background: "#00A8E1" }} className="px-3 py-2.5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Zap className="w-4 h-4 text-white" fill="white" strokeWidth={0} />
+            <div>
+              <p className="text-white font-bold text-[13px]">Deal of the Day</p>
+              <p className="text-white/80 text-[8px]">CozyFit Outerwear</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-1 bg-white/20 rounded px-2 py-1">
+            <Clock className="w-3 h-3 text-white" strokeWidth={2} />
+            <span className="text-white text-[9px] font-bold">02:14:37</span>
+          </div>
+        </div>
       </div>
-      <div style={{ background: "linear-gradient(135deg, #1e40af 0%, #1d4ed8 60%, #2563eb 100%)" }} className="px-4 py-3.5">
-        <p className="text-white font-bold text-[16px] tracking-wider">CozyFit</p>
-        <p className="text-blue-200 text-[9px] mt-0.5">Warm. Stylish. Affordable.</p>
-      </div>
-      <div className="bg-white p-3 grid grid-cols-2 gap-2.5">
+      {/* Products with claim progress bars */}
+      <div className="bg-white p-2.5 grid grid-cols-2 gap-2">
         {prods.map((p, i) => (
-          <div key={i} className="relative">
-            <PCard {...p} />
-            <span className="absolute top-1.5 left-1.5 text-[7px] font-black text-white px-1.5 py-0.5 rounded" style={{ background: "#dc2626" }}>
-              -{discounts[i]}
-            </span>
+          <div key={i} className="border border-[#E8E8E8] rounded-lg p-1.5">
+            <div className="aspect-square rounded overflow-hidden mb-1.5 relative" style={p.img ? undefined : { background: p.bg }}>
+              {p.img && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+              )}
+              {/* Discount badge */}
+              <div className="absolute top-1 left-1 text-[7px] font-bold text-white px-1.5 py-0.5 rounded" style={{ background: "#CC0C39" }}>
+                -{discounts[i]}
+              </div>
+            </div>
+            <p className="text-[8px] text-[#0F1111] font-medium leading-tight truncate">{p.name}</p>
+            {/* Price row */}
+            <div className="flex items-baseline gap-1 mt-0.5">
+              <span className="text-[11px] font-bold" style={{ color: "#CC0C39" }}>{p.price}</span>
+              {p.orig && <span className="text-[8px] text-[#565959] line-through">{p.orig}</span>}
+            </div>
+            {/* Limited time deal tag */}
+            <div className="flex items-center gap-1 mt-1">
+              <span className="text-[7px] font-bold text-white px-1.5 py-0.5 rounded" style={{ background: "#CC0C39" }}>Limited time deal</span>
+            </div>
+            {/* Claim progress bar */}
+            <div className="mt-1.5">
+              <div className="w-full h-1.5 rounded-full bg-[#F0F0F0] overflow-hidden">
+                <div className="h-full rounded-full" style={{ width: `${claimPcts[i]}%`, background: "linear-gradient(90deg, #00A8E1, #00C9A7)" }} />
+              </div>
+              <p className="text-[7px] text-[#565959] mt-0.5">{claimPcts[i]}% claimed</p>
+            </div>
           </div>
         ))}
       </div>
-      <div style={{ background: "#15803d" }} className="px-4 py-2.5 text-center">
-        <span className="text-white text-[10px] font-black tracking-wider uppercase">Shop Sale Now</span>
+      {/* CTA */}
+      <div className="px-3 py-2 bg-white" style={{ borderTop: "1px solid #DDD" }}>
+        <span className="text-[10px] font-bold" style={{ color: "#00A8E1" }}>See All Deals →</span>
       </div>
     </div>
   );

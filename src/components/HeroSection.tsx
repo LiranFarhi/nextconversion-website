@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Heart, MessageCircle, Send, Bookmark, Clock, Zap, MapPin, Truck } from "lucide-react";
 
@@ -912,6 +912,11 @@ function PersonaCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [cdnImages, setCdnImages] = useState<Record<string, string[]>>({});
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const userScrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isUserScrolling = useRef(false);
+  const isAutoScrolling = useRef(false);
 
   useEffect(() => {
     fetch("/api/persona-products")
@@ -920,16 +925,68 @@ function PersonaCarousel() {
       .catch(() => {});
   }, []);
 
+  // Track which card is visible via IntersectionObserver
   useEffect(() => {
-    if (isHovered) return;
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const idx = cardRefs.current.indexOf(entry.target as HTMLDivElement);
+            if (idx !== -1) setActiveIndex(idx);
+          }
+        }
+      },
+      { root: container, threshold: 0.5 }
+    );
+    cardRefs.current.forEach((card) => { if (card) observer.observe(card); });
+    return () => observer.disconnect();
+  }, [cdnImages]);
+
+  // Detect user scroll to pause auto-rotation
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    const handleScroll = () => {
+      if (isAutoScrolling.current) return;
+      isUserScrolling.current = true;
+      if (userScrollTimeoutRef.current) clearTimeout(userScrollTimeoutRef.current);
+      userScrollTimeoutRef.current = setTimeout(() => {
+        isUserScrolling.current = false;
+      }, 5000);
+    };
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      container.removeEventListener("scroll", handleScroll);
+      if (userScrollTimeoutRef.current) clearTimeout(userScrollTimeoutRef.current);
+    };
+  }, []);
+
+  // Auto-rotation via scroll
+  useEffect(() => {
+    if (isHovered || isUserScrolling.current) return;
     const id = setInterval(() => {
-      setActiveIndex((i) => (i + 1) % personas.length);
+      if (isUserScrolling.current) return;
+      const nextIdx = (activeIndex + 1) % personas.length;
+      const card = cardRefs.current[nextIdx];
+      if (card) {
+        isAutoScrolling.current = true;
+        card.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+        setTimeout(() => { isAutoScrolling.current = false; }, 500);
+      }
     }, 3500);
     return () => clearInterval(id);
-  }, [isHovered]);
+  }, [isHovered, activeIndex]);
 
-  const prev = () => setActiveIndex((i) => (i - 1 + personas.length) % personas.length);
-  const next = () => setActiveIndex((i) => (i + 1) % personas.length);
+  const scrollToCard = useCallback((i: number) => {
+    const card = cardRefs.current[i];
+    if (card) {
+      isAutoScrolling.current = true;
+      card.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+      setTimeout(() => { isAutoScrolling.current = false; }, 500);
+    }
+  }, []);
 
   const persona = personas[activeIndex];
 
@@ -966,63 +1023,42 @@ function PersonaCarousel() {
         </motion.div>
       </AnimatePresence>
 
-      {/* Single card — full width of the column */}
-      <div className="relative overflow-hidden">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeIndex}
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -30 }}
-            transition={{ duration: 0.35, ease: "easeOut" }}
+      {/* Horizontal scroll carousel — all storefronts side by side */}
+      <div
+        ref={scrollContainerRef}
+        className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide"
+      >
+        {personas.map((p, i) => (
+          <div
+            key={p.id}
+            ref={(el) => { cardRefs.current[i] = el; }}
+            className="snap-start shrink-0 w-full"
           >
-            <PersonaStorefront
-              persona={persona}
-              cdnImages={cdnImages[persona.id]}
-            />
-          </motion.div>
-        </AnimatePresence>
+            <div className="h-[400px] sm:h-[440px] overflow-hidden rounded-2xl">
+              <PersonaStorefront
+                persona={p}
+                cdnImages={cdnImages[p.id]}
+              />
+            </div>
+          </div>
+        ))}
       </div>
 
-      {/* Persona dot-tabs — shows all 9 store variants */}
-      <div className="flex items-center justify-between mt-3">
-        <div className="flex items-center gap-0.5 sm:gap-1.5 flex-wrap">
-          {personas.map((p, i) => (
-            <button
-              key={p.id}
-              onClick={() => setActiveIndex(i)}
-              title={`${p.theme.store} · ${p.demo}`}
-              className={`transition-all duration-200 rounded-full font-bold text-[7px] flex items-center justify-center p-1.5 sm:p-0 ${
-                i === activeIndex
-                  ? "w-5 h-5 text-white shadow-md"
-                  : "w-4 h-4 bg-gray-100 text-gray-400 hover:bg-gray-200"
-              }`}
-              style={i === activeIndex ? { backgroundColor: p.theme.accentHex } : {}}
-            >
-              {i === activeIndex ? p.theme.store.charAt(0) : ""}
-            </button>
-          ))}
-        </div>
-        <div className="flex items-center gap-1.5">
+      {/* Dot progress indicators */}
+      <div className="flex items-center justify-center mt-3 gap-1">
+        {personas.map((p, i) => (
           <button
-            onClick={prev}
-            className="w-8 h-8 sm:w-6 sm:h-6 rounded-full bg-white border border-border flex items-center justify-center text-muted hover:text-foreground hover:border-primary/30 transition-all shadow-sm"
-            aria-label="Previous persona"
-          >
-            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <button
-            onClick={next}
-            className="w-8 h-8 sm:w-6 sm:h-6 rounded-full bg-white border border-border flex items-center justify-center text-muted hover:text-foreground hover:border-primary/30 transition-all shadow-sm"
-            aria-label="Next persona"
-          >
-            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
+            key={p.id}
+            onClick={() => scrollToCard(i)}
+            title={`${p.theme.store} · ${p.demo}`}
+            className={`transition-all duration-300 rounded-full ${
+              i === activeIndex
+                ? "w-6 h-2 shadow-sm"
+                : "w-2 h-2 bg-gray-200 hover:bg-gray-300"
+            }`}
+            style={i === activeIndex ? { backgroundColor: p.theme.accentHex } : {}}
+          />
+        ))}
       </div>
     </div>
   );

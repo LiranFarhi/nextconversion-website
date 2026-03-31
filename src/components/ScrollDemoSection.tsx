@@ -253,24 +253,80 @@ function PhoneScreen1() {
 }
 
 
+const MOBILE_STOREFRONT_PRODUCTS = [
+  { name: "Linen Midi Dress", price: "$185", img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=300&h=400&fit=crop&auto=format&q=80", badge: "New" },
+  { name: "Cotton Wrap Top", price: "$95", img: "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?w=300&h=400&fit=crop&auto=format&q=80" },
+  { name: "Wide Leg Trousers", price: "$145", img: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=300&h=400&fit=crop&auto=format&q=80" },
+  { name: "Silk Camisole", price: "$120", img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300&h=400&fit=crop&auto=format&q=80", badge: "Trending" },
+  { name: "Knit Cardigan", price: "$165", img: "https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?w=300&h=400&fit=crop&auto=format&q=80" },
+  { name: "Relaxed Blazer", price: "$210", img: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=300&h=400&fit=crop&auto=format&q=80" },
+];
+
+function MobileStorefrontContent() {
+  return (
+    <div className="bg-white" style={{ width: "100%" }}>
+      {/* Hero banner */}
+      <div className="relative overflow-hidden" style={{ height: "160px" }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=600&h=300&fit=crop&auto=format&q=80" alt="" className="w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+        <div className="absolute bottom-3 left-3 right-3">
+          <p className="text-white/70 text-[7px] tracking-widest uppercase">New Collection</p>
+          <p className="text-white text-[11px] font-bold mt-0.5">Contemporary Essentials</p>
+          <div className="mt-1.5 inline-block bg-white text-[7px] font-bold text-stone-900 px-2.5 py-1 rounded">
+            Shop Now
+          </div>
+        </div>
+      </div>
+
+      {/* Category pills */}
+      <div className="flex gap-1.5 px-3 py-2.5 overflow-hidden">
+        {["All", "Dresses", "Tops", "Trousers", "Outerwear"].map((cat, i) => (
+          <span key={cat} className={`text-[7px] font-medium px-2.5 py-1 rounded-full whitespace-nowrap ${i === 0 ? "bg-stone-900 text-white" : "bg-gray-100 text-gray-600"}`}>
+            {cat}
+          </span>
+        ))}
+      </div>
+
+      {/* Product grid */}
+      <div className="px-3 pb-3 grid grid-cols-2 gap-2">
+        {MOBILE_STOREFRONT_PRODUCTS.map((p, i) => (
+          <div key={i} className="rounded-lg overflow-hidden border border-gray-100">
+            <div className="aspect-[3/4] relative overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={p.img} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+              {p.badge && (
+                <span className="absolute top-1.5 left-1.5 text-[6px] font-bold bg-stone-900 text-white px-1.5 py-0.5 rounded">
+                  {p.badge}
+                </span>
+              )}
+            </div>
+            <div className="p-1.5">
+              <p className="text-[7px] font-medium text-gray-800 truncate">{p.name}</p>
+              <p className="text-[8px] font-bold text-gray-900 mt-0.5">{p.price}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function PhoneScreen2({ products: _products }: { products: DemoProduct[] }) {
   return (
     <div className="h-full overflow-hidden relative bg-white">
-      {/* Slow scroll through the mobile storefront — uses the 390px-wide mobile Figma screenshot */}
+      {/* Slow scroll through the CSS-built mobile storefront */}
       <motion.div
         className="absolute inset-x-0 top-0"
         animate={{ y: [0, -180, -180, 0] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", times: [0, 0.45, 0.7, 1] }}
       >
-        {/* Mobile-optimised storefront image — fits the phone frame naturally */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/figma-screens/mobile-storefront.png" alt="" className="w-full block" loading="eager" decoding="async" />
+        <MobileStorefrontContent />
         {/* Repeat so scroll never hits blank space */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/figma-screens/mobile-storefront.png" alt="" className="w-full block" loading="eager" decoding="async" />
+        <MobileStorefrontContent />
       </motion.div>
 
-      {/* Top teal nav bar overlay to match Figma brand */}
+      {/* Top teal nav bar overlay */}
       <div className="absolute top-0 inset-x-0 h-8 flex items-center justify-between px-3 z-10"
         style={{ background: "linear-gradient(to bottom, rgba(18,56,64,0.92) 0%, transparent 100%)" }}>
         <span className="text-white text-[9px] font-black tracking-widest uppercase">LUMA</span>

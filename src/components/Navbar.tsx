@@ -55,7 +55,7 @@ export default function Navbar({ onBookDemo }: { onBookDemo: () => void }) {
 
           {/* Mobile menu button */}
           <button
-            className="md:hidden p-2 text-muted"
+            className="md:hidden p-2.5 -mr-2.5 text-muted"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
@@ -86,31 +86,31 @@ export default function Navbar({ onBookDemo }: { onBookDemo: () => void }) {
 
         {/* Mobile menu */}
         {mobileOpen && (
-          <div className="md:hidden border-t border-border py-4 space-y-3 animate-fade-in">
+          <div className="md:hidden border-t border-border py-3 space-y-1 animate-fade-in">
             <a
               href="#problem"
-              className="block text-sm text-muted hover:text-foreground px-2 py-1"
+              className="block text-sm text-muted hover:text-foreground px-3 py-2.5 rounded-lg active:bg-surface"
               onClick={() => setMobileOpen(false)}
             >
               Why
             </a>
             <a
               href="#agents"
-              className="block text-sm text-muted hover:text-foreground px-2 py-1"
+              className="block text-sm text-muted hover:text-foreground px-3 py-2.5 rounded-lg active:bg-surface"
               onClick={() => setMobileOpen(false)}
             >
               Agents
             </a>
             <a
               href="#demo"
-              className="block text-sm text-muted hover:text-foreground px-2 py-1"
+              className="block text-sm text-muted hover:text-foreground px-3 py-2.5 rounded-lg active:bg-surface"
               onClick={() => setMobileOpen(false)}
             >
               How It Works
             </a>
             <a
               href="#safety"
-              className="block text-sm text-muted hover:text-foreground px-2 py-1"
+              className="block text-sm text-muted hover:text-foreground px-3 py-2.5 rounded-lg active:bg-surface"
               onClick={() => setMobileOpen(false)}
             >
               Safety

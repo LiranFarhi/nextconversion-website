@@ -157,7 +157,7 @@ const features = [
 function DashboardBg() {
   return (
     <div className="absolute inset-0 flex items-center justify-center opacity-[0.04] pointer-events-none overflow-hidden">
-      <div className="w-[800px] h-[500px] border-2 border-foreground rounded-xl flex gap-4 p-6">
+      <div className="w-[400px] sm:w-[600px] lg:w-[800px] h-[300px] sm:h-[400px] lg:h-[500px] border-2 border-foreground rounded-xl flex gap-4 p-6">
         {/* Left panel — data rows */}
         <div className="flex-1 border border-foreground rounded-lg p-4 flex flex-col gap-3">
           {[60, 40, 80, 30, 55].map((w, i) => (
@@ -184,13 +184,13 @@ function DashboardBg() {
 
 export default function SafetySection() {
   return (
-    <section id="safety" className="py-20 lg:py-28 bg-surface relative overflow-hidden">
+    <section id="safety" className="py-12 sm:py-20 lg:py-28 bg-surface relative overflow-hidden">
       <DashboardBg />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <FadeUp className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-foreground mb-6">
+        <FadeUp className="text-center max-w-3xl mx-auto mb-8 sm:mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-display text-foreground mb-6">
             Strategy stays with you.{" "}
             <span className="gradient-text">Safety and scale are on us.</span>
           </h2>
@@ -201,7 +201,7 @@ export default function SafetySection() {
         </FadeUp>
 
         {/* Features with interactive controls */}
-        <StaggerParent className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-16">
+        <StaggerParent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-16">
           {features.map((feature) => (
             <StaggerChild key={feature.title}>
               <motion.div

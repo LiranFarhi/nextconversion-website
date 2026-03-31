@@ -45,11 +45,11 @@ export default function ProblemSection() {
   const { ref, isVisible } = useInView(0.1);
 
   return (
-    <section id="problem" ref={ref} className="py-20 lg:py-28 bg-white relative">
+    <section id="problem" ref={ref} className="py-12 sm:py-20 lg:py-28 bg-white relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
-        <div className={`text-center max-w-3xl mx-auto mb-16 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-foreground mb-6">
+        <div className={`text-center max-w-3xl mx-auto mb-8 sm:mb-16 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-display text-foreground mb-6">
             You don&apos;t lack strategy.{" "}
             <span className="gradient-text">You lack bandwidth.</span>
           </h2>
@@ -60,7 +60,7 @@ export default function ProblemSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           {/* Left: Stats */}
           <div className={`space-y-6 transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"}`}>
             {/* 96% stat — same visual weight as the cards below */}

@@ -22,6 +22,7 @@ import SectionHeading from "./SectionHeading";
 import CountUp from "./CountUp";
 import TiltCard from "./TiltCard";
 import SnapRow from "./SnapRow";
+import CarouselDots from "./CarouselDots";
 import { useAutoAdvance } from "./useAutoAdvance";
 
 type Agent = {
@@ -126,7 +127,7 @@ function AgentCard({ agent }: { agent: Agent }) {
 }
 
 export default function AgentsSection() {
-  const { index, select, ref } = useAutoAdvance(AGENTS.length);
+  const { index, select, ref, playing } = useAutoAdvance(AGENTS.length);
 
   return (
     <section ref={ref} id="agents" className="mx-auto max-w-[1200px] px-5 py-20 sm:px-8 sm:py-28">
@@ -194,6 +195,16 @@ export default function AgentsSection() {
             <AgentCard key={a.name} agent={a} />
           ))}
         </SnapRow>
+        <div className="mt-4 flex justify-center">
+          <CarouselDots
+            count={AGENTS.length}
+            active={index}
+            onSelect={select}
+            dwellMs={4200}
+            playing={playing}
+            label="Agent"
+          />
+        </div>
       </div>
 
       {/* +10 more agents pill */}

@@ -8,6 +8,7 @@ import SectionHeading from "./SectionHeading";
 import CountUp from "./CountUp";
 import DemoPhone from "./DemoPhone";
 import SnapRow from "./SnapRow";
+import CarouselDots from "./CarouselDots";
 
 type Step = {
   title: string;
@@ -160,27 +161,22 @@ export default function LiveDemoSection() {
         </div>
 
         {/* step dots + play / pause */}
-        <div className="mt-5 flex items-center justify-center gap-3">
-          <div className="flex gap-2">
-            {STEPS.map((s, i) => (
-              <button
-                key={s.title}
-                type="button"
-                aria-label={`Step ${i + 1}: ${s.title}`}
-                onClick={() => select(i)}
-                className={`h-1.5 rounded-full transition-all ${
-                  i === active ? "w-6 bg-primary" : "w-1.5 bg-white/25"
-                }`}
-              />
-            ))}
-          </div>
+        <div className="mt-5 flex items-center justify-center gap-2">
+          <CarouselDots
+            count={STEPS.length}
+            active={active}
+            onSelect={select}
+            dwellMs={DWELL}
+            playing={playing}
+            label="Step"
+          />
           <button
             type="button"
             onClick={() => setPlaying((p) => !p)}
             aria-label={playing ? "Pause" : "Play"}
-            className="grid h-7 w-7 place-items-center rounded-full border border-border-strong bg-white/[0.03] text-soft"
+            className="grid h-8 w-8 place-items-center rounded-full border border-white/10 bg-white/[0.05] text-soft transition-colors hover:bg-white/[0.1]"
           >
-            {playing ? <Pause size={12} /> : <Play size={12} />}
+            {playing ? <Pause size={13} /> : <Play size={13} />}
           </button>
         </div>
       </div>

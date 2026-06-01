@@ -54,5 +54,5 @@ export function useAutoAdvance(count: number, { dwell = 4200, resumeAfter = 9000
     [pause]
   );
 
-  return { index, select, pause, ref };
+  return { index, select, pause, ref, playing: !paused };
 }

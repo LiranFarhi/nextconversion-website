@@ -1,3 +1,5 @@
+"use client";
+
 import { CircleArrowRight } from "lucide-react";
 
 type Props = {
@@ -7,7 +9,7 @@ type Props = {
   label?: string;
 };
 
-/** The recurring "Book a Demo" call to action with a circular arrow. */
+/** The recurring "Book a Demo" CTA. Opens the demo modal (falls back to #book-demo). */
 export default function BookDemoButton({
   href = "#book-demo",
   variant = "primary",
@@ -26,7 +28,14 @@ export default function BookDemoButton({
   } as const;
 
   return (
-    <a href={href} className={`${base} ${styles[variant]} ${className}`}>
+    <a
+      href={href}
+      onClick={(e) => {
+        e.preventDefault();
+        window.dispatchEvent(new CustomEvent("open-demo-modal"));
+      }}
+      className={`${base} ${styles[variant]} ${className}`}
+    >
       {label}
       <CircleArrowRight size={18} strokeWidth={1.75} className="btn-arrow" />
     </a>

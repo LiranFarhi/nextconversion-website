@@ -149,20 +149,6 @@ body {
   transform: translateY(0);
 }
 
-/* ===== Marquee (persona strip) ===== */
-@keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marquee 40s linear infinite;
-}
-.marquee:hover .marquee-track {
-  animation-play-state: paused;
-}
-
 /* ===== Animated brand glow ===== */
 @keyframes glowPulse {
   0%, 100% { opacity: 0.55; transform: translateX(-50%) scale(1); }

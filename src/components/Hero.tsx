@@ -24,8 +24,8 @@ export default function Hero() {
         </p>
 
         <h1 className="mx-auto mt-7 max-w-[15ch] font-display text-[clamp(2.75rem,7.2vw,5.5625rem)] font-light leading-[1.02] tracking-[-0.02em] text-white">
-          Turning Static Storefronts Into{" "}
-          <span className="gradient-text font-normal">Endless Self-Adaptive Experiences</span>
+          Turning Static Storefronts Into Endless{" "}
+          <span className="gradient-text font-normal">Self-Adaptive Experiences</span>
         </h1>
 
         <p className="mx-auto mt-7 max-w-[620px] font-inter text-base leading-relaxed text-soft/80 sm:text-[18px]">
@@ -33,11 +33,8 @@ export default function Hero() {
           a personalized, real-time storefront that optimizes continuously.
         </p>
 
-        <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+        <div className="mt-9 flex justify-center">
           <BookDemoButton />
-          <a href="#why" className="btn-ghost">
-            See how it works
-          </a>
         </div>
       </div>
     </section>

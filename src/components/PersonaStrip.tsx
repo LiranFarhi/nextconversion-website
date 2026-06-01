@@ -1,27 +1,31 @@
+import Image from "next/image";
+
 const PERSONAS = [
-  { tag: "34 • F", label: "Sophisticated Sportwear", from: "#714dff", to: "#e151ff" },
-  { tag: "24 • M", label: "Sustainable Hiking Gear", from: "#0fdd98", to: "#14bced" },
-  { tag: "52 • F", label: "Luxury coats", from: "#f39091", to: "#e151ff", active: true },
-  { tag: "19 • M", label: "Streetwear", from: "#14bced", to: "#714dff" },
-  { tag: "41 • F", label: "Organic Skincare", from: "#0fdd98", to: "#9c83ff" },
-  { tag: "30 • M", label: "Vintage Accesories", from: "#fff759", to: "#f39091" },
-  { tag: "61 • F", label: "Handcrafted Jewelry", from: "#9c83ff", to: "#e151ff" },
-  { tag: "28 • F", label: "Budget-Friendly", from: "#714dff", to: "#14bced" },
+  { tag: "34 • F", label: "Sophisticated Sportwear", img: 1 },
+  { tag: "24 • M", label: "Sustainable Hiking Gear", img: 2 },
+  { tag: "52 • F", label: "Luxury coats", img: 3, active: true },
+  { tag: "19 • M", label: "Streetwear", img: 4 },
+  { tag: "41 • F", label: "Organic Skincare", img: 5 },
+  { tag: "30 • M", label: "Vintage Accesories", img: 6 },
+  { tag: "61 • F", label: "Handcrafted Jewelry", img: 7 },
+  { tag: "28 • F", label: "Budget-Friendly", img: 8 },
 ];
 
 type Persona = (typeof PERSONAS)[number] & { active?: boolean };
 
-function Chip({ tag, label, from, to, active }: Persona) {
+function Chip({ tag, label, img, active }: Persona) {
   return (
     <div
       className={`mx-2 flex h-14 shrink-0 items-center gap-3 rounded-full py-1.5 pl-1.5 pr-5 ${
         active ? "border border-white/70 bg-white/[0.07]" : "border border-border bg-white/[0.03]"
       }`}
     >
-      <span
-        className="h-11 w-11 shrink-0 rounded-full ring-1 ring-white/10"
-        style={{ backgroundImage: `linear-gradient(135deg, ${from}, ${to})` }}
-        aria-hidden
+      <Image
+        src={`/figma/persona-${img}.png`}
+        alt=""
+        width={128}
+        height={128}
+        className="h-11 w-11 shrink-0 rounded-full object-cover ring-1 ring-white/10"
       />
       <span className="flex flex-col leading-tight">
         <span className="font-inter text-[11px] font-medium text-muted">{tag}</span>

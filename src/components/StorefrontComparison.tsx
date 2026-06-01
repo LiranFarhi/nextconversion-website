@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Reveal from "./Reveal";
 import SnapRow from "./SnapRow";
+import CarouselDots from "./CarouselDots";
 import { useAutoAdvance } from "./useAutoAdvance";
 
 type Card = {
@@ -65,7 +66,7 @@ function StoreCard({ card }: { card: Card }) {
 }
 
 export default function StorefrontComparison() {
-  const { index, select, ref } = useAutoAdvance(CARDS.length);
+  const { index, select, ref, playing } = useAutoAdvance(CARDS.length);
 
   return (
     <section id="why" className="relative mx-auto max-w-[1200px] px-5 py-12 sm:px-8 sm:py-16">
@@ -83,18 +84,15 @@ export default function StorefrontComparison() {
             <StoreCard key={c.label} card={c} />
           ))}
         </SnapRow>
-        <div className="mt-4 flex justify-center gap-2">
-          {CARDS.map((c, i) => (
-            <button
-              key={c.label}
-              type="button"
-              aria-label={`Show ${c.label}`}
-              onClick={() => select(i)}
-              className={`h-1.5 rounded-full transition-all ${
-                i === index ? "w-6 bg-primary" : "w-1.5 bg-white/25"
-              }`}
-            />
-          ))}
+        <div className="mt-4 flex justify-center">
+          <CarouselDots
+            count={CARDS.length}
+            active={index}
+            onSelect={select}
+            dwellMs={4200}
+            playing={playing}
+            label="Storefront"
+          />
         </div>
       </div>
     </section>

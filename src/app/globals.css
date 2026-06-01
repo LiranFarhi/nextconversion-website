@@ -234,6 +234,12 @@ input:user-invalid {
   border-color: #f39091;
 }
 
+/* ===== Carousel locator — active dot fills in time with auto-advance ===== */
+@keyframes dotFill {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
 /* ===== Scrollbar hide ===== */
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }

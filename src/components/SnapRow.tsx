@@ -58,7 +58,7 @@ export default function SnapRow({ active, onSelect, children, className = "", it
     <div
       ref={scroller}
       onScroll={onScroll}
-      className={`scrollbar-hide flex snap-x snap-mandatory overflow-x-auto ${className}`}
+      className={`scrollbar-hide relative flex snap-x snap-mandatory overflow-x-auto ${className}`}
     >
       {children.map((child, i) => (
         <div key={i} className={`snap-center shrink-0 ${itemClassName}`}>

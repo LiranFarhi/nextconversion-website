@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { TrendingDown, AlertTriangle } from "lucide-react";
 import TiltCard from "./TiltCard";
 import SectionHeading from "./SectionHeading";
 import CountUp from "./CountUp";
@@ -6,11 +7,13 @@ import CountUp from "./CountUp";
 const STATS = [
   {
     eyebrow: "First impression counts",
+    icon: TrendingDown,
     value: "72%",
     desc: "Users landing on a generic homepage bounce within 10 seconds.",
   },
   {
     eyebrow: "Business gets hit",
+    icon: AlertTriangle,
     value: "50%",
     desc: "Missed conversions without proper personalization.",
   },
@@ -38,11 +41,18 @@ export default function ProblemSection() {
               delay={i * 120}
               className="card flex flex-1 flex-col justify-center p-8 sm:p-10"
             >
-              <p className="font-inter text-sm font-medium text-muted">{s.eyebrow}</p>
-              <CountUp
-                value={s.value}
-                className="mt-3 block font-display text-6xl font-normal leading-none tracking-[-0.02em] text-coral sm:text-7xl"
-              />
+              <p className="font-inter text-xs font-semibold uppercase tracking-[0.16em] text-primary-3">
+                {s.eyebrow}
+              </p>
+              <div className="mt-3 flex items-center gap-3">
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-coral/15 text-coral">
+                  <s.icon size={18} />
+                </span>
+                <CountUp
+                  value={s.value}
+                  className="font-display text-6xl font-normal leading-none tracking-[-0.02em] text-white sm:text-7xl"
+                />
+              </div>
               <p className="mt-4 max-w-[22rem] font-inter text-base leading-relaxed text-soft/80">
                 {s.desc}
               </p>
@@ -50,7 +60,10 @@ export default function ProblemSection() {
           ))}
         </div>
 
-        <TiltCard delay={120} className="card flex items-center justify-center overflow-hidden p-6">
+        <TiltCard
+          delay={120}
+          className="card flex items-center justify-center overflow-hidden border-primary/40 p-6"
+        >
           <Image
             src="/figma/funnel.png"
             alt="A conversion funnel collapsing to a stagnant 2-3% conversion rate"

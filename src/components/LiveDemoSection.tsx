@@ -40,7 +40,8 @@ function PhaseHeader({ n, title, icon }: { n: number; title: string; icon: React
   );
 }
 
-const phaseCard = "rounded-3xl border border-primary/60 bg-white/[0.05] p-8 backdrop-blur-md";
+const phaseCardActive = "rounded-3xl border border-primary/60 bg-white/[0.05] p-8 backdrop-blur-md";
+const phaseCardIdle = "rounded-3xl border border-white/10 bg-white/[0.02] p-6 opacity-60";
 
 export default function LiveDemoSection() {
   return (
@@ -77,17 +78,13 @@ export default function LiveDemoSection() {
         <div className="flex flex-col gap-4">
           <p className="font-display text-xl font-medium text-soft">Agent workforce, live</p>
 
-          {/* Phase 1 */}
-          <Reveal className={phaseCard}>
-            <PhaseHeader n={1} title="Trigger" icon={<Target size={32} strokeWidth={1.6} />} />
-            <p className="mt-4 font-inter text-base leading-relaxed text-white/90">
-              A visitor lands from a &ldquo;sustainable activewear&rdquo; ad. The agent reads the intent
-              signal the moment they arrive.
-            </p>
+          {/* Phase 1 — idle */}
+          <Reveal className={phaseCardIdle}>
+            <PhaseHeader n={1} title="Trigger" icon={<Target size={26} strokeWidth={1.6} />} />
           </Reveal>
 
           {/* Phase 2 — active / expanded */}
-          <Reveal delay={100} className={`${phaseCard} ring-1 ring-primary/40`}>
+          <Reveal delay={100} className={`${phaseCardActive} ring-1 ring-primary/40`}>
             <PhaseHeader n={2} title="Evolution" icon={<Wand2 size={32} strokeWidth={1.6} />} />
             <p className="mt-4 font-inter text-base text-white/90">
               Full storefront adapts to sustainability
@@ -115,12 +112,9 @@ export default function LiveDemoSection() {
             </div>
           </Reveal>
 
-          {/* Phase 3 */}
-          <Reveal delay={200} className={phaseCard}>
-            <PhaseHeader n={3} title="Adaptation" icon={<RefreshCw size={30} strokeWidth={1.6} />} />
-            <p className="mt-4 font-inter text-base leading-relaxed text-white/90">
-              Copy, layout and merchandising keep adapting to live performance — continuously, 24/7.
-            </p>
+          {/* Phase 3 — idle */}
+          <Reveal delay={200} className={phaseCardIdle}>
+            <PhaseHeader n={3} title="Adaptation" icon={<RefreshCw size={26} strokeWidth={1.6} />} />
           </Reveal>
         </div>
       </div>

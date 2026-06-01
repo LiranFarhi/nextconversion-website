@@ -15,7 +15,7 @@ export default function BookDemoButton({
   label = "Book a Demo",
 }: Props) {
   const base =
-    "inline-flex items-center gap-2 rounded-full font-inter text-sm font-medium leading-none transition-all duration-300";
+    "group inline-flex items-center gap-2 rounded-full font-inter text-sm font-medium leading-none transition-all duration-300";
   const styles = {
     primary:
       "bg-white px-5 py-3 text-background hover:-translate-y-px hover:shadow-[0_10px_30px_-8px_rgba(131,79,251,0.6)]",
@@ -28,7 +28,7 @@ export default function BookDemoButton({
   return (
     <a href={href} className={`${base} ${styles[variant]} ${className}`}>
       {label}
-      <CircleArrowRight size={18} strokeWidth={1.75} />
+      <CircleArrowRight size={18} strokeWidth={1.75} className="btn-arrow" />
     </a>
   );
 }

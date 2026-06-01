@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
+import CountUp from "./CountUp";
 
 const JOHN_SKILLS: { icon: LucideIcon; label: string }[] = [
   { icon: Images, label: "Creative assets generation" },
@@ -130,9 +131,11 @@ export default function AgentsSection() {
             >
               <Icon size={16} style={{ color }} strokeWidth={2} />
               <div className="flex flex-col gap-2">
-                <p className="font-display text-4xl font-semibold leading-10" style={{ color }}>
-                  {value}
-                </p>
+                <CountUp
+                  value={value}
+                  className="font-display text-4xl font-semibold leading-10"
+                  style={{ color }}
+                />
                 <p className="font-inter text-base leading-6 text-soft/60">{label}</p>
               </div>
             </div>

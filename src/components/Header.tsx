@@ -14,12 +14,31 @@ const NAV = [
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [active, setActive] = useState("");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const sections = NAV.map((n) => document.querySelector(n.href)).filter(
+      (el): el is Element => Boolean(el)
+    );
+    if (!sections.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActive(`#${visible.target.id}`);
+      },
+      { rootMargin: "-45% 0px -45% 0px", threshold: [0, 0.25, 0.5] }
+    );
+    sections.forEach((s) => observer.observe(s));
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -46,7 +65,9 @@ export default function Header() {
             <li key={item.href}>
               <a
                 href={item.href}
-                className="font-inter text-[15px] text-soft/75 transition-colors hover:text-white"
+                className={`font-inter text-[15px] transition-colors hover:text-white ${
+                  active === item.href ? "text-white" : "text-soft/75"
+                }`}
               >
                 {item.label}
               </a>

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
+import CountUp from "./CountUp";
 
 const STATS = [
   {
@@ -38,9 +39,10 @@ export default function ProblemSection() {
               className="card flex flex-1 flex-col justify-center p-8 sm:p-10"
             >
               <p className="font-inter text-sm font-medium text-muted">{s.eyebrow}</p>
-              <p className="mt-3 font-display text-6xl font-normal leading-none tracking-[-0.02em] text-coral sm:text-7xl">
-                {s.value}
-              </p>
+              <CountUp
+                value={s.value}
+                className="mt-3 block font-display text-6xl font-normal leading-none tracking-[-0.02em] text-coral sm:text-7xl"
+              />
               <p className="mt-4 max-w-[22rem] font-inter text-base leading-relaxed text-soft/80">
                 {s.desc}
               </p>

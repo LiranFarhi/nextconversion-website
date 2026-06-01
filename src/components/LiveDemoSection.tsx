@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Check, Target, Wand2, RefreshCw } from "lucide-react";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
+import CountUp from "./CountUp";
 
 const PHASE_DESC =
   'Emilia generates a full shopping experience aligned specifically with "Sustainability" - not just a landing page.';
@@ -125,7 +126,7 @@ export default function LiveDemoSection() {
       <div className="mt-16 grid grid-cols-2 gap-x-12 gap-y-8 sm:flex sm:flex-wrap sm:items-start sm:justify-center sm:gap-12">
         {OUTCOMES.map((s, i) => (
           <Reveal key={s.label} delay={i * 80} className="flex flex-col gap-2 text-center sm:text-left">
-            <p className={`font-display text-4xl font-semibold ${s.color}`}>{s.value}</p>
+            <CountUp value={s.value} className={`font-display text-4xl font-semibold ${s.color}`} />
             <p className="font-inter text-base text-soft">{s.label}</p>
           </Reveal>
         ))}

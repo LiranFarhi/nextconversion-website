@@ -118,6 +118,13 @@ body {
   border: 1px solid var(--color-border);
   border-radius: 1.25rem;
   backdrop-filter: blur(12px);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.4s ease,
+    box-shadow 0.4s ease;
+}
+.card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-border-strong);
+  box-shadow: 0 24px 60px -24px rgba(131, 79, 251, 0.45);
 }
 
 /* ===== Scroll reveal ===== */
@@ -143,6 +150,51 @@ body {
 }
 .marquee:hover .marquee-track {
   animation-play-state: paused;
+}
+
+/* ===== Animated brand glow ===== */
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.55; transform: translateX(-50%) scale(1); }
+  50% { opacity: 0.85; transform: translateX(-50%) scale(1.07); }
+}
+.animate-glow {
+  animation: glowPulse 8s ease-in-out infinite;
+}
+
+/* ===== Flowing gradient text (hero / CTA wordmark) ===== */
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+.gradient-animate {
+  background-size: 200% auto;
+  animation: gradientFlow 7s linear infinite;
+}
+
+/* ===== Floating accent ===== */
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.animate-float {
+  animation: floatY 6s ease-in-out infinite;
+}
+
+/* ===== Soft pulse for "live" dots ===== */
+@keyframes softPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+.animate-soft-pulse {
+  animation: softPulse 1.8s ease-in-out infinite;
+}
+
+/* ===== Button arrow nudge on hover ===== */
+.btn-arrow {
+  transition: transform 0.25s ease;
+}
+.group:hover .btn-arrow {
+  transform: translateX(3px);
 }
 
 /* ===== Scrollbar hide ===== */

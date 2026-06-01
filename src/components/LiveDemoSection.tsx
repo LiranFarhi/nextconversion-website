@@ -76,7 +76,10 @@ export default function LiveDemoSection() {
           {/* Phase 1 */}
           <Reveal className={phaseCard}>
             <PhaseHeader n={1} title="Trigger" icon={<Target size={32} strokeWidth={1.6} />} />
-            <p className="mt-4 font-inter text-base leading-relaxed text-white/90">{PHASE_DESC}</p>
+            <p className="mt-4 font-inter text-base leading-relaxed text-white/90">
+              A visitor lands from a &ldquo;sustainable activewear&rdquo; ad. The agent reads the intent
+              signal the moment they arrive.
+            </p>
           </Reveal>
 
           {/* Phase 2 — active / expanded */}
@@ -111,7 +114,9 @@ export default function LiveDemoSection() {
           {/* Phase 3 */}
           <Reveal delay={200} className={phaseCard}>
             <PhaseHeader n={3} title="Adaptation" icon={<RefreshCw size={30} strokeWidth={1.6} />} />
-            <p className="mt-4 font-inter text-base leading-relaxed text-white/90">{PHASE_DESC}</p>
+            <p className="mt-4 font-inter text-base leading-relaxed text-white/90">
+              Copy, layout and merchandising keep adapting to live performance — continuously, 24/7.
+            </p>
           </Reveal>
         </div>
       </div>

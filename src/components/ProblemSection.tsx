@@ -6,13 +6,11 @@ const STATS = [
   {
     eyebrow: "First impression counts",
     value: "72%",
-    color: "text-coral",
     desc: "Users landing on a generic homepage bounce within 10 seconds.",
   },
   {
     eyebrow: "Business gets hit",
     value: "50%",
-    color: "text-coral",
     desc: "Missed conversions without proper personalization.",
   },
 ];
@@ -31,18 +29,26 @@ export default function ProblemSection() {
         subtitle="Doubling down on personalization is what every brand desires. It always gets pushed to the next quarter, because your dev and creative teams are underwater, and it hurts your business."
       />
 
-      <div className="mt-14 grid items-center gap-6 md:grid-cols-2">
-        <div className="flex flex-col gap-5">
+      <div className="mt-14 grid items-stretch gap-6 md:grid-cols-2">
+        <div className="flex flex-col gap-6">
           {STATS.map((s, i) => (
-            <Reveal key={s.value} delay={i * 100} className="card p-6">
-              <p className="font-inter text-sm text-muted">{s.eyebrow}</p>
-              <p className={`mt-2 font-display text-5xl font-semibold ${s.color}`}>{s.value}</p>
-              <p className="mt-3 font-inter text-sm text-white/70">{s.desc}</p>
+            <Reveal
+              key={s.value}
+              delay={i * 120}
+              className="card flex flex-1 flex-col justify-center p-8 sm:p-10"
+            >
+              <p className="font-inter text-sm font-medium text-muted">{s.eyebrow}</p>
+              <p className="mt-3 font-display text-6xl font-normal leading-none tracking-[-0.02em] text-coral sm:text-7xl">
+                {s.value}
+              </p>
+              <p className="mt-4 max-w-[22rem] font-inter text-base leading-relaxed text-soft/80">
+                {s.desc}
+              </p>
             </Reveal>
           ))}
         </div>
 
-        <Reveal delay={120} className="card overflow-hidden p-4">
+        <Reveal delay={120} className="card flex items-center justify-center overflow-hidden p-6">
           <Image
             src="/figma/funnel.png"
             alt="A conversion funnel collapsing to a stagnant 2-3% conversion rate"

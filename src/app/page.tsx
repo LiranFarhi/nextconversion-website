@@ -10,6 +10,7 @@ import CtaSection from "../components/CtaSection";
 import Footer from "../components/Footer";
 import ScrollProgress from "../components/ScrollProgress";
 import AmbientOrbs from "../components/AmbientOrbs";
+import DemoModal from "../components/DemoModal";
 
 export default function Home() {
   return (
@@ -28,6 +29,7 @@ export default function Home() {
         <CtaSection />
       </main>
       <Footer />
+      <DemoModal />
     </>
   );
 }

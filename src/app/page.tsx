@@ -1,37 +1,29 @@
-"use client";
-
-import { useState } from "react";
-import Navbar from "../components/Navbar";
-import HeroSection from "../components/HeroSection";
+import Header from "../components/Header";
+import Hero from "../components/Hero";
+import StorefrontComparison from "../components/StorefrontComparison";
+import PersonaStrip from "../components/PersonaStrip";
 import ProblemSection from "../components/ProblemSection";
-import AgentSection from "../components/AgentSection";
-import ScrollDemoSection from "../components/ScrollDemoSection";
+import AgentsSection from "../components/AgentsSection";
+import LiveDemoSection from "../components/LiveDemoSection";
 import SafetySection from "../components/SafetySection";
 import CtaSection from "../components/CtaSection";
 import Footer from "../components/Footer";
-import DemoModal from "../components/DemoModal";
-import StickyMobileCta from "../components/StickyMobileCta";
 
 export default function Home() {
-  const [isDemoOpen, setIsDemoOpen] = useState(false);
-
-  const openDemo = () => setIsDemoOpen(true);
-  const closeDemo = () => setIsDemoOpen(false);
-
   return (
     <>
-      <Navbar onBookDemo={openDemo} />
+      <Header />
       <main>
-        <HeroSection onBookDemo={openDemo} />
+        <Hero />
+        <StorefrontComparison />
+        <PersonaStrip />
         <ProblemSection />
-        <AgentSection />
-        <ScrollDemoSection />
+        <AgentsSection />
+        <LiveDemoSection />
         <SafetySection />
-        <CtaSection onBookDemo={openDemo} />
+        <CtaSection />
       </main>
       <Footer />
-      <StickyMobileCta onBookDemo={openDemo} />
-      <DemoModal isOpen={isDemoOpen} onClose={closeDemo} />
     </>
   );
 }

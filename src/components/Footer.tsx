@@ -1,116 +1,70 @@
+function LinkedInIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.22.79 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z" />
+    </svg>
+  );
+}
+
+function InstagramIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+      <rect x="2" y="2" width="20" height="20" rx="5.5" />
+      <circle cx="12" cy="12" r="4.5" />
+      <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
 export default function Footer() {
   return (
-    <footer className="bg-foreground text-white pb-16 md:pb-0">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {/* Brand */}
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-                <span className="text-white font-bold text-sm">NC</span>
-              </div>
-              <span className="font-bold text-lg">
-                Next<span className="text-primary-light">Conversion</span>
-              </span>
-            </div>
-            <p className="text-sm text-gray-400 leading-relaxed">
-              Turning static storefronts into endless self-adaptive experiences
-              with AI agent technology.
-            </p>
-          </div>
+    <footer className="border-t border-border">
+      <div className="mx-auto max-w-[1200px] px-5 py-10 sm:px-8">
+        {/* Top row: logo + socials */}
+        <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
+          <a
+            href="#top"
+            className="flex items-center gap-2.5 font-display text-lg font-semibold tracking-[-0.01em] text-white"
+          >
+            <span className="grid h-7 w-7 place-items-center rounded-[9px] bg-gradient-to-br from-primary-2 via-magenta to-yellow text-[13px] font-bold text-background">
+              N
+            </span>
+            NextConversion
+          </a>
 
-          {/* Product */}
-          <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-gray-300 mb-4">
-              Product
-            </h4>
-            <ul className="space-y-2">
-              <li>
-                <a
-                  href="#agents"
-                  className="text-sm text-gray-400 hover:text-white transition-colors"
-                >
-                  AI Agents
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#demo"
-                  className="text-sm text-gray-400 hover:text-white transition-colors"
-                >
-                  How It Works
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#safety"
-                  className="text-sm text-gray-400 hover:text-white transition-colors"
-                >
-                  Safety &amp; Control
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Company */}
-          <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-gray-300 mb-4">
-              Company
-            </h4>
-            <ul className="space-y-2">
-              <li>
-                <a
-                  href="#"
-                  className="text-sm text-gray-400 hover:text-white transition-colors"
-                >
-                  About
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-sm text-gray-400 hover:text-white transition-colors"
-                >
-                  Contact
-                </a>
-              </li>
-            </ul>
+          <div className="flex items-center gap-3">
+            <a
+              href="#"
+              aria-label="LinkedIn"
+              className="grid h-10 w-10 place-items-center rounded-xl border border-border bg-white/[0.03] text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+            >
+              <LinkedInIcon />
+            </a>
+            <a
+              href="#"
+              aria-label="Instagram"
+              className="grid h-10 w-10 place-items-center rounded-xl bg-primary text-white transition-colors hover:bg-primary-2"
+            >
+              <InstagramIcon />
+            </a>
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="border-t border-gray-800 pt-8">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-gray-500">
-              &copy; 2026 &mdash; NextConversion
-            </p>
-            <div className="flex items-center gap-6">
-              <a
-                href="#"
-                className="text-sm text-gray-500 hover:text-gray-300 transition-colors"
-              >
-                Terms &amp; Conditions
-              </a>
-              <a
-                href="#"
-                className="text-sm text-gray-500 hover:text-gray-300 transition-colors"
-              >
-                Privacy Policy
-              </a>
-            </div>
-          </div>
+        <div className="my-7 h-px bg-border" />
+
+        {/* Bottom row: copyright + legal */}
+        <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+          <p className="font-inter text-sm text-muted">© 2026 NextConversion. All Rights Reserved.</p>
+          <nav className="flex items-center gap-6">
+            <a href="#" className="font-inter text-sm text-white/75 transition-colors hover:text-white">
+              Terms &amp; Conditions
+            </a>
+            <a href="#" className="font-inter text-sm text-white/75 transition-colors hover:text-white">
+              Privacy Policy
+            </a>
+          </nav>
         </div>
       </div>
-
-      {/* Back to top */}
-      <a
-        href="#"
-        className="block bg-primary/10 hover:bg-primary/20 transition-colors text-center py-3"
-      >
-        <span className="text-sm text-primary-light font-medium">
-          Back to top &uarr;
-        </span>
-      </a>
     </footer>
   );
 }

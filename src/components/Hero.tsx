@@ -2,6 +2,7 @@
 
 import { type PointerEvent } from "react";
 import { motion, useMotionValue, useSpring, useReducedMotion, type Variants } from "framer-motion";
+import { Sparkles } from "lucide-react";
 import BookDemoButton from "./BookDemoButton";
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -49,18 +50,15 @@ export default function Hero() {
       >
         <motion.p
           variants={item}
-          className="inline-flex items-center gap-2 rounded-full border border-border bg-white/[0.03] px-3.5 py-1.5 font-inter text-[13px] font-medium tracking-[0.01em] text-soft backdrop-blur-sm"
+          className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 font-inter text-[14px] font-normal text-white/80 backdrop-blur-sm"
         >
-          <span className="relative inline-flex h-1.5 w-1.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green opacity-60" />
-            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-green" />
-          </span>
+          <Sparkles size={16} className="text-primary-3" />
           AI-Powered E-Commerce Evolution
         </motion.p>
 
         <motion.h1
           variants={item}
-          className="mx-auto mt-7 max-w-[15ch] font-display text-[clamp(2.75rem,7.2vw,5.5625rem)] font-light leading-[1.02] tracking-[-0.02em] text-white"
+          className="mx-auto mt-7 max-w-[15ch] font-display text-[clamp(2.75rem,7.2vw,5.5625rem)] font-light leading-[1.0] tracking-[-0.01em] text-white"
         >
           Turning Static Storefronts Into Endless{" "}
           <span className="gradient-text gradient-animate font-normal">Self-Adaptive Experiences</span>
@@ -68,7 +66,7 @@ export default function Hero() {
 
         <motion.p
           variants={item}
-          className="mx-auto mt-7 max-w-[620px] font-inter text-base leading-relaxed text-soft/80 sm:text-[18px]"
+          className="mx-auto mt-7 max-w-[620px] font-inter text-base font-medium leading-[1.65] text-soft sm:text-[18px]"
         >
           Stop directing targeted ad traffic to generic websites. NextConversion transforms each click into
           a personalized, real-time storefront that optimizes continuously.

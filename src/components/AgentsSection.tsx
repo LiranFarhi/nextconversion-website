@@ -7,7 +7,6 @@ import {
   CircleDollarSign,
   Clock,
   Users,
-  Sparkles,
   type LucideIcon,
 } from "lucide-react";
 import Reveal from "./Reveal";
@@ -96,8 +95,7 @@ export default function AgentsSection() {
 
       {/* +10 more agents pill */}
       <Reveal className="mt-8 flex justify-center">
-        <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] py-2 pl-3 pr-4">
-          <Sparkles size={16} className="text-primary" strokeWidth={1.5} />
+        <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.05] py-2 pl-3 pr-4">
           <div className="flex items-center -space-x-2">
             {["Emilia", "Donna", "Danny"].map((name) => (
               <span
@@ -132,7 +130,7 @@ export default function AgentsSection() {
                   className="font-display text-4xl font-semibold leading-10"
                   style={{ color }}
                 />
-                <p className="font-inter text-base leading-6 text-soft/60">{label}</p>
+                <p className="font-inter text-base leading-6 text-soft">{label}</p>
               </div>
             </div>
           ))}

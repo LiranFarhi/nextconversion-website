@@ -8,7 +8,7 @@ export default function StorefrontComparison() {
         {/* Legacy website */}
         <Reveal className="card flex flex-col overflow-hidden p-6 text-center sm:p-7">
           <p className="font-display text-xl font-medium text-white sm:text-2xl">Legacy website</p>
-          <p className="mb-6 mt-1 font-inter text-sm text-muted">One page for everyone</p>
+          <p className="mb-6 mt-1 font-inter text-base text-soft">One page for everyone</p>
           <div className="mt-auto overflow-hidden rounded-2xl border border-border bg-black/30">
             <Image
               src="/figma/legacy-store.png"
@@ -34,7 +34,7 @@ export default function StorefrontComparison() {
           <p className="relative font-display text-xl font-medium text-white sm:text-2xl">
             Endless curated storefronts
           </p>
-          <p className="relative mb-6 mt-1 font-inter text-sm text-muted">Personalized per visitor</p>
+          <p className="relative mb-6 mt-1 font-inter text-base text-soft">Personalized per visitor</p>
           <div className="relative mt-auto overflow-hidden rounded-2xl">
             <Image
               src="/figma/curated-store.png"

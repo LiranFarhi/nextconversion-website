@@ -1,4 +1,4 @@
-import { Check, Lock, ShieldCheck, Boxes, FileText, BarChart3, ShoppingBag } from "lucide-react";
+import { Check, Boxes, FileText, BarChart3, ShoppingBag } from "lucide-react";
 import TiltCard from "./TiltCard";
 import SectionHeading from "./SectionHeading";
 
@@ -20,7 +20,6 @@ export default function SafetySection() {
         <TiltCard className="card flex flex-col p-7">
           <EnforcementVisual />
           <Pillar
-            icon={Lock}
             title="Strict Enforcement"
             desc="Inventory and discount policies are baked into the agent's logic."
           />
@@ -29,7 +28,6 @@ export default function SafetySection() {
         <TiltCard delay={120} className="card flex flex-col p-7">
           <BrandVisual />
           <Pillar
-            icon={ShieldCheck}
             title="Brand Alignment"
             desc="Approval workflows ensure the AI operates within your specific brand voice and business constraints and goals."
           />
@@ -38,7 +36,6 @@ export default function SafetySection() {
         <TiltCard delay={240} className="card flex flex-col p-7">
           <IntegrationVisual />
           <Pillar
-            icon={Boxes}
             title="Plug-and-play"
             desc="Sit on top of your existing stack (Shopify, BigCommerce, Google Analytics) without a migration headache."
           />
@@ -51,20 +48,20 @@ export default function SafetySection() {
 /* ---- Visual 1: overlapping policy documents ---- */
 function EnforcementVisual() {
   const docs = [
-    { label: "Stock", rot: "-rotate-6", x: "-translate-x-12", z: "z-10" },
-    { label: "Margin", rot: "rotate-0", x: "translate-x-0", z: "z-20" },
-    { label: "Discount", rot: "rotate-6", x: "translate-x-12", z: "z-10" },
+    { label: "Stock", rot: "-rotate-[8deg]", x: "-translate-x-[68px]", z: "z-10" },
+    { label: "Discount", rot: "rotate-[8deg]", x: "translate-x-[68px]", z: "z-20" },
+    { label: "Margin", rot: "rotate-0", x: "translate-x-0", z: "z-30" },
   ];
   return (
     <div className="relative grid h-[220px] place-items-center">
-      <span className="absolute left-1/2 top-3 z-30 flex -translate-x-1/2 items-center gap-2 rounded-full border border-green/30 bg-green/10 px-3 py-1 font-inter text-xs text-green">
+      <span className="absolute left-1/2 top-2 z-40 flex -translate-x-1/2 items-center gap-2 rounded-full border border-green/30 bg-green/10 px-3 py-1 font-inter text-xs text-green">
         <span className="h-1.5 w-1.5 rounded-full bg-green" />
         Policy Check
       </span>
       {docs.map((d) => (
         <div
           key={d.label}
-          className={`absolute flex h-[148px] w-[118px] flex-col rounded-2xl border border-border-strong bg-surface-card p-3 shadow-xl ${d.rot} ${d.x} ${d.z}`}
+          className={`absolute mt-6 flex h-[150px] w-[118px] flex-col rounded-2xl border border-border-strong bg-surface-card p-3 shadow-xl ${d.rot} ${d.x} ${d.z}`}
         >
           <FileText size={16} className="text-primary-3" />
           <span className="mt-2 font-inter text-xs text-white/80">{d.label}</span>
@@ -145,14 +142,11 @@ function IntegrationVisual() {
   );
 }
 
-function Pillar({ icon: Icon, title, desc }: { icon: typeof Lock; title: string; desc: string }) {
+function Pillar({ title, desc }: { title: string; desc: string }) {
   return (
-    <div className="mt-7 flex flex-col items-center border-t border-border pt-6 text-center">
-      <span className="grid h-9 w-9 place-items-center rounded-lg bg-primary/15 text-primary-3">
-        <Icon size={18} />
-      </span>
-      <h3 className="mt-3 font-display text-lg font-semibold text-white">{title}</h3>
-      <p className="mt-2 font-inter text-sm text-white/70">{desc}</p>
+    <div className="mt-7 flex flex-col items-center text-center">
+      <h3 className="font-display text-[28px] font-normal leading-tight text-white">{title}</h3>
+      <p className="mt-3 font-inter text-base leading-relaxed text-muted">{desc}</p>
     </div>
   );
 }

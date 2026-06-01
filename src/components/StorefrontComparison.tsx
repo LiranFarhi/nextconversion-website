@@ -6,14 +6,9 @@ export default function StorefrontComparison() {
     <section id="why" className="relative mx-auto max-w-[1200px] px-5 py-12 sm:px-8 sm:py-16">
       <div className="grid items-stretch gap-6 md:grid-cols-2">
         {/* Legacy website */}
-        <Reveal className="card flex flex-col overflow-hidden p-6 sm:p-7">
-          <div className="mb-1 flex items-center gap-2 font-inter text-sm font-medium text-coral">
-            <span className="inline-block h-1.5 w-1.5 rounded-full bg-coral" aria-hidden />
-            Legacy website
-          </div>
-          <p className="mb-6 font-display text-xl font-normal tracking-[-0.01em] text-white/90 sm:text-2xl">
-            One page for everyone
-          </p>
+        <Reveal className="card flex flex-col overflow-hidden p-6 text-center sm:p-7">
+          <p className="font-display text-xl font-medium text-white sm:text-2xl">Legacy website</p>
+          <p className="mb-6 mt-1 font-inter text-sm text-muted">One page for everyone</p>
           <div className="mt-auto overflow-hidden rounded-2xl border border-border bg-black/30">
             <Image
               src="/figma/legacy-store.png"
@@ -26,20 +21,20 @@ export default function StorefrontComparison() {
           </div>
         </Reveal>
 
-        {/* Endless curated storefronts */}
-        <Reveal delay={120} className="card relative flex flex-col overflow-hidden p-6 sm:p-7">
+        {/* Endless curated storefronts (highlighted) */}
+        <Reveal
+          delay={120}
+          className="card relative flex flex-col overflow-hidden border-primary/40 p-6 text-center shadow-[0_0_60px_-24px_rgba(131,79,251,0.6)] sm:p-7"
+        >
           {/* brand glow behind the curated mockups */}
           <div
             aria-hidden
             className="pointer-events-none absolute -bottom-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-primary-2/30 blur-[90px]"
           />
-          <div className="relative mb-1 flex items-center gap-2 font-inter text-sm font-medium text-green">
-            <span className="inline-block h-1.5 w-1.5 rounded-full bg-green" aria-hidden />
+          <p className="relative font-display text-xl font-medium text-white sm:text-2xl">
             Endless curated storefronts
-          </div>
-          <p className="relative mb-6 font-display text-xl font-normal tracking-[-0.01em] text-white/90 sm:text-2xl">
-            Personalized per visitor
           </p>
+          <p className="relative mb-6 mt-1 font-inter text-sm text-muted">Personalized per visitor</p>
           <div className="relative mt-auto overflow-hidden rounded-2xl">
             <Image
               src="/figma/curated-store.png"

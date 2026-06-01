@@ -69,16 +69,11 @@ export default function AgentsSection() {
               className="h-[119px] w-[119px] flex-shrink-0 rounded-3xl object-cover"
             />
             <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-4">
-                <span className="grid h-10 w-10 flex-shrink-0 place-items-center rounded-xl border border-white/15 bg-primary/15 text-primary-3">
-                  <Sparkles size={22} strokeWidth={1.5} />
-                </span>
-                <div>
-                  <p className="font-display text-lg font-medium leading-6 text-[#f4f0ff]">John</p>
-                  <p className="font-inter text-base leading-6 text-soft/60">The Optimizer</p>
-                </div>
+              <div>
+                <p className="font-display text-lg font-semibold leading-6 text-[#f4f0ff]">John</p>
+                <p className="mt-0.5 font-inter text-base leading-6 text-primary-3">The Optimizer</p>
               </div>
-              <p className="font-inter text-base leading-6 text-white">
+              <p className="font-inter text-base leading-6 text-white/90">
                 &ldquo;I enhance product details - generating descriptions, images and videos, copy
                 styles to ensure your performance never drops.&rdquo;
               </p>

@@ -4,7 +4,7 @@ import Image from "next/image";
 import Reveal from "./Reveal";
 import SnapRow from "./SnapRow";
 import CarouselDots from "./CarouselDots";
-import PersonaStrip, { PERSONAS } from "./PersonaStrip";
+import PersonaStrip, { PERSONAS, type StoreKey } from "./PersonaStrip";
 import { useAutoAdvance } from "./useAutoAdvance";
 
 type Card = {
@@ -25,14 +25,54 @@ const LEGACY: Card = {
 };
 const CURATED: Card = {
   label: "Endless curated storefronts",
-  src: "/figma/curated-store.png",
-  w: 1928,
-  h: 1240,
-  alt: "Multiple curated storefronts personalized to different visitors",
+  src: "/figma/store-luxury.png",
+  w: 1024,
+  h: 1536,
+  alt: "A curated storefront, personalized to the active visitor",
   highlight: true,
 };
 
-function StoreCard({ card, sub, badge }: { card: Card; sub: string; badge: React.ReactNode }) {
+// The three storefront designs the agents build, from the Figma "Endless
+// curated storefronts" frame. The active visitor's segment selects which one.
+const STORES: { key: StoreKey; src: string; alt: string }[] = [
+  { key: "sport", src: "/figma/store-sport.png", alt: "A storefront curated for activewear shoppers" },
+  { key: "luxury", src: "/figma/store-luxury.png", alt: "A storefront curated for luxury shoppers" },
+  { key: "street", src: "/figma/store-street.png", alt: "A storefront curated for streetwear shoppers" },
+];
+
+/** Cross-fades between the curated storefronts as the active visitor changes. */
+function CuratedStack({ activeStore }: { activeStore: StoreKey }) {
+  return (
+    <div className="relative aspect-[1024/1004] w-full">
+      {STORES.map((s) => (
+        <Image
+          key={s.key}
+          src={s.src}
+          alt={s.alt}
+          width={1024}
+          height={1536}
+          sizes="(max-width: 768px) 88vw, 560px"
+          aria-hidden={s.key !== activeStore}
+          className={`absolute inset-0 h-full w-full object-cover object-top transition-opacity duration-700 ease-out ${
+            s.key === activeStore ? "opacity-100" : "opacity-0"
+          }`}
+        />
+      ))}
+    </div>
+  );
+}
+
+function StoreCard({
+  card,
+  sub,
+  badge,
+  media,
+}: {
+  card: Card;
+  sub: string;
+  badge: React.ReactNode;
+  media?: React.ReactNode;
+}) {
   return (
     <div
       className={`card relative flex h-full flex-col overflow-hidden p-6 text-center sm:p-7 ${
@@ -50,17 +90,19 @@ function StoreCard({ card, sub, badge }: { card: Card; sub: string; badge: React
       <p className="relative mb-6 mt-1 min-h-[24px] font-inter text-base text-soft transition-colors">{sub}</p>
       <div
         className={`relative mt-auto overflow-hidden rounded-2xl ${
-          card.highlight ? "" : "border border-border bg-black/30"
+          card.highlight ? "ring-1 ring-primary/30" : "border border-border bg-black/30"
         }`}
       >
-        <Image
-          src={card.src}
-          alt={card.alt}
-          width={card.w}
-          height={card.h}
-          className="h-auto w-full"
-          sizes="(max-width: 768px) 88vw, 560px"
-        />
+        {media ?? (
+          <Image
+            src={card.src}
+            alt={card.alt}
+            width={card.w}
+            height={card.h}
+            className="h-auto w-full"
+            sizes="(max-width: 768px) 88vw, 560px"
+          />
+        )}
       </div>
     </div>
   );
@@ -154,14 +196,24 @@ export default function StorefrontComparison() {
       {/* Desktop: legacy vs curated, connected to the active visitor */}
       <div className="hidden gap-6 md:grid md:grid-cols-2">
         <StoreCard card={LEGACY} sub={legacySub} badge={legacyBadge} />
-        <StoreCard card={CURATED} sub={curatedSub} badge={curatedBadge} />
+        <StoreCard
+          card={CURATED}
+          sub={curatedSub}
+          badge={curatedBadge}
+          media={<CuratedStack activeStore={active.store} />}
+        />
       </div>
 
       {/* Mobile: swipe carousel */}
       <div className="mt-2 md:hidden">
         <SnapRow active={cIdx} onSelect={cSelect} className="gap-4 px-1 pb-1" itemClassName="basis-[86%] pr-1">
           <StoreCard card={LEGACY} sub={legacySub} badge={legacyBadge} />
-          <StoreCard card={CURATED} sub={curatedSub} badge={curatedBadge} />
+          <StoreCard
+            card={CURATED}
+            sub={curatedSub}
+            badge={curatedBadge}
+            media={<CuratedStack activeStore={active.store} />}
+          />
         </SnapRow>
         <div className="mt-4 flex justify-center">
           <CarouselDots count={2} active={cIdx} onSelect={cSelect} dwellMs={4200} playing={cPlaying} label="Storefront" />

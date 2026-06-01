@@ -3,17 +3,20 @@
 import { useState } from "react";
 import Image from "next/image";
 
-export type Persona = { tag: string; label: string; img: number };
+export type StoreKey = "sport" | "luxury" | "street";
+export type Persona = { tag: string; label: string; img: number; store: StoreKey };
 
+// Each visitor maps to the curated storefront style the agents build for them
+// (the three storefront designs in the Figma "Endless curated storefronts" frame).
 export const PERSONAS: Persona[] = [
-  { tag: "34 • F", label: "Sophisticated Sportwear", img: 1 },
-  { tag: "24 • M", label: "Sustainable Hiking Gear", img: 2 },
-  { tag: "52 • F", label: "Luxury coats", img: 3 },
-  { tag: "19 • M", label: "Streetwear", img: 4 },
-  { tag: "41 • F", label: "Organic Skincare", img: 5 },
-  { tag: "30 • M", label: "Vintage Accesories", img: 6 },
-  { tag: "61 • F", label: "Handcrafted Jewelry", img: 7 },
-  { tag: "28 • F", label: "Budget-Friendly", img: 8 },
+  { tag: "34 • F", label: "Sophisticated Sportwear", img: 1, store: "sport" },
+  { tag: "24 • M", label: "Sustainable Hiking Gear", img: 2, store: "sport" },
+  { tag: "52 • F", label: "Luxury coats", img: 3, store: "luxury" },
+  { tag: "19 • M", label: "Streetwear", img: 4, store: "street" },
+  { tag: "41 • F", label: "Organic Skincare", img: 5, store: "luxury" },
+  { tag: "30 • M", label: "Vintage Accesories", img: 6, store: "street" },
+  { tag: "61 • F", label: "Handcrafted Jewelry", img: 7, store: "luxury" },
+  { tag: "28 • F", label: "Budget-Friendly", img: 8, store: "street" },
 ];
 
 function DeviceIcon() {

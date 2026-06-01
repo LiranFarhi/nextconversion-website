@@ -51,6 +51,7 @@ function Chip({ tag, label, img, active, onSelect }: Persona & { active: boolean
         alt=""
         width={128}
         height={128}
+        loading="eager"
         className="h-10 w-10 shrink-0 rounded-full object-cover ring-1 ring-white/10"
       />
       <span className="flex min-w-[164px] flex-col items-start leading-tight">

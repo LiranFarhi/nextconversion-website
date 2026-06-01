@@ -1,15 +1,53 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
-import { Check, Target, Wand2, RefreshCw, Sparkles, Search, Play, Pause } from "lucide-react";
+import { Target, Wand2, Images, MessageSquareQuote, Check, Play, Pause, type LucideIcon } from "lucide-react";
 import { useReducedMotion } from "framer-motion";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
 import CountUp from "./CountUp";
-import Parallax from "./Parallax";
+import DemoPhone from "./DemoPhone";
 
-const CATEGORIES = ["All", "Contemporary", "Sophisticated", "TOPS", "Bikinis"];
+type Step = {
+  title: string;
+  icon: LucideIcon;
+  agent?: { name: string; role: string; color: string };
+  body: string;
+};
+
+// The 5-step storefront evolution from the Figma "Storefront - Step 1..5"
+// frames, each driven by the agent whose job that stage maps to.
+const STEPS: Step[] = [
+  {
+    title: "Arrival",
+    icon: Target,
+    agent: { name: "Danny", role: "The Analyst", color: "text-cyan" },
+    body: "A visitor lands from a “sustainable activewear” ad — Danny reads the intent signal the moment they arrive.",
+  },
+  {
+    title: "Personalized home",
+    icon: Wand2,
+    agent: { name: "Emilia", role: "The Taylor", color: "text-magenta" },
+    body: "Emilia builds a full storefront around their intent — sustainable materials, ethical production, conscious design.",
+  },
+  {
+    title: "Curated collection",
+    icon: Images,
+    agent: { name: "John", role: "The Optimizer", color: "text-green" },
+    body: "John enhances every product — descriptions, imagery and copy tuned so performance never drops.",
+  },
+  {
+    title: "Assisted cart",
+    icon: MessageSquareQuote,
+    agent: { name: "Donna", role: "The Concierge", color: "text-primary-3" },
+    body: "Donna chats with the visitor, intelligently bundling complementary products to lift average order value.",
+  },
+  {
+    title: "Confirmed",
+    icon: Check,
+    body: "A sustainable, higher-value order — confirmed and on its way. The storefront keeps adapting for the next visitor.",
+  },
+];
 
 const OUTCOMES = [
   { value: "+200%", label: "Conversion Rate", color: "text-green" },
@@ -18,50 +56,13 @@ const OUTCOMES = [
   { value: "+29%", label: "Returning Users", color: "text-magenta" },
 ];
 
-type Phase = {
-  label: string;
-  icon: typeof Target;
-  body: string;
-  subtitle?: string;
-  working?: boolean;
-  listLabel: string;
-  items: string[];
-};
-
-const PHASES: Phase[] = [
-  {
-    label: "Trigger",
-    icon: Target,
-    body: 'A visitor lands from a "sustainable activewear" ad. The agent reads the intent signal the moment they arrive.',
-    listLabel: "Signals detected:",
-    items: ["Paid social — “sustainable activewear”", "First-time visitor", "High purchase intent"],
-  },
-  {
-    label: "Evolution",
-    icon: Wand2,
-    body: "",
-    subtitle: "Full storefront adapts to sustainability",
-    working: true,
-    listLabel: "Agent Actions:",
-    items: ["Personalize UX layouts", "Adapts Merchandising", "Adjust messaging tone"],
-  },
-  {
-    label: "Adaptation",
-    icon: RefreshCw,
-    body: "Copy, layout and merchandising keep adapting to live performance — continuously, 24/7.",
-    listLabel: "Now optimizing:",
-    items: ["Engagement trending up", "Bounce rate falling", "Repeat visits increasing"],
-  },
-];
-
-const DWELL = 4200; // ms per phase
+const DWELL = 3800;
 
 export default function LiveDemoSection() {
   const reduce = useReducedMotion();
-  const [active, setActive] = useState(1); // Evolution first (matches Figma default)
+  const [active, setActive] = useState(0);
   const [progress, setProgress] = useState(0);
   const [playing, setPlaying] = useState(true);
-  const [category, setCategory] = useState("All");
   const startRef = useRef(0);
 
   useEffect(() => {
@@ -74,7 +75,7 @@ export default function LiveDemoSection() {
       setProgress(Math.min(elapsed / DWELL, 1) * 100);
       if (elapsed >= DWELL) {
         startRef.current = t;
-        setActive((a) => (a + 1) % PHASES.length);
+        setActive((a) => (a + 1) % STEPS.length);
       }
       raf = requestAnimationFrame(tick);
     };
@@ -82,11 +83,13 @@ export default function LiveDemoSection() {
     return () => cancelAnimationFrame(raf);
   }, [reduce, playing]);
 
-  const selectPhase = (i: number) => {
+  const select = (i: number) => {
     setActive(i);
     setProgress(0);
     startRef.current = 0;
   };
+
+  const step = STEPS[active];
 
   return (
     <section id="how-it-works" className="mx-auto max-w-[1200px] px-5 py-20 sm:px-8 sm:py-28">
@@ -95,75 +98,27 @@ export default function LiveDemoSection() {
         subtitle="Meet your agent workforce that deliver autonomously behind the scenes."
       />
 
-      {/* Assistant bar + category chips (from the Figma fashion-assistant UI) */}
-      <Reveal className="mx-auto mt-10 max-w-[760px]">
-        <div className="flex items-center gap-3 rounded-full border border-border-strong bg-white/[0.04] px-4 py-3 backdrop-blur-sm">
-          <Sparkles size={18} className="shrink-0 text-primary-3" />
-          <input
-            type="text"
-            aria-label="Ask the fashion assistant"
-            placeholder="Ask, Discover, Style — ask a question, make a request or search…"
-            className="w-full bg-transparent font-inter text-sm text-white placeholder:text-muted focus:outline-none"
-          />
-          <button
-            type="button"
-            aria-label="Search"
-            className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primary text-white transition-colors hover:bg-primary-2"
-          >
-            <Search size={16} />
-          </button>
-        </div>
-        <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-          {CATEGORIES.map((c) => (
-            <button
-              key={c}
-              type="button"
-              onClick={() => setCategory(c)}
-              className={`rounded-full border px-4 py-1.5 font-inter text-sm transition-colors ${
-                category === c
-                  ? "border-primary bg-primary text-white"
-                  : "border-border-strong bg-white/[0.03] text-soft hover:bg-white/[0.08]"
-              }`}
-            >
-              {c}
-            </button>
-          ))}
-        </div>
-      </Reveal>
-
-      <div className="mt-12 grid items-start gap-8 lg:grid-cols-2">
-        {/* Left: live storefront preview */}
-        <Reveal className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-primary/25 via-background-2 to-background p-6">
+      <div className="mt-14 grid items-start gap-10 lg:grid-cols-2">
+        {/* Left: the live phone, evolving through each step */}
+        <Reveal className="relative flex flex-col items-center">
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 h-[460px] w-[460px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/50 blur-[90px]"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[460px] w-[460px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/40 blur-[90px]"
           />
-          {/* live status badge synced to the active phase */}
-          <div className="relative mb-4 flex items-center justify-between">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-background/60 px-3 py-1.5 font-inter text-xs text-white/85 backdrop-blur">
-              <span className="h-1.5 w-1.5 animate-soft-pulse rounded-full bg-green" />
-              Live · {PHASES[active].label}
-            </span>
-            <span className="rounded-full border border-white/15 bg-background/60 px-3 py-1.5 font-inter text-xs text-muted backdrop-blur">
-              {category === "All" ? "Sustainability" : category}
-            </span>
+          <div className="relative mb-5 flex items-center gap-2 rounded-full border border-white/15 bg-background/60 px-3 py-1.5 font-inter text-xs text-white/85 backdrop-blur">
+            <span className="h-1.5 w-1.5 animate-soft-pulse rounded-full bg-green" />
+            Live · Step {active + 1} of {STEPS.length}
+            {step.agent && <span className={`font-medium ${step.agent.color}`}>· {step.agent.name}</span>}
           </div>
-          <Parallax distance={24} className="relative mx-auto w-full max-w-[420px]">
-            <Image
-              src="/figma/demo-storefront.png"
-              alt="A phone showing an eco-friendly sportswear storefront generated in real time"
-              width={2565}
-              height={2565}
-              className="h-auto w-full"
-              sizes="(max-width: 1024px) 92vw, 420px"
-            />
-          </Parallax>
+          <div className="relative transition-opacity duration-500">
+            <DemoPhone step={active} />
+          </div>
         </Reveal>
 
-        {/* Right: interactive phase timeline */}
-        <div className="flex flex-col gap-4">
+        {/* Right: interactive step timeline */}
+        <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <p className="font-inter text-sm text-muted">Agent workforce, live</p>
+            <p className="font-inter text-sm text-muted">The journey, built live</p>
             <button
               type="button"
               onClick={() => setPlaying((p) => !p)}
@@ -174,70 +129,52 @@ export default function LiveDemoSection() {
             </button>
           </div>
 
-          {PHASES.map((p, i) => {
+          {STEPS.map((s, i) => {
             const isActive = i === active;
             return (
               <button
-                key={p.label}
+                key={s.title}
                 type="button"
-                onClick={() => selectPhase(i)}
-                className={`block w-full rounded-3xl border p-6 text-left transition-all duration-500 ${
+                onClick={() => select(i)}
+                className={`block w-full rounded-2xl border p-5 text-left transition-all duration-500 ${
                   isActive
                     ? "border-primary bg-white/[0.05]"
-                    : "border-white/10 bg-white/[0.02] opacity-50 hover:opacity-80"
+                    : "border-white/10 bg-white/[0.02] opacity-50 hover:opacity-90"
                 }`}
               >
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3">
                   <span
-                    className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl ${
+                    className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl ${
                       isActive ? "bg-primary text-white" : "bg-white/10 text-white/70"
                     }`}
                   >
-                    <p.icon size={22} strokeWidth={1.7} />
+                    <s.icon size={18} strokeWidth={1.8} />
                   </span>
-                  <div>
+                  <div className="flex items-baseline gap-2">
                     <span className="font-inter text-xs uppercase tracking-[0.14em] text-primary-3">
-                      Phase {i + 1}
+                      Step {i + 1}
                     </span>
-                    <p className="font-display text-2xl font-semibold leading-none text-white">{p.label}</p>
+                    <span className="font-display text-lg font-semibold leading-none text-white">{s.title}</span>
                   </div>
                 </div>
 
-                {/* progress bar on the active phase */}
-                {isActive && !reduce && playing && (
-                  <div className="mt-4 h-1 w-full overflow-hidden rounded-full bg-white/10">
-                    <div
-                      className="h-full rounded-full bg-gradient-to-r from-primary-2 to-magenta"
-                      style={{ width: `${progress}%` }}
-                    />
-                  </div>
-                )}
-
-                {/* expanded content for the active phase (min-height reserved
-                    so the column doesn't resize as phases auto-cycle) */}
                 {isActive && (
-                  <div className="mt-4 lg:min-h-[230px]">
-                    {p.subtitle && <p className="font-inter text-base text-white/90">{p.subtitle}</p>}
-                    {p.body && <p className="font-inter text-base leading-relaxed text-white/90">{p.body}</p>}
-                    {p.working && (
-                      <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/[0.05] px-4 py-2.5">
-                        <span className="grid h-6 w-6 place-items-center rounded-full bg-gradient-to-br from-magenta to-primary font-inter text-[11px] font-bold text-white">
-                          E
-                        </span>
-                        <span className="font-inter text-sm font-semibold text-magenta">Emilia</span>
-                        <span className="font-inter text-sm text-soft/60">[The Taylor]</span>
-                        <span className="font-inter text-sm text-white/80">is working…</span>
+                  <div className="lg:min-h-[84px]">
+                    {!reduce && playing && (
+                      <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-white/10">
+                        <div
+                          className="h-full rounded-full bg-gradient-to-r from-primary-2 to-magenta"
+                          style={{ width: `${progress}%` }}
+                        />
                       </div>
                     )}
-                    <div className="mt-5 flex flex-col gap-3">
-                      <p className="font-inter text-sm text-white/60">{p.listLabel}</p>
-                      {p.items.map((a) => (
-                        <div key={a} className="flex items-center gap-3">
-                          <Check size={16} strokeWidth={2.2} className="shrink-0 text-green" />
-                          <span className="font-inter text-sm text-white/80">{a}</span>
-                        </div>
-                      ))}
-                    </div>
+                    <p className="mt-3 font-inter text-sm leading-relaxed text-white/85">{s.body}</p>
+                    {s.agent && (
+                      <span className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-white/12 bg-white/[0.04] px-3 py-1 font-inter text-xs">
+                        <span className={`font-medium ${s.agent.color}`}>{s.agent.name}</span>
+                        <span className="text-muted">{s.agent.role}</span>
+                      </span>
+                    )}
                   </div>
                 )}
               </button>

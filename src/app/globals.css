@@ -50,6 +50,17 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ===== Keyboard focus ring (visible on the dark theme) ===== */
+:focus-visible {
+  outline: 2px solid #9c83ff;
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+/* mouse clicks shouldn't show the ring */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
 /* ===== Brand gradient text (purple -> magenta -> yellow) ===== */
 .gradient-text {
   background: linear-gradient(103deg, #714dff 0%, #9c83ff 30%, #e151ff 66%, #fff759 100%);

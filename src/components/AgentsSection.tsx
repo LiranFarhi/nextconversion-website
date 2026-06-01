@@ -8,13 +8,11 @@ import {
   LayoutDashboard,
   Wand2,
   Palette,
-  Leaf,
   Activity,
   TrendingUp,
   Target,
   LayoutGrid,
   Boxes,
-  Tag,
   CircleDollarSign,
   Clock,
   Users,
@@ -33,44 +31,42 @@ type Agent = {
   skills: { icon: LucideIcon; label: string }[];
 };
 
-// Roster left→right as shown in the group image. John & Emilia are grounded in
-// the Figma (John "The Optimizer" card; Emilia "The Taylor" generating the
-// sustainability storefront in the demo); Donna & Danny extend the workforce.
+// Roster left→right as in the group image. Quotes are taken verbatim from the
+// per-agent Figma frames (Agents - John/Danny/Donna/Emilia); skills are derived
+// from each quote. Role titles: John "The Optimizer" and Emilia "The Taylor"
+// are named in the Figma; Donna & Danny are titled to match their stated role.
 const AGENTS: Agent[] = [
   {
     name: "Emilia",
     role: "The Taylor",
     img: "/figma/agent-emilia.png",
-    quote:
-      "“I generate a full shopping experience aligned to each visitor’s intent — not just a landing page.”",
+    quote: "“I adjust your site design, UX, and merchandising in live sessions.”",
     skills: [
-      { icon: Wand2, label: "Full storefront generation" },
-      { icon: Palette, label: "Brand-aligned styling" },
-      { icon: Leaf, label: "Theme & collection framing" },
+      { icon: Palette, label: "On-the-fly design" },
+      { icon: Wand2, label: "Live UX adjustments" },
+      { icon: LayoutGrid, label: "Dynamic merchandising" },
     ],
   },
   {
     name: "Donna",
-    role: "The Analyst",
+    role: "The Concierge",
     img: "/figma/agent-donna.png",
-    quote:
-      "“I read every signal in real time so the workforce always knows what to build next.”",
+    quote: "“While chatting with the user I intelligently bundle products to maximize AOV.”",
     skills: [
-      { icon: Activity, label: "Real-time cohort analysis" },
-      { icon: TrendingUp, label: "Conversion tracking" },
-      { icon: Target, label: "Signal-based targeting" },
+      { icon: MessageSquareQuote, label: "Conversational selling" },
+      { icon: Boxes, label: "Smart product bundling" },
+      { icon: CircleDollarSign, label: "AOV maximization" },
     ],
   },
   {
     name: "Danny",
-    role: "The Merchandiser",
+    role: "The Analyst",
     img: "/figma/agent-danny.png",
-    quote:
-      "“I curate and rank products for every visitor, always within your margin and stock rules.”",
+    quote: "“I process intent signals and social trends that human teams miss.”",
     skills: [
-      { icon: LayoutGrid, label: "Dynamic product curation" },
-      { icon: Boxes, label: "Inventory-aware ranking" },
-      { icon: Tag, label: "Promo & discount logic" },
+      { icon: Activity, label: "Intent signal processing" },
+      { icon: TrendingUp, label: "Social trend detection" },
+      { icon: Target, label: "Audience targeting" },
     ],
   },
   {

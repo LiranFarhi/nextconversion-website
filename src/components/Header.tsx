@@ -24,24 +24,29 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        scrolled ? "bg-background/80 backdrop-blur-xl border-b border-border" : "border-b border-transparent"
+      className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300 ${
+        scrolled
+          ? "border-b border-border bg-background/70 backdrop-blur-xl"
+          : "border-b border-transparent bg-transparent"
       }`}
     >
-      <nav className="mx-auto flex h-[72px] max-w-[1200px] items-center justify-between px-5 sm:px-8">
-        <a href="#top" className="flex items-center gap-2 font-display text-[17px] font-semibold tracking-tight">
-          <span className="grid h-7 w-7 place-items-center rounded-lg bg-gradient-to-br from-primary-2 via-magenta to-yellow text-[13px] font-bold text-background">
+      <nav className="mx-auto flex h-[72px] max-w-[1280px] items-center justify-between px-5 sm:px-8 lg:px-10">
+        <a
+          href="#top"
+          className="flex items-center gap-2.5 font-display text-[18px] font-semibold tracking-[-0.01em] text-white"
+        >
+          <span className="grid h-7 w-7 place-items-center rounded-[9px] bg-gradient-to-br from-primary-2 via-magenta to-yellow text-[13px] font-bold text-background">
             N
           </span>
           NextConversion
         </a>
 
-        <ul className="hidden items-center gap-8 md:flex">
+        <ul className="hidden items-center gap-9 md:flex">
           {NAV.map((item) => (
             <li key={item.href}>
               <a
                 href={item.href}
-                className="font-inter text-sm text-white/80 transition-colors hover:text-white"
+                className="font-inter text-[15px] text-soft/75 transition-colors hover:text-white"
               >
                 {item.label}
               </a>
@@ -58,7 +63,7 @@ export default function Header() {
           aria-label="Toggle menu"
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
-          className="grid h-10 w-10 place-items-center rounded-lg text-white md:hidden"
+          className="grid h-10 w-10 place-items-center rounded-lg text-white transition-colors hover:bg-white/5 md:hidden"
         >
           {open ? <X size={22} /> : <Menu size={22} />}
         </button>
@@ -72,7 +77,7 @@ export default function Header() {
                 <a
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className="block rounded-lg px-3 py-3 font-inter text-base text-white/85 hover:bg-white/5"
+                  className="block rounded-lg px-3 py-3 font-inter text-base text-soft/85 hover:bg-white/5"
                 >
                   {item.label}
                 </a>

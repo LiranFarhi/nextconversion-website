@@ -21,10 +21,11 @@ const OUTCOMES = [
 type Phase = {
   label: string;
   icon: typeof Target;
-  body?: string;
+  body: string;
   subtitle?: string;
   working?: boolean;
-  actions?: string[];
+  listLabel: string;
+  items: string[];
 };
 
 const PHASES: Phase[] = [
@@ -32,18 +33,24 @@ const PHASES: Phase[] = [
     label: "Trigger",
     icon: Target,
     body: 'A visitor lands from a "sustainable activewear" ad. The agent reads the intent signal the moment they arrive.',
+    listLabel: "Signals detected:",
+    items: ["Paid social — “sustainable activewear”", "First-time visitor", "High purchase intent"],
   },
   {
     label: "Evolution",
     icon: Wand2,
+    body: "",
     subtitle: "Full storefront adapts to sustainability",
     working: true,
-    actions: ["Personalize UX layouts", "Adapts Merchandising", "Adjust messaging tone"],
+    listLabel: "Agent Actions:",
+    items: ["Personalize UX layouts", "Adapts Merchandising", "Adjust messaging tone"],
   },
   {
     label: "Adaptation",
     icon: RefreshCw,
     body: "Copy, layout and merchandising keep adapting to live performance — continuously, 24/7.",
+    listLabel: "Now optimizing:",
+    items: ["Engagement trending up", "Bounce rate falling", "Repeat visits increasing"],
   },
 ];
 
@@ -206,12 +213,12 @@ export default function LiveDemoSection() {
                   </div>
                 )}
 
-                {/* expanded content for the active phase */}
+                {/* expanded content for the active phase (min-height reserved
+                    so the column doesn't resize as phases auto-cycle) */}
                 {isActive && (
-                  <div className="mt-4">
-                    {p.subtitle && (
-                      <p className="font-inter text-base text-white/90">{p.subtitle}</p>
-                    )}
+                  <div className="mt-4 lg:min-h-[230px]">
+                    {p.subtitle && <p className="font-inter text-base text-white/90">{p.subtitle}</p>}
+                    {p.body && <p className="font-inter text-base leading-relaxed text-white/90">{p.body}</p>}
                     {p.working && (
                       <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/[0.05] px-4 py-2.5">
                         <span className="grid h-6 w-6 place-items-center rounded-full bg-gradient-to-br from-magenta to-primary font-inter text-[11px] font-bold text-white">
@@ -222,18 +229,15 @@ export default function LiveDemoSection() {
                         <span className="font-inter text-sm text-white/80">is working…</span>
                       </div>
                     )}
-                    {p.actions && (
-                      <div className="mt-5 flex flex-col gap-3">
-                        <p className="font-inter text-sm text-white/60">Agent Actions:</p>
-                        {p.actions.map((a) => (
-                          <div key={a} className="flex items-center gap-3">
-                            <Check size={16} strokeWidth={2.2} className="shrink-0 text-green" />
-                            <span className="font-inter text-sm text-white/80">{a}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    {p.body && <p className="font-inter text-base leading-relaxed text-white/90">{p.body}</p>}
+                    <div className="mt-5 flex flex-col gap-3">
+                      <p className="font-inter text-sm text-white/60">{p.listLabel}</p>
+                      {p.items.map((a) => (
+                        <div key={a} className="flex items-center gap-3">
+                          <Check size={16} strokeWidth={2.2} className="shrink-0 text-green" />
+                          <span className="font-inter text-sm text-white/80">{a}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
               </button>

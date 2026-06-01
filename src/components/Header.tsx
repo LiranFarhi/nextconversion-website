@@ -55,7 +55,7 @@ export default function Header() {
         </ul>
 
         <div className="hidden md:block">
-          <BookDemoButton />
+          <BookDemoButton variant="solid" />
         </div>
 
         <button
@@ -84,7 +84,7 @@ export default function Header() {
               </li>
             ))}
             <li className="px-3 pt-2">
-              <BookDemoButton className="w-full justify-center" />
+              <BookDemoButton variant="solid" className="w-full justify-center" />
             </li>
           </ul>
         </div>

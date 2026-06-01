@@ -1,17 +1,6 @@
-import { Check, Lock, ShieldCheck, Boxes } from "lucide-react";
+import { Check, Lock, ShieldCheck, Boxes, FileText, BarChart3, ShoppingBag } from "lucide-react";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
-
-const POLICIES = [
-  { label: "Margin", value: "Min 20%" },
-  { label: "Discount", value: "Min 20%" },
-  { label: "Stock", value: "Min 20%" },
-  { label: "Policy Check", value: "Min 15%" },
-];
-
-const BRAND = ["Brand voice: Casual", "Design guidelines", "Client Approval"];
-
-const STACK = ["Shopify", "BigCommerce", "Google Analytics"];
 
 export default function SafetySection() {
   return (
@@ -28,24 +17,8 @@ export default function SafetySection() {
       />
 
       <div className="mt-14 grid gap-6 lg:grid-cols-3">
-        {/* Strict Enforcement */}
         <Reveal className="card flex flex-col p-7">
-          <div className="flex flex-col gap-2">
-            {POLICIES.map((p) => (
-              <div
-                key={p.label}
-                className="flex items-center justify-between rounded-xl border border-border bg-white/[0.02] px-4 py-2.5"
-              >
-                <span className="font-inter text-sm text-white/80">{p.label}</span>
-                <span className="flex items-center gap-2 font-inter text-sm font-medium text-white">
-                  {p.value}
-                  <span className="grid h-5 w-5 place-items-center rounded-full bg-green/15 text-green">
-                    <Check size={12} />
-                  </span>
-                </span>
-              </div>
-            ))}
-          </div>
+          <EnforcementVisual />
           <Pillar
             icon={Lock}
             title="Strict Enforcement"
@@ -53,25 +26,8 @@ export default function SafetySection() {
           />
         </Reveal>
 
-        {/* Brand Alignment */}
         <Reveal delay={120} className="card flex flex-col p-7">
-          <div className="flex flex-col gap-2">
-            {BRAND.map((b) => (
-              <div
-                key={b}
-                className="flex items-center gap-3 rounded-xl border border-border bg-white/[0.02] px-4 py-2.5 font-inter text-sm text-white/80"
-              >
-                <span className="grid h-5 w-5 place-items-center rounded-full bg-primary/20 text-primary-3">
-                  <Check size={12} />
-                </span>
-                {b}
-              </div>
-            ))}
-            <p className="mt-1 inline-flex items-center gap-2 px-1 font-inter text-xs text-muted">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-magenta" />
-              Emilia [The Taylor] is working…
-            </p>
-          </div>
+          <BrandVisual />
           <Pillar
             icon={ShieldCheck}
             title="Brand Alignment"
@@ -79,21 +35,8 @@ export default function SafetySection() {
           />
         </Reveal>
 
-        {/* Plug-and-play */}
         <Reveal delay={240} className="card flex flex-col p-7">
-          <div className="flex flex-col gap-2">
-            {STACK.map((s) => (
-              <div
-                key={s}
-                className="flex items-center justify-between rounded-xl border border-border bg-white/[0.02] px-4 py-2.5"
-              >
-                <span className="font-inter text-sm text-white/80">{s}</span>
-                <span className="rounded-full bg-green/15 px-2 py-0.5 font-inter text-[11px] font-medium text-green">
-                  Connected
-                </span>
-              </div>
-            ))}
-          </div>
+          <IntegrationVisual />
           <Pillar
             icon={Boxes}
             title="Plug-and-play"
@@ -105,24 +48,111 @@ export default function SafetySection() {
   );
 }
 
-function Pillar({
-  icon: Icon,
-  title,
-  desc,
-}: {
-  icon: typeof Lock;
-  title: string;
-  desc: string;
-}) {
+/* ---- Visual 1: overlapping policy documents ---- */
+function EnforcementVisual() {
+  const docs = [
+    { label: "Stock", rot: "-rotate-6", x: "-translate-x-12", z: "z-10" },
+    { label: "Margin", rot: "rotate-0", x: "translate-x-0", z: "z-20" },
+    { label: "Discount", rot: "rotate-6", x: "translate-x-12", z: "z-10" },
+  ];
   return (
-    <div className="mt-7 border-t border-border pt-6">
-      <div className="flex items-center gap-3">
-        <span className="grid h-9 w-9 place-items-center rounded-lg bg-primary/15 text-primary-3">
-          <Icon size={18} />
+    <div className="relative grid h-[220px] place-items-center">
+      <span className="absolute left-1/2 top-3 z-30 flex -translate-x-1/2 items-center gap-2 rounded-full border border-green/30 bg-green/10 px-3 py-1 font-inter text-xs text-green">
+        <span className="h-1.5 w-1.5 rounded-full bg-green" />
+        Policy Check
+      </span>
+      {docs.map((d) => (
+        <div
+          key={d.label}
+          className={`absolute flex h-[148px] w-[118px] flex-col rounded-2xl border border-border-strong bg-surface-card p-3 shadow-xl ${d.rot} ${d.x} ${d.z}`}
+        >
+          <FileText size={16} className="text-primary-3" />
+          <span className="mt-2 font-inter text-xs text-white/80">{d.label}</span>
+          <div className="mt-2 space-y-1.5">
+            <span className="block h-1 w-full rounded bg-white/10" />
+            <span className="block h-1 w-3/4 rounded bg-white/10" />
+            <span className="block h-1 w-5/6 rounded bg-white/10" />
+          </div>
+          <span className="mt-auto grid h-6 w-6 place-items-center self-end rounded-full bg-green/20 text-green">
+            <Check size={13} />
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ---- Visual 2: connected approval checklist ---- */
+function BrandVisual() {
+  const items = [
+    { label: "Brand voice:", chip: "Casual" },
+    { label: "Design guidelines" },
+    { label: "Client Approval", pending: true },
+  ];
+  return (
+    <div className="flex h-[220px] flex-col justify-center gap-4">
+      <span className="flex w-fit items-center gap-2 rounded-full border border-border-strong bg-white/[0.04] py-1 pl-1 pr-3">
+        <span className="grid h-6 w-6 place-items-center rounded-full bg-gradient-to-br from-magenta to-primary font-inter text-[10px] font-bold text-white">
+          E
         </span>
-        <h3 className="font-display text-lg font-semibold text-white">{title}</h3>
+        <span className="font-inter text-xs text-white/80">is working…</span>
+      </span>
+      <ol className="relative ml-3 flex flex-col gap-3 border-l border-border-strong pl-6">
+        {items.map((it) => (
+          <li key={it.label} className="relative flex items-center gap-2">
+            <span
+              className={`absolute -left-[31px] grid h-5 w-5 place-items-center rounded-full ${
+                it.pending ? "border border-border-strong bg-background" : "bg-green/20 text-green"
+              }`}
+            >
+              {!it.pending && <Check size={12} />}
+            </span>
+            <span className="font-inter text-sm text-white/85">{it.label}</span>
+            {it.chip && (
+              <span className="rounded-md bg-primary/20 px-2 py-0.5 font-inter text-xs text-primary-3">
+                {it.chip}
+              </span>
+            )}
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+/* ---- Visual 3: integration logos connected to the engine ---- */
+function IntegrationVisual() {
+  const logos = [
+    { icon: ShoppingBag, color: "text-green", bg: "bg-green/15" },
+    { icon: BarChart3, color: "text-yellow", bg: "bg-yellow/15" },
+    { icon: ShoppingBag, color: "text-cyan", bg: "bg-cyan/15" },
+  ];
+  return (
+    <div className="relative grid h-[220px] place-items-center">
+      <div className="flex gap-5">
+        {logos.map((l, i) => (
+          <span key={i} className={`grid h-12 w-12 place-items-center rounded-xl border border-border ${l.bg} ${l.color}`}>
+            <l.icon size={22} />
+          </span>
+        ))}
       </div>
-      <p className="mt-3 font-inter text-sm text-white/70">{desc}</p>
+      {/* dotted connectors */}
+      <div aria-hidden className="my-4 h-10 w-px border-l border-dashed border-border-strong" />
+      <span className="grid h-14 w-14 place-items-center rounded-2xl bg-primary text-white shadow-[0_0_30px_-4px_rgba(131,79,251,0.7)]">
+        <Boxes size={26} />
+      </span>
+    </div>
+  );
+}
+
+function Pillar({ icon: Icon, title, desc }: { icon: typeof Lock; title: string; desc: string }) {
+  return (
+    <div className="mt-7 flex flex-col items-center border-t border-border pt-6 text-center">
+      <span className="grid h-9 w-9 place-items-center rounded-lg bg-primary/15 text-primary-3">
+        <Icon size={18} />
+      </span>
+      <h3 className="mt-3 font-display text-lg font-semibold text-white">{title}</h3>
+      <p className="mt-2 font-inter text-sm text-white/70">{desc}</p>
     </div>
   );
 }

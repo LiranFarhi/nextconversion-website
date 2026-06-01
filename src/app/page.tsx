@@ -8,12 +8,16 @@ import LiveDemoSection from "../components/LiveDemoSection";
 import SafetySection from "../components/SafetySection";
 import CtaSection from "../components/CtaSection";
 import Footer from "../components/Footer";
+import ScrollProgress from "../components/ScrollProgress";
+import AmbientOrbs from "../components/AmbientOrbs";
 
 export default function Home() {
   return (
     <>
+      <ScrollProgress />
+      <AmbientOrbs />
       <Header />
-      <main>
+      <main className="relative z-10">
         <Hero />
         <StorefrontComparison />
         <PersonaStrip />

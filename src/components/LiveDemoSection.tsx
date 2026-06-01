@@ -3,6 +3,7 @@ import { Check, Target, Wand2, RefreshCw } from "lucide-react";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
 import CountUp from "./CountUp";
+import Parallax from "./Parallax";
 
 const PHASE_DESC =
   'Emilia generates a full shopping experience aligned specifically with "Sustainability" - not just a landing page.';
@@ -59,14 +60,16 @@ export default function LiveDemoSection() {
               aria-hidden
               className="pointer-events-none absolute left-1/2 top-1/2 h-[460px] w-[460px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/50 blur-[90px]"
             />
-            <Image
-              src="/figma/demo-storefront.png"
-              alt="A phone showing an eco-friendly sportswear storefront generated in real time"
-              width={2565}
-              height={2565}
-              className="relative mx-auto h-auto w-full max-w-[420px]"
-              sizes="(max-width: 1024px) 92vw, 420px"
-            />
+            <Parallax distance={28} className="relative mx-auto w-full max-w-[420px]">
+              <Image
+                src="/figma/demo-storefront.png"
+                alt="A phone showing an eco-friendly sportswear storefront generated in real time"
+                width={2565}
+                height={2565}
+                className="h-auto w-full"
+                sizes="(max-width: 1024px) 92vw, 420px"
+              />
+            </Parallax>
           </div>
         </Reveal>
 

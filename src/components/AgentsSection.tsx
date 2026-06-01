@@ -8,7 +8,6 @@ import {
   TrendingUp,
   CircleDollarSign,
   Clock,
-  Users,
   type LucideIcon,
 } from "lucide-react";
 import Reveal from "./Reveal";
@@ -68,7 +67,6 @@ const IMPACT: { icon: LucideIcon; value: string; color: string; label: string }[
   { icon: TrendingUp, value: "+30%", color: "#0fdd98", label: "Conversion Rate" },
   { icon: CircleDollarSign, value: "10x", color: "#834ffb", label: "Campaigns launched per team" },
   { icon: Clock, value: "800%", color: "#009dff", label: "Faster idea-to-launch cycle time" },
-  { icon: Users, value: "+29%", color: "#ff6eba", label: "Returning Users" },
 ];
 
 function AgentCard({ agent }: { agent: Agent }) {
@@ -167,8 +165,18 @@ export default function AgentsSection() {
         <AgentCard agent={AGENTS[index]} />
       </div>
 
-      {/* Mobile: swipe carousel of every agent card, shown with its explanation */}
+      {/* Mobile: the agents-at-a-table illustration, then the per-agent cards */}
       <div className="mt-6 lg:hidden">
+        <div className="mb-4 overflow-hidden rounded-3xl border border-primary/30 bg-white/[0.02]">
+          <Image
+            src="/figma/agents-group.png"
+            alt="Four AI agents — Emilia, Donna, Danny and John — collaborating at a table"
+            width={1120}
+            height={626}
+            className="h-auto w-full object-cover"
+            sizes="92vw"
+          />
+        </div>
         <SnapRow active={index} onSelect={select} className="gap-4 px-1 pb-1" itemClassName="basis-[88%] pr-1">
           {AGENTS.map((a) => (
             <AgentCard key={a.name} agent={a} />
@@ -186,7 +194,25 @@ export default function AgentsSection() {
         </div>
       </div>
 
-      {/* +10 more agents pill */}
+      {/* Impact stats (3 metrics, per Figma) */}
+      <Reveal className="mt-10 rounded-3xl border border-white/10 px-4 py-8 sm:px-6">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:gap-12">
+          {IMPACT.map(({ icon: Icon, value, color, label }) => (
+            <div
+              key={label}
+              className="flex flex-col gap-4 rounded-3xl border border-primary/30 bg-white/[0.05] p-6"
+            >
+              <Icon size={16} className="text-soft" strokeWidth={2} />
+              <div className="flex flex-col gap-2">
+                <CountUp value={value} className="font-display text-4xl font-semibold leading-10" style={{ color }} />
+                <p className="font-inter text-base leading-6 text-soft">{label}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Reveal>
+
+      {/* +10 more agents — sits under the metrics, per Figma */}
       <Reveal className="mt-8 flex justify-center">
         <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.05] py-2 pl-3 pr-4">
           <div className="flex items-center -space-x-2">
@@ -205,24 +231,6 @@ export default function AgentsSection() {
             </span>
           </div>
           <span className="font-inter text-sm leading-5 text-white/80">+10 more agents ready to scale</span>
-        </div>
-      </Reveal>
-
-      {/* Impact stats */}
-      <Reveal className="mt-10 rounded-3xl border border-white/10 px-4 py-8 sm:px-6">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12">
-          {IMPACT.map(({ icon: Icon, value, color, label }) => (
-            <div
-              key={label}
-              className="flex flex-col gap-4 rounded-3xl border border-primary/30 bg-white/[0.05] p-6"
-            >
-              <Icon size={16} className="text-soft" strokeWidth={2} />
-              <div className="flex flex-col gap-2">
-                <CountUp value={value} className="font-display text-4xl font-semibold leading-10" style={{ color }} />
-                <p className="font-inter text-base leading-6 text-soft">{label}</p>
-              </div>
-            </div>
-          ))}
         </div>
       </Reveal>
     </section>

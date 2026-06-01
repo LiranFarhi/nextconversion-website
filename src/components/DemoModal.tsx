@@ -106,9 +106,18 @@ export default function DemoModal() {
                     setSent(true);
                   }}
                 >
-                  <Field label="Full name" type="text" name="name" placeholder="Alex Rivera" autoFocus />
-                  <Field label="Work email" type="email" name="email" placeholder="alex@brand.com" />
-                  <Field label="Company" type="text" name="company" placeholder="Brand Co." />
+                  <Field label="Name" type="text" name="name" placeholder="Alex Rivera" autoFocus />
+                  <Field label="Email" type="email" name="email" placeholder="alex@brand.com" />
+                  <Field label="Brand website" type="url" name="website" placeholder="https://yourbrand.com" />
+                  <label className="flex flex-col gap-1.5">
+                    <span className="font-inter text-xs font-medium text-soft/80">Message (optional)</span>
+                    <textarea
+                      name="message"
+                      rows={3}
+                      placeholder="Anything we should know before the demo?"
+                      className="resize-none rounded-xl border border-border-strong bg-white/[0.03] px-4 py-2.5 font-inter text-sm text-white placeholder:text-muted focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                    />
+                  </label>
                   <button
                     type="submit"
                     className="group mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 font-inter text-sm font-medium text-white transition-colors hover:bg-primary-2"

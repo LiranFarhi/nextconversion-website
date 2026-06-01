@@ -7,6 +7,7 @@ import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
 import CountUp from "./CountUp";
 import DemoPhone from "./DemoPhone";
+import SnapRow from "./SnapRow";
 
 type Step = {
   title: string;
@@ -117,11 +118,16 @@ export default function LiveDemoSection() {
               aria-hidden
               className="pointer-events-none absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/40 blur-[70px]"
             />
-            <div className="relative h-[430px] w-[200px]">
-              <div className="absolute left-0 top-0 origin-top-left scale-[0.69]">
-                <DemoPhone step={active} />
-              </div>
-            </div>
+            {/* swipe left/right through the storefront steps */}
+            <SnapRow active={active} onSelect={select} className="w-[200px]" itemClassName="w-[200px]">
+              {STEPS.map((s, i) => (
+                <div key={s.title} className="relative h-[430px] w-[200px]">
+                  <div className="absolute left-0 top-0 origin-top-left scale-[0.69]">
+                    <DemoPhone step={i} />
+                  </div>
+                </div>
+              ))}
+            </SnapRow>
           </div>
 
           <div className="min-w-0 flex-1 pt-1">

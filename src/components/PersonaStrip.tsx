@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 export type StoreKey = "sport" | "luxury" | "street";
@@ -49,7 +49,8 @@ function Chip({
       type="button"
       onClick={onSelect}
       aria-pressed={active}
-      className={`mx-2 flex h-[60px] shrink-0 items-center gap-2 rounded-full py-2 pl-2 pr-5 transition-all duration-300 ${
+      data-active={active || undefined}
+      className={`flex h-[60px] shrink-0 snap-center items-center gap-2 rounded-full py-2 pl-2 pr-5 transition-all duration-300 ${
         active
           ? "border border-primary bg-white/[0.07] shadow-[0_0_24px_-8px_rgba(131,79,251,0.7)]"
           : "border border-white/15 bg-white/[0.05] opacity-60 hover:opacity-100"
@@ -80,26 +81,43 @@ type Props = {
   /** controlled active persona label; falls back to internal state when omitted */
   activeLabel?: string;
   onSelect?: (label: string) => void;
+  /** called when the user manually scrolls/touches the strip (to pause auto-tour) */
+  onInteract?: () => void;
 };
 
-export default function PersonaStrip({ activeLabel, onSelect }: Props) {
+export default function PersonaStrip({ activeLabel, onSelect, onInteract }: Props) {
   const [internal, setInternal] = useState("Luxury coats");
   const active = activeLabel ?? internal;
   const handle = (label: string) => (onSelect ? onSelect(label) : setInternal(label));
+  const scroller = useRef<HTMLDivElement | null>(null);
+
+  // keep the active chip centered as it changes (auto-tour or click)
+  useEffect(() => {
+    const el = scroller.current;
+    if (!el) return;
+    const i = PERSONAS.findIndex((p) => p.label === active);
+    const chip = el.children[i] as HTMLElement | undefined;
+    if (!chip) return;
+    el.scrollTo({ left: chip.offsetLeft - (el.clientWidth - chip.clientWidth) / 2, behavior: "smooth" });
+  }, [active]);
 
   return (
-    <section
-      className="marquee relative overflow-hidden py-2"
+    <div
+      ref={scroller}
+      onPointerDown={onInteract}
+      onWheel={onInteract}
+      onTouchStart={onInteract}
+      role="tablist"
+      aria-label="Choose a visitor"
+      className="scrollbar-hide relative flex snap-x snap-mandatory gap-3 overflow-x-auto px-2 py-2"
       style={{
-        WebkitMaskImage: "linear-gradient(to right, transparent, #000 8%, #000 92%, transparent)",
-        maskImage: "linear-gradient(to right, transparent, #000 8%, #000 92%, transparent)",
+        WebkitMaskImage: "linear-gradient(to right, transparent, #000 6%, #000 94%, transparent)",
+        maskImage: "linear-gradient(to right, transparent, #000 6%, #000 94%, transparent)",
       }}
     >
-      <div className="marquee-track">
-        {[...PERSONAS, ...PERSONAS].map((p, i) => (
-          <Chip key={i} {...p} active={active === p.label} onSelect={() => handle(p.label)} />
-        ))}
-      </div>
-    </section>
+      {PERSONAS.map((p) => (
+        <Chip key={p.label} {...p} active={active === p.label} onSelect={() => handle(p.label)} />
+      ))}
+    </div>
   );
 }

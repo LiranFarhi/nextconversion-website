@@ -110,7 +110,9 @@ function StoreCard({
 
 export default function StorefrontComparison() {
   // shared "active visitor" — connects the segments to the curated storefront
-  const { index: pIdx, select: pSelect, ref: personaRef } = useAutoAdvance(PERSONAS.length, { dwell: 3000 });
+  const { index: pIdx, select: pSelect, pause: pPause, ref: personaRef } = useAutoAdvance(PERSONAS.length, {
+    dwell: 3000,
+  });
   const active = PERSONAS[pIdx];
   // mobile card carousel (legacy <-> curated)
   const { index: cIdx, select: cSelect, playing: cPlaying } = useAutoAdvance(2);
@@ -156,7 +158,11 @@ export default function StorefrontComparison() {
         <p className="mb-3 text-center font-inter text-sm text-muted">
           Every click is a different person
         </p>
-        <PersonaStrip activeLabel={active.label} onSelect={(label) => pSelect(PERSONAS.findIndex((p) => p.label === label))} />
+        <PersonaStrip
+          activeLabel={active.label}
+          onSelect={(label) => pSelect(PERSONAS.findIndex((p) => p.label === label))}
+          onInteract={pPause}
+        />
       </Reveal>
 
       {/* Connector: active visitor flows into the storefronts */}

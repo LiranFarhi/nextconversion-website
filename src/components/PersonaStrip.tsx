@@ -3,20 +3,21 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
-export type StoreKey = "sport" | "luxury" | "street";
-export type Persona = { tag: string; label: string; img: number; store: StoreKey };
+import type { StorefrontId } from "./storefronts";
 
-// Each visitor maps to the curated storefront style the agents build for them
-// (the three storefront designs in the Figma "Endless curated storefronts" frame).
+export type Persona = { tag: string; label: string; img: number; storefront: StorefrontId };
+
+// Each visitor gets a bespoke storefront — a different *format* per person
+// (modern shop, magazine, lookbook, video feed, pin board, social shop, chat, deals).
 export const PERSONAS: Persona[] = [
-  { tag: "34 • F", label: "Sophisticated Sportwear", img: 1, store: "sport" },
-  { tag: "24 • M", label: "Sustainable Hiking Gear", img: 2, store: "sport" },
-  { tag: "52 • F", label: "Luxury coats", img: 3, store: "luxury" },
-  { tag: "19 • M", label: "Streetwear", img: 4, store: "street" },
-  { tag: "41 • F", label: "Organic Skincare", img: 5, store: "luxury" },
-  { tag: "30 • M", label: "Vintage Accesories", img: 6, store: "street" },
-  { tag: "61 • F", label: "Handcrafted Jewelry", img: 7, store: "luxury" },
-  { tag: "28 • F", label: "Budget-Friendly", img: 8, store: "street" },
+  { tag: "34 • F", label: "Sophisticated Sportwear", img: 1, storefront: "sport" },
+  { tag: "24 • M", label: "Sustainable Hiking Gear", img: 2, storefront: "hiking" },
+  { tag: "52 • F", label: "Luxury coats", img: 3, storefront: "luxury" },
+  { tag: "19 • M", label: "Streetwear", img: 4, storefront: "street" },
+  { tag: "41 • F", label: "Organic Skincare", img: 5, storefront: "skincare" },
+  { tag: "30 • M", label: "Vintage Accesories", img: 6, storefront: "vintage" },
+  { tag: "61 • F", label: "Handcrafted Jewelry", img: 7, storefront: "jewelry" },
+  { tag: "28 • F", label: "Budget-Friendly", img: 8, storefront: "budget" },
 ];
 
 function DeviceIcon() {

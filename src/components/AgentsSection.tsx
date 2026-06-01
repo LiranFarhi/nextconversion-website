@@ -1,113 +1,68 @@
 "use client";
 
+import { useRef, useState } from "react";
 import Image from "next/image";
-import {
-  Images,
-  MessageSquareQuote,
-  LayoutDashboard,
-  TrendingUp,
-  CircleDollarSign,
-  Clock,
-  type LucideIcon,
-} from "lucide-react";
+import { TrendingUp, CircleDollarSign, Clock, type LucideIcon } from "lucide-react";
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
 import CountUp from "./CountUp";
-import TiltCard from "./TiltCard";
-import SnapRow from "./SnapRow";
-import CarouselDots from "./CarouselDots";
-import { useAutoAdvance } from "./useAutoAdvance";
 
 type Agent = {
   name: string;
   role?: string;
-  img: string;
   quote: string;
+  x: number; // horizontal centre of the agent in the illustration (0–1)
 };
 
-// Skills are the Figma set (icon frames named gallery / square-quote / dashboard,
-// in #834ffb) — the design reuses the same three across the agent cards.
-const SKILLS: { icon: LucideIcon; label: string }[] = [
-  { icon: Images, label: "Creative assets generation" },
-  { icon: MessageSquareQuote, label: "A/B Tested copy styles" },
-  { icon: LayoutDashboard, label: "Performance monitoring" },
-];
-
-// Roster left→right as in the group image. Quotes are verbatim from the per-agent
-// Figma frames; roles only where the Figma names them (John, Emilia).
+// Order matches the agents in the table illustration (left → right). Quotes are
+// verbatim from the per-agent Figma frames; roles only where the Figma names them.
 const AGENTS: Agent[] = [
   {
     name: "Emilia",
     role: "The Taylor",
-    img: "/figma/agent-emilia.png",
     quote: "“I adjust your site design, UX, and merchandising in live sessions.”",
+    x: 0.16,
   },
   {
     name: "Donna",
-    img: "/figma/agent-donna.png",
     quote: "“While chatting with the user I intelligently bundle products to maximize AOV.”",
+    x: 0.37,
   },
   {
     name: "Danny",
-    img: "/figma/agent-danny.png",
     quote: "“I process intent signals and social trends that human teams miss.”",
+    x: 0.61,
   },
   {
     name: "John",
     role: "The Optimizer",
-    img: "/figma/agent-john.png",
     quote:
       "“I enhance product details - generating descriptions, images and videos, copy styles to ensure your performance never drops.”",
+    x: 0.83,
   },
 ];
 
-// Stat icons mirror the Figma icon names (usd-circle, clock, users); the numbers
-// carry the accent colour and the icons are soft #efedfd, per the Figma.
 const IMPACT: { icon: LucideIcon; value: string; color: string; label: string }[] = [
   { icon: TrendingUp, value: "+30%", color: "#0fdd98", label: "Conversion Rate" },
   { icon: CircleDollarSign, value: "10x", color: "#834ffb", label: "Campaigns launched per team" },
   { icon: Clock, value: "800%", color: "#009dff", label: "Faster idea-to-launch cycle time" },
 ];
 
-function AgentCard({ agent }: { agent: Agent }) {
-  return (
-    <div className="flex h-full flex-col gap-6 rounded-3xl border border-primary/30 bg-white/[0.05] p-6">
-      <div className="flex items-start gap-4">
-        <Image
-          src={agent.img}
-          alt={`Portrait of ${agent.name}`}
-          width={128}
-          height={128}
-          className="h-[88px] w-[88px] flex-shrink-0 rounded-3xl object-cover sm:h-[119px] sm:w-[119px]"
-        />
-        <div className="flex flex-col gap-4">
-          <div>
-            <p className="font-display text-lg font-medium leading-6 text-[#f4f0ff]">{agent.name}</p>
-            {agent.role && <p className="mt-0.5 font-inter text-base leading-6 text-soft">{agent.role}</p>}
-          </div>
-          <p className="font-inter text-base leading-6 text-white">{agent.quote}</p>
-        </div>
-      </div>
-      <ul className="flex flex-col gap-3">
-        {SKILLS.map(({ icon: Icon, label }) => (
-          <li
-            key={label}
-            className="flex items-center gap-4 font-inter text-base font-medium leading-6 text-[#f4f0ff]"
-          >
-            <Icon size={16} className="flex-shrink-0 text-primary" strokeWidth={2} />
-            {label}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
 export default function AgentsSection() {
-  const { index, select, ref, playing } = useAutoAdvance(AGENTS.length);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
+  const { scrollYProgress } = useScroll({ target: trackRef, offset: ["start start", "end end"] });
+
+  useMotionValueEvent(scrollYProgress, "change", (p) => {
+    const i = Math.min(AGENTS.length - 1, Math.max(0, Math.floor(p * AGENTS.length)));
+    if (i !== active) setActive(i);
+  });
+
+  const agent = AGENTS[active];
 
   return (
-    <section ref={ref} id="agents" className="mx-auto max-w-[1200px] px-5 py-20 sm:px-8 sm:py-28">
+    <section id="agents" className="mx-auto max-w-[1200px] px-5 py-20 sm:px-8 sm:py-28">
       <SectionHeading
         title={
           <>
@@ -119,78 +74,72 @@ export default function AgentsSection() {
         subtitle="Meet your agent workforce that deliver autonomously behind the scenes"
       />
 
-      {/* Selectable roster — tapping an avatar jumps to that agent */}
-      <Reveal className="mt-10 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-        {AGENTS.map((a, i) => (
-          <button
-            key={a.name}
-            type="button"
-            onClick={() => select(i)}
-            aria-pressed={index === i}
-            className={`flex items-center gap-2.5 rounded-full border py-1.5 pl-1.5 pr-4 transition-colors ${
-              index === i
-                ? "border-primary bg-white/[0.06] shadow-[0_0_24px_-8px_rgba(131,79,251,0.7)]"
-                : "border-white/12 bg-white/[0.03] hover:bg-white/[0.07]"
-            }`}
-          >
+      {/* Scroll-scrubbed illustration — scrolling moves between the avatars */}
+      <div ref={trackRef} className="relative mt-10 h-[280vh]">
+        <div className="sticky top-0 flex h-screen flex-col items-center justify-center gap-6">
+          <div className="relative w-full max-w-[660px] overflow-hidden rounded-3xl border border-primary/30 bg-white/[0.02]">
             <Image
-              src={a.img}
-              alt=""
-              width={128}
-              height={128}
-              className={`h-9 w-9 rounded-full object-cover ring-1 ${
-                index === i ? "ring-primary" : "ring-white/10"
-              }`}
+              src="/figma/agents-table.png"
+              alt="Emilia, Donna, Danny and John — the AI agent workforce at a table"
+              width={1327}
+              height={752}
+              className="h-auto w-full"
+              sizes="(max-width: 700px) 92vw, 660px"
+              
             />
-            <span className="flex flex-col items-start leading-tight">
-              <span className="font-inter text-sm font-medium text-white">{a.name}</span>
-              {a.role && <span className="font-inter text-xs text-muted">{a.role}</span>}
-            </span>
-          </button>
-        ))}
-      </Reveal>
 
-      {/* Desktop: group image + active agent detail (auto-cycles) */}
-      <div className="mt-8 hidden items-stretch gap-8 lg:grid lg:grid-cols-2">
-        <TiltCard className="overflow-hidden rounded-3xl border border-primary/30 bg-white/[0.02]">
-          <Image
-            src="/figma/agents-group.png"
-            alt="Four AI agents — Emilia, Donna, Danny and John — collaborating at a table"
-            width={1120}
-            height={626}
-            className="h-full w-full object-cover"
-            sizes="560px"
-          />
-        </TiltCard>
-        <AgentCard agent={AGENTS[index]} />
-      </div>
+            {/* moving spotlight over the active agent */}
+            <motion.span
+              aria-hidden
+              className="pointer-events-none absolute top-[18%] h-40 w-40 -translate-x-1/2 rounded-full bg-primary/40 blur-[55px]"
+              animate={{ left: `${agent.x * 100}%` }}
+              transition={{ type: "spring", stiffness: 120, damping: 22 }}
+            />
 
-      {/* Mobile: the agents-at-a-table illustration, then the per-agent cards */}
-      <div className="mt-6 lg:hidden">
-        <div className="mb-4 overflow-hidden rounded-3xl border border-primary/30 bg-white/[0.02]">
-          <Image
-            src="/figma/agents-group.png"
-            alt="Four AI agents — Emilia, Donna, Danny and John — collaborating at a table"
-            width={1120}
-            height={626}
-            className="h-auto w-full object-cover"
-            sizes="92vw"
-          />
-        </div>
-        <SnapRow active={index} onSelect={select} className="gap-4 px-1 pb-1" itemClassName="basis-[88%] pr-1">
-          {AGENTS.map((a) => (
-            <AgentCard key={a.name} agent={a} />
-          ))}
-        </SnapRow>
-        <div className="mt-4 flex justify-center">
-          <CarouselDots
-            count={AGENTS.length}
-            active={index}
-            onSelect={select}
-            dwellMs={4200}
-            playing={playing}
-            label="Agent"
-          />
+            {/* name pills (30% → 100% opacity for the active one) */}
+            {AGENTS.map((a, i) => (
+              <span
+                key={a.name}
+                style={{ left: `${a.x * 100}%`, top: "5%" }}
+                className={`absolute -translate-x-1/2 rounded-full border px-3 py-1 font-inter text-xs font-medium backdrop-blur-sm transition-all duration-500 ${
+                  i === active
+                    ? "scale-110 border-primary bg-background/70 text-white shadow-[0_0_24px_-6px_rgba(131,79,251,0.8)] opacity-100"
+                    : "border-white/15 bg-background/40 text-white/70 opacity-40"
+                }`}
+              >
+                {a.name}
+              </span>
+            ))}
+          </div>
+
+          {/* active agent caption (crossfades as you scroll) */}
+          <div className="flex min-h-[120px] max-w-[600px] flex-col items-center text-center">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={active}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+              >
+                <p className="font-display text-2xl font-semibold text-[#f4f0ff]">{agent.name}</p>
+                {agent.role && <p className="mt-0.5 font-inter text-base text-soft">{agent.role}</p>}
+                <p className="mt-3 font-inter text-base leading-relaxed text-white/90">{agent.quote}</p>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* progress dots */}
+          <div className="flex gap-2">
+            {AGENTS.map((a, i) => (
+              <span
+                key={a.name}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  i === active ? "w-6 bg-primary" : "w-1.5 bg-white/25"
+                }`}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
@@ -212,14 +161,14 @@ export default function AgentsSection() {
         </div>
       </Reveal>
 
-      {/* +10 more agents — sits under the metrics, per Figma */}
+      {/* +10 more agents — under the metrics */}
       <Reveal className="mt-8 flex justify-center">
         <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.05] py-2 pl-3 pr-4">
           <div className="flex items-center -space-x-2">
-            {AGENTS.slice(0, 3).map((a) => (
+            {["emilia", "donna", "danny"].map((n) => (
               <Image
-                key={a.name}
-                src={a.img}
+                key={n}
+                src={`/figma/agent-${n}.png`}
                 alt=""
                 width={128}
                 height={128}

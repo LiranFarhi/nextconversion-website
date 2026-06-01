@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Check, Target, Wand2, RefreshCw } from "lucide-react";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
+import CountUp from "./CountUp";
 
 const PHASE_DESC =
   'Emilia generates a full shopping experience aligned specifically with "Sustainability" - not just a landing page.';
@@ -76,7 +77,10 @@ export default function LiveDemoSection() {
           {/* Phase 1 */}
           <Reveal className={phaseCard}>
             <PhaseHeader n={1} title="Trigger" icon={<Target size={32} strokeWidth={1.6} />} />
-            <p className="mt-4 font-inter text-base leading-relaxed text-white/90">{PHASE_DESC}</p>
+            <p className="mt-4 font-inter text-base leading-relaxed text-white/90">
+              A visitor lands from a &ldquo;sustainable activewear&rdquo; ad. The agent reads the intent
+              signal the moment they arrive.
+            </p>
           </Reveal>
 
           {/* Phase 2 — active / expanded */}
@@ -111,7 +115,9 @@ export default function LiveDemoSection() {
           {/* Phase 3 */}
           <Reveal delay={200} className={phaseCard}>
             <PhaseHeader n={3} title="Adaptation" icon={<RefreshCw size={30} strokeWidth={1.6} />} />
-            <p className="mt-4 font-inter text-base leading-relaxed text-white/90">{PHASE_DESC}</p>
+            <p className="mt-4 font-inter text-base leading-relaxed text-white/90">
+              Copy, layout and merchandising keep adapting to live performance — continuously, 24/7.
+            </p>
           </Reveal>
         </div>
       </div>
@@ -120,7 +126,7 @@ export default function LiveDemoSection() {
       <div className="mt-16 grid grid-cols-2 gap-x-12 gap-y-8 sm:flex sm:flex-wrap sm:items-start sm:justify-center sm:gap-12">
         {OUTCOMES.map((s, i) => (
           <Reveal key={s.label} delay={i * 80} className="flex flex-col gap-2 text-center sm:text-left">
-            <p className={`font-display text-4xl font-semibold ${s.color}`}>{s.value}</p>
+            <CountUp value={s.value} className={`font-display text-4xl font-semibold ${s.color}`} />
             <p className="font-inter text-base text-soft">{s.label}</p>
           </Reveal>
         ))}

@@ -6,7 +6,7 @@ export default function Hero() {
       {/* Soft purple radial brand glow behind the headline */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-[-10%] h-[720px] w-[1180px] max-w-[150vw] -translate-x-1/2 rounded-full opacity-80"
+        className="animate-glow pointer-events-none absolute left-1/2 top-[-10%] h-[720px] w-[1180px] max-w-[150vw] -translate-x-1/2 rounded-full opacity-70"
         style={{
           background:
             "radial-gradient(closest-side, rgba(131,79,251,0.42), rgba(225,81,255,0.16) 46%, rgba(1,0,30,0) 72%)",
@@ -25,7 +25,7 @@ export default function Hero() {
 
         <h1 className="mx-auto mt-7 max-w-[15ch] font-display text-[clamp(2.75rem,7.2vw,5.5625rem)] font-light leading-[1.02] tracking-[-0.02em] text-white">
           Turning Static Storefronts Into Endless{" "}
-          <span className="gradient-text font-normal">Self-Adaptive Experiences</span>
+          <span className="gradient-text gradient-animate font-normal">Self-Adaptive Experiences</span>
         </h1>
 
         <p className="mx-auto mt-7 max-w-[620px] font-inter text-base leading-relaxed text-soft/80 sm:text-[18px]">

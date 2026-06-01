@@ -92,14 +92,11 @@ export default function DemoModal() {
               </div>
             ) : (
               <div className="relative">
-                <p className="font-inter text-sm font-medium uppercase tracking-[0.14em] text-primary-3">
-                  Book a Demo
-                </p>
-                <h3 className="mt-2 font-display text-2xl font-semibold leading-tight text-white">
-                  See your storefront adapt in real-time
+                <h3 className="font-display text-2xl font-semibold leading-tight text-white">
+                  Book Your Demo
                 </h3>
                 <p className="mt-2 font-inter text-sm text-soft/80">
-                  Tell us where to reach you and we&rsquo;ll set up a personalized walkthrough.
+                  See how NextConversion can transform your e-commerce storefront.
                 </p>
 
                 <form
@@ -116,7 +113,7 @@ export default function DemoModal() {
                     type="submit"
                     className="group mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 font-inter text-sm font-medium text-white transition-colors hover:bg-primary-2"
                   >
-                    Request my demo
+                    Book a demo
                     <CircleArrowRight size={18} strokeWidth={1.75} className="btn-arrow" />
                   </button>
                 </form>

@@ -1,21 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Check, CircleArrowRight } from "lucide-react";
 
 export default function DemoModal() {
   const [open, setOpen] = useState(false);
   const [sent, setSent] = useState(false);
+  const lastFocused = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const onOpen = () => {
+      lastFocused.current = document.activeElement as HTMLElement;
       setSent(false);
       setOpen(true);
     };
     window.addEventListener("open-demo-modal", onOpen);
     return () => window.removeEventListener("open-demo-modal", onOpen);
   }, []);
+
+  // restore focus to the trigger when the modal closes
+  useEffect(() => {
+    if (!open) lastFocused.current?.focus?.();
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -102,7 +109,7 @@ export default function DemoModal() {
                     setSent(true);
                   }}
                 >
-                  <Field label="Full name" type="text" name="name" placeholder="Alex Rivera" />
+                  <Field label="Full name" type="text" name="name" placeholder="Alex Rivera" autoFocus />
                   <Field label="Work email" type="email" name="email" placeholder="alex@brand.com" />
                   <Field label="Company" type="text" name="company" placeholder="Brand Co." />
                   <button
@@ -127,17 +134,20 @@ function Field({
   type,
   name,
   placeholder,
+  autoFocus,
 }: {
   label: string;
   type: string;
   name: string;
   placeholder: string;
+  autoFocus?: boolean;
 }) {
   return (
     <label className="flex flex-col gap-1.5">
       <span className="font-inter text-xs font-medium text-soft/80">{label}</span>
       <input
         required
+        autoFocus={autoFocus}
         type={type}
         name={name}
         placeholder={placeholder}

@@ -64,9 +64,20 @@ export default function LiveDemoSection() {
   const [progress, setProgress] = useState(0);
   const [playing, setPlaying] = useState(true);
   const startRef = useRef(0);
+  const sectionRef = useRef<HTMLElement>(null);
+  const [inView, setInView] = useState(false);
+
+  // only auto-advance while the section is actually on screen
+  useEffect(() => {
+    const node = sectionRef.current;
+    if (!node) return;
+    const obs = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { threshold: 0.25 });
+    obs.observe(node);
+    return () => obs.disconnect();
+  }, []);
 
   useEffect(() => {
-    if (reduce || !playing) return;
+    if (reduce || !playing || !inView) return;
     let raf = 0;
     startRef.current = 0;
     const tick = (t: number) => {
@@ -81,7 +92,7 @@ export default function LiveDemoSection() {
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [reduce, playing]);
+  }, [reduce, playing, inView]);
 
   const select = (i: number) => {
     setActive(i);
@@ -92,7 +103,7 @@ export default function LiveDemoSection() {
   const step = STEPS[active];
 
   return (
-    <section id="how-it-works" className="mx-auto max-w-[1200px] px-5 py-20 sm:px-8 sm:py-28">
+    <section ref={sectionRef} id="how-it-works" className="mx-auto max-w-[1200px] px-5 py-20 sm:px-8 sm:py-28">
       <SectionHeading
         title="Watch a Storefront Evolve in Real-Time"
         subtitle="Meet your agent workforce that deliver autonomously behind the scenes."

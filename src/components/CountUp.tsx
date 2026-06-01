@@ -49,7 +49,7 @@ export default function CountUp({ value, className = "", style, durationMs = 140
           observer.disconnect();
         }
       },
-      { threshold: 0.4 }
+      { threshold: 0.15, rootMargin: "0px 0px -10% 0px" }
     );
     observer.observe(node);
     return () => {

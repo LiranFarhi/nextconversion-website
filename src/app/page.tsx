@@ -11,6 +11,7 @@ import Footer from "../components/Footer";
 import ScrollProgress from "../components/ScrollProgress";
 import AmbientOrbs from "../components/AmbientOrbs";
 import DemoModal from "../components/DemoModal";
+import StickyMobileCta from "../components/StickyMobileCta";
 
 export default function Home() {
   return (
@@ -30,6 +31,7 @@ export default function Home() {
       </main>
       <Footer />
       <DemoModal />
+      <StickyMobileCta />
     </>
   );
 }

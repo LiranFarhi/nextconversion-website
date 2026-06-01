@@ -1,10 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Reveal from "./Reveal";
 import SnapRow from "./SnapRow";
 import CarouselDots from "./CarouselDots";
-import PersonaStrip, { PERSONAS, type StoreKey } from "./PersonaStrip";
+import PersonaStrip, { PERSONAS } from "./PersonaStrip";
+import { STOREFRONTS, type StorefrontId } from "./storefronts";
 import { useAutoAdvance } from "./useAutoAdvance";
 
 type Card = {
@@ -25,39 +27,35 @@ const LEGACY: Card = {
 };
 const CURATED: Card = {
   label: "Endless curated storefronts",
-  src: "/figma/store-luxury.png",
+  src: "/figma/legacy-store.png",
   w: 1024,
-  h: 1536,
+  h: 1004,
   alt: "A curated storefront, personalized to the active visitor",
   highlight: true,
 };
 
-// The three storefront designs the agents build, from the Figma "Endless
-// curated storefronts" frame. The active visitor's segment selects which one.
-const STORES: { key: StoreKey; src: string; alt: string }[] = [
-  { key: "sport", src: "/figma/store-sport.png", alt: "A storefront curated for activewear shoppers" },
-  { key: "luxury", src: "/figma/store-luxury.png", alt: "A storefront curated for luxury shoppers" },
-  { key: "street", src: "/figma/store-street.png", alt: "A storefront curated for streetwear shoppers" },
-];
-
-/** Cross-fades between the curated storefronts as the active visitor changes. */
-function CuratedStack({ activeStore }: { activeStore: StoreKey }) {
+/**
+ * Renders the live storefront the agents built for the active visitor and
+ * cross-fades to a new one when the visitor changes. Each visitor gets a
+ * different *format* (modern shop, magazine, video feed, chat, …).
+ */
+function CuratedShowcase({ id }: { id: StorefrontId }) {
+  const reduce = useReducedMotion();
+  const { Component } = STOREFRONTS[id];
   return (
-    <div className="relative aspect-[1024/1004] w-full">
-      {STORES.map((s) => (
-        <Image
-          key={s.key}
-          src={s.src}
-          alt={s.alt}
-          width={1024}
-          height={1536}
-          sizes="(max-width: 768px) 88vw, 560px"
-          aria-hidden={s.key !== activeStore}
-          className={`absolute inset-0 h-full w-full object-cover object-top transition-opacity duration-700 ease-out ${
-            s.key === activeStore ? "opacity-100" : "opacity-0"
-          }`}
-        />
-      ))}
+    <div className="relative aspect-[1024/1004] w-full bg-[#0b0a1f]">
+      <AnimatePresence initial={false}>
+        <motion.div
+          key={id}
+          className="absolute inset-0"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: reduce ? 0 : 0.45, ease: "easeOut" }}
+        >
+          <Component />
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }
@@ -69,7 +67,7 @@ function StoreCard({
   media,
 }: {
   card: Card;
-  sub: string;
+  sub: React.ReactNode;
   badge: React.ReactNode;
   media?: React.ReactNode;
 }) {
@@ -149,7 +147,17 @@ export default function StorefrontComparison() {
   );
 
   const legacySub = "One page for everyone";
-  const curatedSub = `Personalized for ${active.label}`;
+  const curatedSub = (
+    <span className="inline-flex flex-wrap items-center justify-center gap-x-1.5 gap-y-1">
+      <span>
+        Personalized for <span className="text-white">{active.label}</span>
+      </span>
+      <span className="inline-flex items-center gap-1 rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary-3">
+        <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+        {STOREFRONTS[active.storefront].format}
+      </span>
+    </span>
+  );
 
   return (
     <section id="why" className="relative mx-auto max-w-[1200px] px-5 py-12 sm:px-8 sm:py-16">
@@ -206,7 +214,7 @@ export default function StorefrontComparison() {
           card={CURATED}
           sub={curatedSub}
           badge={curatedBadge}
-          media={<CuratedStack activeStore={active.store} />}
+          media={<CuratedShowcase id={active.storefront} />}
         />
       </div>
 
@@ -218,7 +226,7 @@ export default function StorefrontComparison() {
             card={CURATED}
             sub={curatedSub}
             badge={curatedBadge}
-            media={<CuratedStack activeStore={active.store} />}
+            media={<CuratedShowcase id={active.storefront} />}
           />
         </SnapRow>
         <div className="mt-4 flex justify-center">

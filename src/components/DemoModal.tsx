@@ -116,6 +116,9 @@ export default function DemoModal() {
                     Book a demo
                     <CircleArrowRight size={18} strokeWidth={1.75} className="btn-arrow" />
                   </button>
+                  <p className="text-center font-inter text-[11px] text-muted">
+                    No spam · 2-min setup · We&rsquo;ll only use this to schedule your demo.
+                  </p>
                 </form>
               </div>
             )}

@@ -5,7 +5,6 @@ import { Target, Wand2, Images, MessageSquareQuote, Check, Play, Pause, type Luc
 import { useReducedMotion } from "framer-motion";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
-import CountUp from "./CountUp";
 import DemoPhone from "./DemoPhone";
 import SnapRow from "./SnapRow";
 import CarouselDots from "./CarouselDots";
@@ -85,13 +84,6 @@ function StepExtras({ step }: { step: Step }) {
     </>
   );
 }
-
-const OUTCOMES = [
-  { value: "+200%", label: "Conversion Rate", color: "text-green" },
-  { value: "+35%", label: "AOV", color: "text-primary" },
-  { value: "+90%", label: "Session Duration", color: "text-cyan" },
-  { value: "+29%", label: "Returning Users", color: "text-magenta" },
-];
 
 const DWELL = 3800;
 
@@ -301,16 +293,6 @@ export default function LiveDemoSection() {
             );
           })}
         </div>
-      </div>
-
-      {/* Outcome stats */}
-      <div className="mt-16 grid grid-cols-2 gap-x-12 gap-y-8 sm:flex sm:flex-wrap sm:items-start sm:justify-center sm:gap-12">
-        {OUTCOMES.map((s, i) => (
-          <Reveal key={s.label} delay={i * 80} className="flex flex-col gap-2 text-center sm:text-left">
-            <CountUp value={s.value} className={`font-display text-4xl font-semibold ${s.color}`} />
-            <p className="font-inter text-base text-soft">{s.label}</p>
-          </Reveal>
-        ))}
       </div>
     </section>
   );

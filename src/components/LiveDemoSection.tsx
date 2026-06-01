@@ -5,9 +5,6 @@ import SectionHeading from "./SectionHeading";
 import CountUp from "./CountUp";
 import Parallax from "./Parallax";
 
-const PHASE_DESC =
-  'Emilia generates a full shopping experience aligned specifically with "Sustainability" - not just a landing page.';
-
 const OUTCOMES = [
   { value: "+200%", label: "Conversion Rate", color: "text-green" },
   { value: "+35%", label: "AOV", color: "text-primary" },
@@ -17,21 +14,10 @@ const OUTCOMES = [
 
 const ACTIONS = ["Personalize UX layouts", "Adapts Merchandising", "Adjust messaging tone"];
 
-function PhaseBadge({ n, icon }: { n: number; icon: React.ReactNode }) {
-  return (
-    <div className="flex shrink-0 items-center gap-4">
-      <span className="grid h-12 w-12 place-items-center rounded-full bg-primary font-inter text-base font-bold text-white">
-        {n}
-      </span>
-      <span className="grid h-[60px] w-[60px] place-items-center text-white/90">{icon}</span>
-    </div>
-  );
-}
-
 function PhaseHeader({ n, title, icon }: { n: number; title: string; icon: React.ReactNode }) {
   return (
     <div className="flex items-center gap-4">
-      <PhaseBadge n={n} icon={icon} />
+      <span className="grid h-[60px] w-[60px] shrink-0 place-items-center text-white/90">{icon}</span>
       <div className="flex flex-col gap-1">
         <span className="font-inter text-sm font-normal text-primary-3">phase&nbsp;&nbsp;{n}</span>
         <span className="font-display text-2xl font-semibold leading-none text-white">{title}</span>
@@ -40,8 +26,8 @@ function PhaseHeader({ n, title, icon }: { n: number; title: string; icon: React
   );
 }
 
-const phaseCardActive = "rounded-3xl border border-primary/60 bg-white/[0.05] p-8 backdrop-blur-md";
-const phaseCardIdle = "rounded-3xl border border-white/10 bg-white/[0.02] p-6 opacity-60";
+const phaseCardActive = "rounded-3xl border border-primary bg-white/[0.05] p-8 backdrop-blur-md";
+const phaseCardIdle = "rounded-3xl border border-primary bg-white/[0.05] p-8 opacity-[0.35]";
 
 export default function LiveDemoSection() {
   return (
@@ -54,7 +40,6 @@ export default function LiveDemoSection() {
       <div className="mt-14 grid items-start gap-8 lg:grid-cols-2">
         {/* Left: live storefront preview */}
         <Reveal className="flex flex-col gap-4">
-          <p className="font-display text-xl font-medium text-soft">Endless curated storefronts</p>
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-primary/25 via-background-2 to-background p-6">
             {/* glowing ellipse behind the phone */}
             <div
@@ -76,15 +61,13 @@ export default function LiveDemoSection() {
 
         {/* Right: phase timeline */}
         <div className="flex flex-col gap-4">
-          <p className="font-display text-xl font-medium text-soft">Agent workforce, live</p>
-
           {/* Phase 1 — idle */}
           <Reveal className={phaseCardIdle}>
             <PhaseHeader n={1} title="Trigger" icon={<Target size={26} strokeWidth={1.6} />} />
           </Reveal>
 
           {/* Phase 2 — active / expanded */}
-          <Reveal delay={100} className={`${phaseCardActive} ring-1 ring-primary/40`}>
+          <Reveal delay={100} className={phaseCardActive}>
             <PhaseHeader n={2} title="Evolution" icon={<Wand2 size={32} strokeWidth={1.6} />} />
             <p className="mt-4 font-inter text-base text-white/90">
               Full storefront adapts to sustainability
@@ -98,8 +81,6 @@ export default function LiveDemoSection() {
               <span className="font-inter text-sm text-soft/60">[The Taylor]</span>
               <span className="font-inter text-sm text-white/80">is working...</span>
             </div>
-
-            <p className="mt-4 font-inter text-base text-white/90">{PHASE_DESC}</p>
 
             <div className="mt-5 flex flex-col gap-3">
               <p className="font-inter text-sm text-white/60">Agent Actions:</p>

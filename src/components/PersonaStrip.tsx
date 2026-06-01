@@ -13,11 +13,31 @@ const PERSONAS = [
 
 type Persona = (typeof PERSONAS)[number] & { active?: boolean };
 
+function DeviceIcon() {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 16 16"
+      className="ml-3 mt-0.5 h-4 w-4 shrink-0 text-white/80"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.33}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="4.5" y="1.5" width="7" height="13" rx="1.5" />
+      <line x1="7" y1="12.5" x2="9" y2="12.5" />
+    </svg>
+  );
+}
+
 function Chip({ tag, label, img, active }: Persona) {
   return (
     <div
-      className={`mx-2 flex h-14 shrink-0 items-center gap-3 rounded-full py-1.5 pl-1.5 pr-5 ${
-        active ? "border border-white/70 bg-white/[0.07]" : "border border-border bg-white/[0.03]"
+      className={`mx-2 flex h-[60px] shrink-0 items-center gap-2 rounded-full bg-white/[0.05] py-2 pl-2 pr-5 ${
+        active
+          ? "border border-primary shadow-[0_0_24px_-8px_rgba(131,79,251,0.7)]"
+          : "border border-white/15"
       }`}
     >
       <Image
@@ -25,11 +45,14 @@ function Chip({ tag, label, img, active }: Persona) {
         alt=""
         width={128}
         height={128}
-        className="h-11 w-11 shrink-0 rounded-full object-cover ring-1 ring-white/10"
+        className="h-10 w-10 shrink-0 rounded-full object-cover ring-1 ring-white/10"
       />
-      <span className="flex flex-col leading-tight">
-        <span className="font-inter text-[11px] font-medium text-muted">{tag}</span>
-        <span className="whitespace-nowrap font-inter text-sm font-medium text-white/90">{label}</span>
+      <span className="flex min-w-[164px] flex-col leading-tight">
+        <span className="flex items-center justify-between">
+          <span className="font-inter text-sm font-normal text-white/80">{tag}</span>
+          <DeviceIcon />
+        </span>
+        <span className="whitespace-nowrap font-inter text-sm font-normal text-white/80">{label}</span>
       </span>
     </div>
   );

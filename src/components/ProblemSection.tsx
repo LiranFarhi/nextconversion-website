@@ -39,21 +39,21 @@ export default function ProblemSection() {
             <TiltCard
               key={s.value}
               delay={i * 120}
-              className="card flex flex-1 flex-col justify-center p-8 sm:p-10"
+              className="card flex flex-1 flex-col justify-center p-6"
             >
-              <p className="font-inter text-xs font-semibold uppercase tracking-[0.16em] text-primary-3">
+              <p className="font-inter text-sm font-medium uppercase tracking-[0.05em] text-primary-3">
                 {s.eyebrow}
               </p>
-              <div className="mt-3 flex items-center gap-3">
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-coral/15 text-coral">
-                  <s.icon size={18} />
+              <div className="mt-2 flex items-center gap-4">
+                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-[10px] bg-coral/20 text-coral">
+                  <s.icon size={24} />
                 </span>
                 <CountUp
                   value={s.value}
-                  className="font-display text-6xl font-normal leading-none tracking-[-0.02em] text-white sm:text-7xl"
+                  className="font-display text-4xl font-semibold leading-none text-white"
                 />
               </div>
-              <p className="mt-4 max-w-[22rem] font-inter text-base leading-relaxed text-soft/80">
+              <p className="mt-2 max-w-[22rem] font-inter text-base leading-relaxed text-soft/60">
                 {s.desc}
               </p>
             </TiltCard>

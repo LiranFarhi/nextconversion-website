@@ -13,24 +13,29 @@ import CarouselDots from "./CarouselDots";
 type Step = {
   title: string;
   icon: LucideIcon;
-  agent?: { name: string; role: string; color: string };
+  agent?: { name: string; role?: string; color: string };
   body: string;
+  working?: boolean;
+  actions?: string[];
 };
 
 // The 5-step storefront evolution from the Figma "Storefront - Step 1..5"
-// frames, each driven by the agent whose job that stage maps to.
+// frames, each driven by the agent whose job that stage maps to. The
+// "Personalized home" step also carries the Figma "Agent Actions" copy.
 const STEPS: Step[] = [
   {
     title: "Arrival",
     icon: Target,
-    agent: { name: "Danny", role: "The Analyst", color: "text-cyan" },
+    agent: { name: "Danny", color: "text-cyan" },
     body: "A visitor lands from a “sustainable activewear” ad — Danny reads the intent signal the moment they arrive.",
   },
   {
     title: "Personalized home",
     icon: Wand2,
     agent: { name: "Emilia", role: "The Taylor", color: "text-magenta" },
-    body: "Emilia builds a full storefront around their intent — sustainable materials, ethical production, conscious design.",
+    body: "Emilia builds a full storefront that adapts to sustainability — materials, production and conscious design.",
+    working: true,
+    actions: ["Personalize UX layouts", "Adapts Merchandising", "Adjust messaging tone"],
   },
   {
     title: "Curated collection",
@@ -41,7 +46,7 @@ const STEPS: Step[] = [
   {
     title: "Assisted cart",
     icon: MessageSquareQuote,
-    agent: { name: "Donna", role: "The Concierge", color: "text-primary-3" },
+    agent: { name: "Donna", color: "text-primary-3" },
     body: "Donna chats with the visitor, intelligently bundling complementary products to lift average order value.",
   },
   {
@@ -50,6 +55,36 @@ const STEPS: Step[] = [
     body: "A sustainable, higher-value order — confirmed and on its way. The storefront keeps adapting for the next visitor.",
   },
 ];
+
+/** The Figma "Emilia is working…" pill + "Agent Actions" checklist for a step. */
+function StepExtras({ step }: { step: Step }) {
+  if (!step.working && !step.actions) return null;
+  return (
+    <>
+      {step.working && step.agent && (
+        <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/[0.05] px-3 py-2">
+          <span className="grid h-6 w-6 place-items-center rounded-full bg-gradient-to-br from-magenta to-primary font-inter text-[11px] font-bold text-white">
+            {step.agent.name[0]}
+          </span>
+          <span className={`font-inter text-sm font-semibold ${step.agent.color}`}>{step.agent.name}</span>
+          {step.agent.role && <span className="font-inter text-sm text-soft/60">[{step.agent.role}]</span>}
+          <span className="font-inter text-sm text-white/80">is working…</span>
+        </div>
+      )}
+      {step.actions && (
+        <div className="mt-4 flex flex-col gap-2.5">
+          <p className="font-inter text-sm text-white/60">Agent Actions:</p>
+          {step.actions.map((a) => (
+            <div key={a} className="flex items-center gap-3">
+              <Check size={16} strokeWidth={2.2} className="shrink-0 text-green" />
+              <span className="font-inter text-sm text-white/80">{a}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
 
 const OUTCOMES = [
   { value: "+200%", label: "Conversion Rate", color: "text-green" },
@@ -154,7 +189,7 @@ export default function LiveDemoSection() {
             {step.agent && (
               <span className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-white/12 bg-white/[0.04] px-3 py-1 font-inter text-xs">
                 <span className={`font-medium ${step.agent.color}`}>{step.agent.name}</span>
-                <span className="text-muted">{step.agent.role}</span>
+                {step.agent.role && <span className="text-muted">{step.agent.role}</span>}
               </span>
             )}
           </div>
@@ -243,7 +278,7 @@ export default function LiveDemoSection() {
                 </div>
 
                 {isActive && (
-                  <div className="lg:min-h-[84px]">
+                  <div className="lg:min-h-[235px]">
                     {!reduce && playing && (
                       <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-white/10">
                         <div
@@ -256,9 +291,10 @@ export default function LiveDemoSection() {
                     {s.agent && (
                       <span className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-white/12 bg-white/[0.04] px-3 py-1 font-inter text-xs">
                         <span className={`font-medium ${s.agent.color}`}>{s.agent.name}</span>
-                        <span className="text-muted">{s.agent.role}</span>
+                        {s.agent.role && <span className="text-muted">{s.agent.role}</span>}
                       </span>
                     )}
+                    <StepExtras step={s} />
                   </div>
                 )}
               </button>

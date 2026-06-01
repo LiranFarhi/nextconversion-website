@@ -5,13 +5,7 @@ import {
   Images,
   MessageSquareQuote,
   LayoutDashboard,
-  Wand2,
-  Palette,
-  Activity,
   TrendingUp,
-  Target,
-  LayoutGrid,
-  Boxes,
   CircleDollarSign,
   Clock,
   Users,
@@ -27,49 +21,37 @@ import { useAutoAdvance } from "./useAutoAdvance";
 
 type Agent = {
   name: string;
-  role: string;
+  role?: string;
   img: string;
   quote: string;
-  skills: { icon: LucideIcon; label: string }[];
 };
 
-// Roster left→right as in the group image. Quotes are taken verbatim from the
-// per-agent Figma frames (Agents - John/Danny/Donna/Emilia); skills are derived
-// from each quote. Role titles: John "The Optimizer" and Emilia "The Taylor"
-// are named in the Figma; Donna & Danny are titled to match their stated role.
+// Skills are the Figma set (icon frames named gallery / square-quote / dashboard,
+// in #834ffb) — the design reuses the same three across the agent cards.
+const SKILLS: { icon: LucideIcon; label: string }[] = [
+  { icon: Images, label: "Creative assets generation" },
+  { icon: MessageSquareQuote, label: "A/B Tested copy styles" },
+  { icon: LayoutDashboard, label: "Performance monitoring" },
+];
+
+// Roster left→right as in the group image. Quotes are verbatim from the per-agent
+// Figma frames; roles only where the Figma names them (John, Emilia).
 const AGENTS: Agent[] = [
   {
     name: "Emilia",
     role: "The Taylor",
     img: "/figma/agent-emilia.png",
     quote: "“I adjust your site design, UX, and merchandising in live sessions.”",
-    skills: [
-      { icon: Palette, label: "On-the-fly design" },
-      { icon: Wand2, label: "Live UX adjustments" },
-      { icon: LayoutGrid, label: "Dynamic merchandising" },
-    ],
   },
   {
     name: "Donna",
-    role: "The Concierge",
     img: "/figma/agent-donna.png",
     quote: "“While chatting with the user I intelligently bundle products to maximize AOV.”",
-    skills: [
-      { icon: MessageSquareQuote, label: "Conversational selling" },
-      { icon: Boxes, label: "Smart product bundling" },
-      { icon: CircleDollarSign, label: "AOV maximization" },
-    ],
   },
   {
     name: "Danny",
-    role: "The Analyst",
     img: "/figma/agent-danny.png",
     quote: "“I process intent signals and social trends that human teams miss.”",
-    skills: [
-      { icon: Activity, label: "Intent signal processing" },
-      { icon: TrendingUp, label: "Social trend detection" },
-      { icon: Target, label: "Audience targeting" },
-    ],
   },
   {
     name: "John",
@@ -77,14 +59,11 @@ const AGENTS: Agent[] = [
     img: "/figma/agent-john.png",
     quote:
       "“I enhance product details - generating descriptions, images and videos, copy styles to ensure your performance never drops.”",
-    skills: [
-      { icon: Images, label: "Creative assets generation" },
-      { icon: MessageSquareQuote, label: "A/B Tested copy styles" },
-      { icon: LayoutDashboard, label: "Performance monitoring" },
-    ],
   },
 ];
 
+// Stat icons mirror the Figma icon names (usd-circle, clock, users); the numbers
+// carry the accent colour and the icons are soft #efedfd, per the Figma.
 const IMPACT: { icon: LucideIcon; value: string; color: string; label: string }[] = [
   { icon: TrendingUp, value: "+30%", color: "#0fdd98", label: "Conversion Rate" },
   { icon: CircleDollarSign, value: "10x", color: "#834ffb", label: "Campaigns launched per team" },
@@ -98,24 +77,24 @@ function AgentCard({ agent }: { agent: Agent }) {
       <div className="flex items-start gap-4">
         <Image
           src={agent.img}
-          alt={`Portrait of ${agent.name}, ${agent.role}`}
+          alt={`Portrait of ${agent.name}`}
           width={128}
           height={128}
           className="h-[88px] w-[88px] flex-shrink-0 rounded-3xl object-cover sm:h-[119px] sm:w-[119px]"
         />
         <div className="flex flex-col gap-4">
           <div>
-            <p className="font-display text-lg font-semibold leading-6 text-[#f4f0ff]">{agent.name}</p>
-            <p className="mt-0.5 font-inter text-base leading-6 text-primary-3">{agent.role}</p>
+            <p className="font-display text-lg font-medium leading-6 text-[#f4f0ff]">{agent.name}</p>
+            {agent.role && <p className="mt-0.5 font-inter text-base leading-6 text-soft">{agent.role}</p>}
           </div>
-          <p className="font-inter text-base leading-6 text-white/90">{agent.quote}</p>
+          <p className="font-inter text-base leading-6 text-white">{agent.quote}</p>
         </div>
       </div>
       <ul className="flex flex-col gap-3">
-        {agent.skills.map(({ icon: Icon, label }) => (
+        {SKILLS.map(({ icon: Icon, label }) => (
           <li
             key={label}
-            className="flex items-center gap-4 font-display text-base font-medium leading-6 text-[#f4f0ff]"
+            className="flex items-center gap-4 font-inter text-base font-medium leading-6 text-[#f4f0ff]"
           >
             <Icon size={16} className="flex-shrink-0 text-primary" strokeWidth={2} />
             {label}
@@ -167,7 +146,7 @@ export default function AgentsSection() {
             />
             <span className="flex flex-col items-start leading-tight">
               <span className="font-inter text-sm font-medium text-white">{a.name}</span>
-              <span className="font-inter text-xs text-muted">{a.role}</span>
+              {a.role && <span className="font-inter text-xs text-muted">{a.role}</span>}
             </span>
           </button>
         ))}
@@ -237,7 +216,7 @@ export default function AgentsSection() {
               key={label}
               className="flex flex-col gap-4 rounded-3xl border border-primary/30 bg-white/[0.05] p-6"
             >
-              <Icon size={16} style={{ color }} strokeWidth={2} />
+              <Icon size={16} className="text-soft" strokeWidth={2} />
               <div className="flex flex-col gap-2">
                 <CountUp value={value} className="font-display text-4xl font-semibold leading-10" style={{ color }} />
                 <p className="font-inter text-base leading-6 text-soft">{label}</p>

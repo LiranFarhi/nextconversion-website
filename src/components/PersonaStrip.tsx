@@ -3,7 +3,9 @@
 import { useState } from "react";
 import Image from "next/image";
 
-const PERSONAS = [
+export type Persona = { tag: string; label: string; img: number };
+
+export const PERSONAS: Persona[] = [
   { tag: "34 • F", label: "Sophisticated Sportwear", img: 1 },
   { tag: "24 • M", label: "Sustainable Hiking Gear", img: 2 },
   { tag: "52 • F", label: "Luxury coats", img: 3 },
@@ -13,8 +15,6 @@ const PERSONAS = [
   { tag: "61 • F", label: "Handcrafted Jewelry", img: 7 },
   { tag: "28 • F", label: "Budget-Friendly", img: 8 },
 ];
-
-type Persona = (typeof PERSONAS)[number];
 
 function DeviceIcon() {
   return (
@@ -34,16 +34,22 @@ function DeviceIcon() {
   );
 }
 
-function Chip({ tag, label, img, active, onSelect }: Persona & { active: boolean; onSelect: () => void }) {
+function Chip({
+  tag,
+  label,
+  img,
+  active,
+  onSelect,
+}: Persona & { active: boolean; onSelect: () => void }) {
   return (
     <button
       type="button"
       onClick={onSelect}
       aria-pressed={active}
-      className={`mx-2 flex h-[60px] shrink-0 items-center gap-2 rounded-full bg-white/[0.05] py-2 pl-2 pr-5 transition-colors ${
+      className={`mx-2 flex h-[60px] shrink-0 items-center gap-2 rounded-full py-2 pl-2 pr-5 transition-all duration-300 ${
         active
-          ? "border border-primary shadow-[0_0_24px_-8px_rgba(131,79,251,0.7)]"
-          : "border border-white/15 hover:border-white/30"
+          ? "border border-primary bg-white/[0.07] shadow-[0_0_24px_-8px_rgba(131,79,251,0.7)]"
+          : "border border-white/15 bg-white/[0.05] opacity-60 hover:opacity-100"
       }`}
     >
       <Image
@@ -52,7 +58,9 @@ function Chip({ tag, label, img, active, onSelect }: Persona & { active: boolean
         width={128}
         height={128}
         loading="eager"
-        className="h-10 w-10 shrink-0 rounded-full object-cover ring-1 ring-white/10"
+        className={`h-10 w-10 shrink-0 rounded-full object-cover ring-1 ${
+          active ? "ring-primary" : "ring-white/10"
+        }`}
       />
       <span className="flex min-w-[164px] flex-col items-start leading-tight">
         <span className="flex w-full items-center justify-between">
@@ -65,11 +73,20 @@ function Chip({ tag, label, img, active, onSelect }: Persona & { active: boolean
   );
 }
 
-export default function PersonaStrip() {
-  const [selected, setSelected] = useState("Luxury coats");
+type Props = {
+  /** controlled active persona label; falls back to internal state when omitted */
+  activeLabel?: string;
+  onSelect?: (label: string) => void;
+};
+
+export default function PersonaStrip({ activeLabel, onSelect }: Props) {
+  const [internal, setInternal] = useState("Luxury coats");
+  const active = activeLabel ?? internal;
+  const handle = (label: string) => (onSelect ? onSelect(label) : setInternal(label));
+
   return (
     <section
-      className="marquee relative overflow-hidden py-6"
+      className="marquee relative overflow-hidden py-2"
       style={{
         WebkitMaskImage: "linear-gradient(to right, transparent, #000 8%, #000 92%, transparent)",
         maskImage: "linear-gradient(to right, transparent, #000 8%, #000 92%, transparent)",
@@ -77,12 +94,7 @@ export default function PersonaStrip() {
     >
       <div className="marquee-track">
         {[...PERSONAS, ...PERSONAS].map((p, i) => (
-          <Chip
-            key={i}
-            {...p}
-            active={selected === p.label}
-            onSelect={() => setSelected(p.label)}
-          />
+          <Chip key={i} {...p} active={active === p.label} onSelect={() => handle(p.label)} />
         ))}
       </div>
     </section>

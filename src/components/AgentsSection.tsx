@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import {
   Images,
@@ -22,6 +21,8 @@ import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
 import CountUp from "./CountUp";
 import TiltCard from "./TiltCard";
+import SnapRow from "./SnapRow";
+import { useAutoAdvance } from "./useAutoAdvance";
 
 type Agent = {
   name: string;
@@ -90,12 +91,45 @@ const IMPACT: { icon: LucideIcon; value: string; color: string; label: string }[
   { icon: Users, value: "+29%", color: "#ff6eba", label: "Returning Users" },
 ];
 
+function AgentCard({ agent }: { agent: Agent }) {
+  return (
+    <div className="flex h-full flex-col gap-6 rounded-3xl border border-primary/30 bg-white/[0.05] p-6">
+      <div className="flex items-start gap-4">
+        <Image
+          src={agent.img}
+          alt={`Portrait of ${agent.name}, ${agent.role}`}
+          width={128}
+          height={128}
+          className="h-[88px] w-[88px] flex-shrink-0 rounded-3xl object-cover sm:h-[119px] sm:w-[119px]"
+        />
+        <div className="flex flex-col gap-4">
+          <div>
+            <p className="font-display text-lg font-semibold leading-6 text-[#f4f0ff]">{agent.name}</p>
+            <p className="mt-0.5 font-inter text-base leading-6 text-primary-3">{agent.role}</p>
+          </div>
+          <p className="font-inter text-base leading-6 text-white/90">{agent.quote}</p>
+        </div>
+      </div>
+      <ul className="flex flex-col gap-3">
+        {agent.skills.map(({ icon: Icon, label }) => (
+          <li
+            key={label}
+            className="flex items-center gap-4 font-display text-base font-medium leading-6 text-[#f4f0ff]"
+          >
+            <Icon size={16} className="flex-shrink-0 text-primary" strokeWidth={2} />
+            {label}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 export default function AgentsSection() {
-  const [selected, setSelected] = useState(3); // John (matches the Figma card)
-  const agent = AGENTS[selected];
+  const { index, select, ref } = useAutoAdvance(AGENTS.length);
 
   return (
-    <section id="agents" className="mx-auto max-w-[1200px] px-5 py-20 sm:px-8 sm:py-28">
+    <section ref={ref} id="agents" className="mx-auto max-w-[1200px] px-5 py-20 sm:px-8 sm:py-28">
       <SectionHeading
         title={
           <>
@@ -107,16 +141,16 @@ export default function AgentsSection() {
         subtitle="Meet your agent workforce that deliver autonomously behind the scenes"
       />
 
-      {/* Selectable roster */}
+      {/* Selectable roster — tapping an avatar jumps to that agent */}
       <Reveal className="mt-10 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
         {AGENTS.map((a, i) => (
           <button
             key={a.name}
             type="button"
-            onClick={() => setSelected(i)}
-            aria-pressed={selected === i}
+            onClick={() => select(i)}
+            aria-pressed={index === i}
             className={`flex items-center gap-2.5 rounded-full border py-1.5 pl-1.5 pr-4 transition-colors ${
-              selected === i
+              index === i
                 ? "border-primary bg-white/[0.06] shadow-[0_0_24px_-8px_rgba(131,79,251,0.7)]"
                 : "border-white/12 bg-white/[0.03] hover:bg-white/[0.07]"
             }`}
@@ -127,7 +161,7 @@ export default function AgentsSection() {
               width={128}
               height={128}
               className={`h-9 w-9 rounded-full object-cover ring-1 ${
-                selected === i ? "ring-primary" : "ring-white/10"
+                index === i ? "ring-primary" : "ring-white/10"
               }`}
             />
             <span className="flex flex-col items-start leading-tight">
@@ -138,8 +172,8 @@ export default function AgentsSection() {
         ))}
       </Reveal>
 
-      <div className="mt-8 grid items-stretch gap-8 lg:grid-cols-2">
-        {/* Left: agent group image */}
+      {/* Desktop: group image + active agent detail (auto-cycles) */}
+      <div className="mt-8 hidden items-stretch gap-8 lg:grid lg:grid-cols-2">
         <TiltCard className="overflow-hidden rounded-3xl border border-primary/30 bg-white/[0.02]">
           <Image
             src="/figma/agents-group.png"
@@ -147,42 +181,19 @@ export default function AgentsSection() {
             width={1120}
             height={626}
             className="h-full w-full object-cover"
-            sizes="(max-width: 1024px) 92vw, 560px"
+            sizes="560px"
           />
         </TiltCard>
+        <AgentCard agent={AGENTS[index]} />
+      </div>
 
-        {/* Right: selected agent detail (swaps on roster click) */}
-        <div className="flex flex-col gap-6 rounded-3xl border border-primary/30 bg-white/[0.05] p-6">
-          <div className="flex items-start gap-4">
-            <Image
-              key={agent.img}
-              src={agent.img}
-              alt={`Portrait of ${agent.name}, ${agent.role}`}
-              width={128}
-              height={128}
-              className="h-[88px] w-[88px] flex-shrink-0 rounded-3xl object-cover sm:h-[119px] sm:w-[119px]"
-            />
-            <div className="flex flex-col gap-4">
-              <div>
-                <p className="font-display text-lg font-semibold leading-6 text-[#f4f0ff]">{agent.name}</p>
-                <p className="mt-0.5 font-inter text-base leading-6 text-primary-3">{agent.role}</p>
-              </div>
-              <p className="font-inter text-base leading-6 text-white/90">{agent.quote}</p>
-            </div>
-          </div>
-
-          <ul className="flex flex-col gap-3">
-            {agent.skills.map(({ icon: Icon, label }) => (
-              <li
-                key={label}
-                className="flex items-center gap-4 font-display text-base font-medium leading-6 text-[#f4f0ff]"
-              >
-                <Icon size={16} className="flex-shrink-0 text-primary" strokeWidth={2} />
-                {label}
-              </li>
-            ))}
-          </ul>
-        </div>
+      {/* Mobile: swipe carousel of every agent card, shown with its explanation */}
+      <div className="mt-6 lg:hidden">
+        <SnapRow active={index} onSelect={select} className="gap-4 px-1 pb-1" itemClassName="basis-[88%] pr-1">
+          {AGENTS.map((a) => (
+            <AgentCard key={a.name} agent={a} />
+          ))}
+        </SnapRow>
       </div>
 
       {/* +10 more agents pill */}

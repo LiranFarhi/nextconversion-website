@@ -109,7 +109,78 @@ export default function LiveDemoSection() {
         subtitle="Meet your agent workforce that deliver autonomously behind the scenes."
       />
 
-      <div className="mt-14 grid items-start gap-10 lg:grid-cols-2">
+      {/* MOBILE: phone + the active step's action shown side by side */}
+      <div className="mt-12 lg:hidden">
+        <div className="flex items-start gap-3">
+          <div className="relative shrink-0">
+            <div
+              aria-hidden
+              className="pointer-events-none absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/40 blur-[70px]"
+            />
+            <div className="relative h-[430px] w-[200px]">
+              <div className="absolute left-0 top-0 origin-top-left scale-[0.69]">
+                <DemoPhone step={active} />
+              </div>
+            </div>
+          </div>
+
+          <div className="min-w-0 flex-1 pt-1">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.04] px-2.5 py-1 font-inter text-[11px] text-white/85">
+              <span className="h-1.5 w-1.5 animate-soft-pulse rounded-full bg-green" />
+              Live · {active + 1}/{STEPS.length}
+            </span>
+            <div className="mt-2 flex items-center gap-2">
+              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-primary text-white">
+                <step.icon size={15} strokeWidth={1.8} />
+              </span>
+              <span className="font-display text-base font-semibold leading-tight text-white">{step.title}</span>
+            </div>
+            {!reduce && playing && (
+              <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-white/10">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-primary-2 to-magenta"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+            )}
+            <p className="mt-3 font-inter text-sm leading-relaxed text-white/85">{step.body}</p>
+            {step.agent && (
+              <span className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-white/12 bg-white/[0.04] px-3 py-1 font-inter text-xs">
+                <span className={`font-medium ${step.agent.color}`}>{step.agent.name}</span>
+                <span className="text-muted">{step.agent.role}</span>
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* step dots + play / pause */}
+        <div className="mt-5 flex items-center justify-center gap-3">
+          <div className="flex gap-2">
+            {STEPS.map((s, i) => (
+              <button
+                key={s.title}
+                type="button"
+                aria-label={`Step ${i + 1}: ${s.title}`}
+                onClick={() => select(i)}
+                className={`h-1.5 rounded-full transition-all ${
+                  i === active ? "w-6 bg-primary" : "w-1.5 bg-white/25"
+                }`}
+              />
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={() => setPlaying((p) => !p)}
+            aria-label={playing ? "Pause" : "Play"}
+            className="grid h-7 w-7 place-items-center rounded-full border border-border-strong bg-white/[0.03] text-soft"
+          >
+            {playing ? <Pause size={12} /> : <Play size={12} />}
+          </button>
+        </div>
+      </div>
+
+      {/* DESKTOP: phone | full interactive step timeline */}
+      <div className="mt-14 hidden items-start gap-10 lg:grid lg:grid-cols-2">
         {/* Left: the live phone, evolving through each step */}
         <Reveal className="relative flex flex-col items-center">
           <div

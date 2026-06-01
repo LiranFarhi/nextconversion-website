@@ -1,285 +1,128 @@
-"use client";
+import { Check, Lock, ShieldCheck, Boxes } from "lucide-react";
+import Reveal from "./Reveal";
+import SectionHeading from "./SectionHeading";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Bot, Eye, ShieldCheck, Rocket } from "lucide-react";
-import { FadeUp, StaggerParent, StaggerChild } from "./motion-primitives";
-
-const platforms = [
-  { name: "Shopify", color: "bg-green-100 text-green-700" },
-  { name: "BigCommerce", color: "bg-blue-100 text-blue-700" },
-  { name: "Headless", color: "bg-purple-100 text-purple-700" },
-  { name: "Custom", color: "bg-gray-100 text-gray-700" },
+const POLICIES = [
+  { label: "Margin", value: "Min 20%" },
+  { label: "Discount", value: "Min 20%" },
+  { label: "Stock", value: "Min 20%" },
+  { label: "Policy Check", value: "Min 15%" },
 ];
 
-const VOICE_OPTIONS = ["Premium", "Casual", "Playful"] as const;
+const BRAND = ["Brand voice: Casual", "Design guidelines", "Client Approval"];
 
-function StrictEnforcementControl() {
-  const [margin, setMargin] = useState(35);
-  const pct = margin; // 10–60 range
-
-  return (
-    <div className="rounded-xl bg-surface p-4 border border-border">
-      <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-medium text-muted">Minimum Margin</span>
-        <span className="text-xs font-bold text-primary">{margin}%</span>
-      </div>
-      <div className="relative h-6 mb-3">
-        <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-2 bg-gray-200 rounded-full">
-          <div
-            className="absolute left-0 top-0 h-full bg-gradient-to-r from-primary to-primary-light rounded-full transition-all duration-150"
-            style={{ width: `${((pct - 10) / 50) * 100}%` }}
-          />
-          <div
-            className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 border-primary rounded-full shadow-sm transition-all duration-150"
-            style={{ left: `calc(${((pct - 10) / 50) * 100}% - 8px)` }}
-          />
-        </div>
-        <input
-          type="range"
-          min={10}
-          max={60}
-          value={margin}
-          onChange={(e) => setMargin(Number(e.target.value))}
-          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-          aria-label="Minimum margin percentage"
-        />
-      </div>
-      <p className="text-[10px] text-muted">Agents never go below this margin floor</p>
-    </div>
-  );
-}
-
-function BrandAlignmentControl() {
-  const [voice, setVoice] = useState<typeof VOICE_OPTIONS[number]>("Premium");
-
-  return (
-    <div className="rounded-xl bg-surface p-4 border border-border">
-      <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-medium text-muted">Brand Voice</span>
-        <span className="text-xs font-bold text-primary">{voice}</span>
-      </div>
-      <div className="flex gap-1.5">
-        {VOICE_OPTIONS.map((opt) => (
-          <button
-            key={opt}
-            onClick={() => setVoice(opt)}
-            className={`text-[10px] px-2.5 py-1 rounded-full font-medium transition-all duration-200 ${
-              opt === voice
-                ? "bg-primary text-white shadow-sm"
-                : "bg-gray-100 text-muted hover:bg-gray-200"
-            }`}
-          >
-            {opt}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function PlugPlayControl() {
-  const [autoPublish, setAutoPublish] = useState(false);
-
-  return (
-    <div className="rounded-xl bg-surface p-4 border border-border">
-      <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-medium text-muted">Auto-publish</span>
-        <span className={`text-xs font-bold transition-colors ${autoPublish ? "text-success" : "text-primary"}`}>
-          {autoPublish ? "Enabled" : "Manual review"}
-        </span>
-      </div>
-      <div className="flex items-center gap-3">
-        <button
-          onClick={() => setAutoPublish(!autoPublish)}
-          className={`relative w-10 h-5 rounded-full transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-            autoPublish ? "bg-success" : "bg-gray-200"
-          }`}
-          role="switch"
-          aria-checked={autoPublish}
-          aria-label="Toggle auto-publish"
-        >
-          <motion.div
-            className="absolute top-0.5 w-4 h-4 bg-white rounded-full shadow-sm"
-            animate={{ left: autoPublish ? "calc(100% - 18px)" : "2px" }}
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          />
-        </button>
-        <span className="text-[10px] text-muted">
-          {autoPublish ? "Changes go live automatically" : "You approve before publishing"}
-        </span>
-      </div>
-    </div>
-  );
-}
-
-const features = [
-  {
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-          d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-        />
-      </svg>
-    ),
-    title: "Strict Enforcement",
-    description:
-      "Margin and discount policies are baked into the agent's logic.",
-    control: <StrictEnforcementControl />,
-  },
-  {
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-          d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
-        />
-      </svg>
-    ),
-    title: "Brand Alignment",
-    description:
-      "Approval workflows ensure the AI operates within your specific brand voice and business constraints and goals.",
-    control: <BrandAlignmentControl />,
-  },
-  {
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-          d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"
-        />
-      </svg>
-    ),
-    title: "Plug & Play",
-    description:
-      "Sit on top of your existing stack (Shopify, BigCommerce) without a migration headache.",
-    control: <PlugPlayControl />,
-  },
-];
-
-function DashboardBg() {
-  return (
-    <div className="absolute inset-0 flex items-center justify-center opacity-[0.04] pointer-events-none overflow-hidden">
-      <div className="w-[400px] sm:w-[600px] lg:w-[800px] h-[300px] sm:h-[400px] lg:h-[500px] border-2 border-foreground rounded-xl flex gap-4 p-6">
-        {/* Left panel — data rows */}
-        <div className="flex-1 border border-foreground rounded-lg p-4 flex flex-col gap-3">
-          {[60, 40, 80, 30, 55].map((w, i) => (
-            <div key={i} className="h-2 bg-foreground rounded" style={{ width: `${w}%` }} />
-          ))}
-        </div>
-        {/* Center panel — bar chart */}
-        <div className="flex-1 border border-foreground rounded-lg p-4 flex items-end gap-2 justify-center">
-          {[60, 80, 45, 90, 55, 70].map((h, i) => (
-            <div key={i} className="w-7 bg-foreground rounded-t" style={{ height: `${h}%` }} />
-          ))}
-        </div>
-        {/* Right panel — metrics + pie */}
-        <div className="w-44 border border-foreground rounded-lg p-4 flex flex-col gap-3">
-          {[40, 70, 55, 35].map((w, i) => (
-            <div key={i} className="h-2 bg-foreground rounded" style={{ width: `${w}%` }} />
-          ))}
-          <div className="w-14 h-14 rounded-full border-[5px] border-foreground mx-auto mt-2" />
-        </div>
-      </div>
-    </div>
-  );
-}
+const STACK = ["Shopify", "BigCommerce", "Google Analytics"];
 
 export default function SafetySection() {
   return (
-    <section id="safety" className="py-12 sm:py-20 lg:py-28 bg-surface relative overflow-hidden">
-      <DashboardBg />
+    <section id="safety" className="mx-auto max-w-[1200px] px-5 py-20 sm:px-8 sm:py-28">
+      <SectionHeading
+        title={
+          <>
+            Strategy stays with you.
+            <br />
+            Safety and scale are on us.
+          </>
+        }
+        subtitle="Your brand guidelines are paramount. Our agents operate strictly within your established boundaries, always."
+      />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <FadeUp className="text-center max-w-3xl mx-auto mb-8 sm:mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-display text-foreground mb-6">
-            Strategy stays with you.{" "}
-            <span className="gradient-text">Safety and scale are on us.</span>
-          </h2>
-          <p className="text-lg text-muted">
-            Your brand rules are sacred. Our agents operate within your
-            guardrails — always.
-          </p>
-        </FadeUp>
-
-        {/* Features with interactive controls */}
-        <StaggerParent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-16">
-          {features.map((feature) => (
-            <StaggerChild key={feature.title}>
-              <motion.div
-                className="rounded-2xl bg-white p-8 border border-border shadow-sm h-full"
-                whileHover={{ y: -4, boxShadow: "0 12px 40px -8px rgba(0,0,0,0.12)" }}
-                transition={{ type: "spring", stiffness: 350, damping: 25 }}
+      <div className="mt-14 grid gap-6 lg:grid-cols-3">
+        {/* Strict Enforcement */}
+        <Reveal className="card flex flex-col p-7">
+          <div className="flex flex-col gap-2">
+            {POLICIES.map((p) => (
+              <div
+                key={p.label}
+                className="flex items-center justify-between rounded-xl border border-border bg-white/[0.02] px-4 py-2.5"
               >
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-6">
-                  {feature.icon}
-                </div>
-                <h3 className="text-xl font-bold font-display text-foreground mb-3">
-                  {feature.title}
-                </h3>
-                <p className="text-muted text-sm leading-relaxed mb-6">
-                  {feature.description}
-                </p>
-                {feature.control}
-              </motion.div>
-            </StaggerChild>
-          ))}
-        </StaggerParent>
-
-        {/* Approval workflow */}
-        <FadeUp delay={0.15} className="max-w-3xl mx-auto mb-12">
-          <div className="rounded-2xl bg-white p-6 border border-border shadow-sm">
-            <p className="text-sm font-semibold text-muted uppercase tracking-wider mb-4 text-center">
-              How changes go live
-            </p>
-            <div className="flex flex-col sm:flex-row items-center gap-0 sm:gap-0">
-              {[
-                { label: "Agent Suggests", Icon: Bot,         bg: "bg-blue-50",    icon: "text-blue-600"   },
-                { label: "You Review",     Icon: Eye,         bg: "bg-amber-50",   icon: "text-amber-600"  },
-                { label: "You Approve",    Icon: ShieldCheck, bg: "bg-green-50",   icon: "text-green-600"  },
-                { label: "It Goes Live",   Icon: Rocket,      bg: "bg-primary/8",  icon: "text-primary"    },
-              ].map((step, i) => (
-                <div key={step.label} className="flex flex-col sm:flex-row items-center sm:flex-1">
-                  {/* Mobile vertical connector (above each step except the first) */}
-                  {i > 0 && (
-                    <div className="sm:hidden w-px h-4 bg-border" />
-                  )}
-                  <div className="flex flex-col items-center text-center py-1 sm:py-0">
-                    <div className={`w-10 h-10 rounded-xl ${step.bg} flex items-center justify-center mb-1.5`}>
-                      <step.Icon className={`w-5 h-5 ${step.icon}`} strokeWidth={1.75} />
-                    </div>
-                    <span className="text-xs font-medium text-foreground">
-                      {step.label}
-                    </span>
-                  </div>
-                  {/* Desktop horizontal connector */}
-                  {i < 3 && (
-                    <div className="hidden sm:block flex-1 h-px bg-border mx-2" />
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </FadeUp>
-
-        {/* Platform integrations */}
-        <FadeUp delay={0.2} className="text-center">
-          <p className="text-sm font-semibold text-muted uppercase tracking-wider mb-4">
-            Works with your existing stack
-          </p>
-          <div className="flex flex-wrap justify-center gap-3">
-            {platforms.map((p) => (
-              <motion.span
-                key={p.name}
-                className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium ${p.color}`}
-                whileHover={{ scale: 1.05 }}
-                transition={{ type: "spring", stiffness: 400, damping: 20 }}
-              >
-                {p.name}
-              </motion.span>
+                <span className="font-inter text-sm text-white/80">{p.label}</span>
+                <span className="flex items-center gap-2 font-inter text-sm font-medium text-white">
+                  {p.value}
+                  <span className="grid h-5 w-5 place-items-center rounded-full bg-green/15 text-green">
+                    <Check size={12} />
+                  </span>
+                </span>
+              </div>
             ))}
           </div>
-        </FadeUp>
+          <Pillar
+            icon={Lock}
+            title="Strict Enforcement"
+            desc="Inventory and discount policies are baked into the agent's logic."
+          />
+        </Reveal>
+
+        {/* Brand Alignment */}
+        <Reveal delay={120} className="card flex flex-col p-7">
+          <div className="flex flex-col gap-2">
+            {BRAND.map((b) => (
+              <div
+                key={b}
+                className="flex items-center gap-3 rounded-xl border border-border bg-white/[0.02] px-4 py-2.5 font-inter text-sm text-white/80"
+              >
+                <span className="grid h-5 w-5 place-items-center rounded-full bg-primary/20 text-primary-3">
+                  <Check size={12} />
+                </span>
+                {b}
+              </div>
+            ))}
+            <p className="mt-1 inline-flex items-center gap-2 px-1 font-inter text-xs text-muted">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-magenta" />
+              Emilia [The Taylor] is working…
+            </p>
+          </div>
+          <Pillar
+            icon={ShieldCheck}
+            title="Brand Alignment"
+            desc="Approval workflows ensure the AI operates within your specific brand voice and business constraints and goals."
+          />
+        </Reveal>
+
+        {/* Plug-and-play */}
+        <Reveal delay={240} className="card flex flex-col p-7">
+          <div className="flex flex-col gap-2">
+            {STACK.map((s) => (
+              <div
+                key={s}
+                className="flex items-center justify-between rounded-xl border border-border bg-white/[0.02] px-4 py-2.5"
+              >
+                <span className="font-inter text-sm text-white/80">{s}</span>
+                <span className="rounded-full bg-green/15 px-2 py-0.5 font-inter text-[11px] font-medium text-green">
+                  Connected
+                </span>
+              </div>
+            ))}
+          </div>
+          <Pillar
+            icon={Boxes}
+            title="Plug-and-play"
+            desc="Sit on top of your existing stack (Shopify, BigCommerce, Google Analytics) without a migration headache."
+          />
+        </Reveal>
       </div>
     </section>
+  );
+}
+
+function Pillar({
+  icon: Icon,
+  title,
+  desc,
+}: {
+  icon: typeof Lock;
+  title: string;
+  desc: string;
+}) {
+  return (
+    <div className="mt-7 border-t border-border pt-6">
+      <div className="flex items-center gap-3">
+        <span className="grid h-9 w-9 place-items-center rounded-lg bg-primary/15 text-primary-3">
+          <Icon size={18} />
+        </span>
+        <h3 className="font-display text-lg font-semibold text-white">{title}</h3>
+      </div>
+      <p className="mt-3 font-inter text-sm text-white/70">{desc}</p>
+    </div>
   );
 }

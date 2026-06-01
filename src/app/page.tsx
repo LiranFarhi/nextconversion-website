@@ -1,7 +1,6 @@
 import Header from "../components/Header";
 import Hero from "../components/Hero";
 import StorefrontComparison from "../components/StorefrontComparison";
-import PersonaStrip from "../components/PersonaStrip";
 import ProblemSection from "../components/ProblemSection";
 import AgentsSection from "../components/AgentsSection";
 import LiveDemoSection from "../components/LiveDemoSection";
@@ -22,7 +21,6 @@ export default function Home() {
       <main className="relative z-10">
         <Hero />
         <StorefrontComparison />
-        <PersonaStrip />
         <ProblemSection />
         <AgentsSection />
         <LiveDemoSection />

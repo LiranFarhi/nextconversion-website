@@ -13,6 +13,7 @@ import {
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
 import CountUp from "./CountUp";
+import TiltCard from "./TiltCard";
 
 const JOHN_SKILLS: { icon: LucideIcon; label: string }[] = [
   { icon: Images, label: "Creative assets generation" },
@@ -43,7 +44,7 @@ export default function AgentsSection() {
 
       <div className="mt-12 grid items-stretch gap-8 lg:grid-cols-2">
         {/* Left: agent group image */}
-        <Reveal className="overflow-hidden rounded-3xl border border-primary/30 bg-white/[0.02]">
+        <TiltCard className="overflow-hidden rounded-3xl border border-primary/30 bg-white/[0.02]">
           <Image
             src="/figma/agents-group.png"
             alt="Four AI agents — Emilia, Donna, Danny and John — collaborating at a table"
@@ -52,10 +53,10 @@ export default function AgentsSection() {
             className="h-full w-full object-cover"
             sizes="(max-width: 1024px) 92vw, 560px"
           />
-        </Reveal>
+        </TiltCard>
 
         {/* Right: highlighted agent — John */}
-        <Reveal
+        <TiltCard
           delay={120}
           className="flex flex-col gap-6 rounded-3xl border border-primary/30 bg-white/[0.05] p-6"
         >
@@ -95,7 +96,7 @@ export default function AgentsSection() {
               </li>
             ))}
           </ul>
-        </Reveal>
+        </TiltCard>
       </div>
 
       {/* +10 more agents pill */}

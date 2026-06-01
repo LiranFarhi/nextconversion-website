@@ -1,5 +1,5 @@
 import { Check, Lock, ShieldCheck, Boxes, FileText, BarChart3, ShoppingBag } from "lucide-react";
-import Reveal from "./Reveal";
+import TiltCard from "./TiltCard";
 import SectionHeading from "./SectionHeading";
 
 export default function SafetySection() {
@@ -17,32 +17,32 @@ export default function SafetySection() {
       />
 
       <div className="mt-14 grid gap-6 lg:grid-cols-3">
-        <Reveal className="card flex flex-col p-7">
+        <TiltCard className="card flex flex-col p-7">
           <EnforcementVisual />
           <Pillar
             icon={Lock}
             title="Strict Enforcement"
             desc="Inventory and discount policies are baked into the agent's logic."
           />
-        </Reveal>
+        </TiltCard>
 
-        <Reveal delay={120} className="card flex flex-col p-7">
+        <TiltCard delay={120} className="card flex flex-col p-7">
           <BrandVisual />
           <Pillar
             icon={ShieldCheck}
             title="Brand Alignment"
             desc="Approval workflows ensure the AI operates within your specific brand voice and business constraints and goals."
           />
-        </Reveal>
+        </TiltCard>
 
-        <Reveal delay={240} className="card flex flex-col p-7">
+        <TiltCard delay={240} className="card flex flex-col p-7">
           <IntegrationVisual />
           <Pillar
             icon={Boxes}
             title="Plug-and-play"
             desc="Sit on top of your existing stack (Shopify, BigCommerce, Google Analytics) without a migration headache."
           />
-        </Reveal>
+        </TiltCard>
       </div>
     </section>
   );

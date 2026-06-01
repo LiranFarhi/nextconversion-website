@@ -18,7 +18,7 @@ function InstagramIcon() {
 
 export default function Footer() {
   return (
-    <footer className="border-t border-border">
+    <footer className="relative z-10 border-t border-border">
       <div className="mx-auto max-w-[1200px] px-5 py-10 sm:px-8">
         {/* Top row: logo + socials */}
         <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">

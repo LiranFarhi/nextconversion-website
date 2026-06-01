@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Reveal from "./Reveal";
+import TiltCard from "./TiltCard";
 import SectionHeading from "./SectionHeading";
 import CountUp from "./CountUp";
 
@@ -33,7 +33,7 @@ export default function ProblemSection() {
       <div className="mt-14 grid items-stretch gap-6 md:grid-cols-2">
         <div className="flex flex-col gap-6">
           {STATS.map((s, i) => (
-            <Reveal
+            <TiltCard
               key={s.value}
               delay={i * 120}
               className="card flex flex-1 flex-col justify-center p-8 sm:p-10"
@@ -46,11 +46,11 @@ export default function ProblemSection() {
               <p className="mt-4 max-w-[22rem] font-inter text-base leading-relaxed text-soft/80">
                 {s.desc}
               </p>
-            </Reveal>
+            </TiltCard>
           ))}
         </div>
 
-        <Reveal delay={120} className="card flex items-center justify-center overflow-hidden p-6">
+        <TiltCard delay={120} className="card flex items-center justify-center overflow-hidden p-6">
           <Image
             src="/figma/funnel.png"
             alt="A conversion funnel collapsing to a stagnant 2-3% conversion rate"
@@ -59,7 +59,7 @@ export default function ProblemSection() {
             className="mx-auto h-auto w-full max-w-[460px]"
             sizes="(max-width: 768px) 92vw, 460px"
           />
-        </Reveal>
+        </TiltCard>
       </div>
     </section>
   );

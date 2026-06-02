@@ -1,0 +1,39 @@
+Product images sourced via Openverse (openverse.org) under Creative Commons licenses.
+
+earbuds.jpg
+  License: CC BY (Attribution)
+  Source: Openverse / Flickr
+  Query: "wireless earbuds white background"
+
+hoodie.jpg
+  License: CC BY (Attribution)
+  Source: Openverse / Flickr
+  Title: Flickr / Yahoo! T-Shirt (and hoodies + jacket) Collection
+  Creator: Schill
+  URL: https://live.staticflickr.com/1598/24078666831_61126ecebd_b.jpg
+
+led.jpg
+  License: CC BY-ND (Attribution-NoDerivs)
+  Source: Openverse / Flickr
+  Title: 3528-warm-white-led-strip-light-non-waterproof-120leds/m
+  Creator: LEDBulbs123
+  URL: https://live.staticflickr.com/8874/18122746226_510e927af5.jpg
+
+stand.jpg
+  License: CC BY-SA (Attribution-ShareAlike)
+  Source: Openverse / Flickr
+  Title: 3D Cell Phone Stand
+  Creator: cpl_makerspace
+  URL: https://live.staticflickr.com/5535/12240125965_d0a35a84e7_b.jpg
+
+tote.jpg
+  License: CC BY (Attribution)
+  Source: Openverse / Flickr
+  Title: Canvas tote bag printed with NIKON!
+  Creator: MIKI Yoshihito. (#mikiyoshihito)
+  URL: https://live.staticflickr.com/915/28554102647_aa4da54657_b.jpg
+
+blender.jpg
+  License: CC BY (Attribution)
+  Source: Openverse / Flickr
+  Query: "blender"

@@ -128,37 +128,31 @@ const DWELL_MS = 4000;
 // Sub-components (defined at module scope — never recreated inside render)
 // ---------------------------------------------------------------------------
 
-function AgentRow({ agent }: { agent: Phase["agent"] }): ReactElement {
+function AgentPill({ agent }: { agent: Phase["agent"] }): ReactElement {
   return (
-    <div className="mt-3.5 flex items-center gap-2.5">
-      <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full ring-2 ring-[#834ffb]/30">
-        <Image src={agent.img} alt={agent.name} fill sizes="32px" className="object-cover" />
-      </div>
-      <p className="font-inter text-[13px] leading-tight">
-        <span className="font-semibold text-[#834ffb]">{agent.name}</span>{" "}
-        <span className="text-[#5b5470]">[{agent.role}]</span>{" "}
-        <span className="text-[#8a8499]">is working&hellip;</span>
-      </p>
+    <div className="inline-flex items-center gap-2 self-start rounded-full border border-white/10 bg-white/[0.05] py-1.5 pl-1.5 pr-4">
+      <span className="relative h-6 w-6 shrink-0 overflow-hidden rounded-full">
+        <Image src={agent.img} alt={agent.name} fill sizes="24px" className="object-cover" />
+      </span>
+      <span className="font-inter text-sm leading-none">
+        <span className="font-semibold text-[#ff6eba]">{agent.name}</span>{" "}
+        <span className="text-soft/60">[{agent.role}]</span>{" "}
+        <span className="text-white/80">is working&hellip;</span>
+      </span>
     </div>
   );
 }
 
 function ActionChecklist({ actions }: { actions: string[] }): ReactElement {
   return (
-    <div className="mt-3.5">
-      <p className="mb-2 font-inter text-[11px] font-semibold uppercase tracking-[0.1em] text-[#9a93ad]">
-        Agent Actions:
-      </p>
-      <div className="flex flex-col gap-2">
-        {actions.map((action) => (
-          <div key={action} className="flex items-center gap-2.5">
-            <span className="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-[#0fdd98]">
-              <Check size={11} strokeWidth={3} className="text-white" />
-            </span>
-            <span className="font-inter text-[13px] leading-snug text-[#3a3550]">{action}</span>
-          </div>
-        ))}
-      </div>
+    <div className="flex flex-col gap-2.5">
+      <p className="font-inter text-sm text-white/60">Agent Actions:</p>
+      {actions.map((action) => (
+        <div key={action} className="flex items-center gap-3">
+          <Check size={16} strokeWidth={2.5} className="shrink-0 text-[#0fdd98]" />
+          <span className="font-inter text-sm leading-snug text-white/80">{action}</span>
+        </div>
+      ))}
     </div>
   );
 }
@@ -178,32 +172,27 @@ function PhaseCard({ phase, isActive, onSelect }: PhaseCardProps): ReactElement 
       aria-pressed={isActive}
       aria-label={`Select ${phase.title} phase`}
       className={[
-        "w-full rounded-2xl px-4 py-3.5 text-left backdrop-blur-md transition-all duration-300",
+        "w-full rounded-[24px] border text-left transition-all duration-300",
         isActive
-          ? "bg-white shadow-[0_18px_50px_-20px_rgba(131,79,251,0.55)] ring-1 ring-white/60"
-          : "bg-white/75 ring-1 ring-white/40 hover:bg-white/85",
+          ? "border-primary/30 bg-white/[0.05] p-6 shadow-[0_18px_50px_-26px_rgba(131,79,251,0.6)]"
+          : "border-primary/15 bg-white/[0.03] p-5 hover:border-primary/30",
       ].join(" ")}
     >
-      {/* Icon + eyebrow/title row */}
+      {/* Icon badge + eyebrow/title */}
       <div className="flex items-center gap-3">
         <span
           className={[
             "grid h-9 w-9 shrink-0 place-items-center rounded-xl transition-colors",
-            isActive ? "bg-[#834ffb] text-white" : "bg-[#834ffb]/12 text-[#834ffb]",
+            isActive ? "bg-primary text-white" : "bg-white/10 text-white/70",
           ].join(" ")}
         >
           <Icon size={17} strokeWidth={2} />
         </span>
         <div className="flex flex-col">
-          <span className="font-inter text-[10px] font-semibold uppercase tracking-[0.16em] text-[#9a7bf3]">
+          <span className="font-inter text-[13px] uppercase tracking-[0.08em] text-primary">
             {phase.label}
           </span>
-          <span
-            className={[
-              "font-display text-base font-semibold leading-tight",
-              isActive ? "text-[#1a1430]" : "text-[#1a1430]/55",
-            ].join(" ")}
-          >
+          <span className="font-display text-xl font-semibold leading-tight text-white">
             {phase.title}
           </span>
         </div>
@@ -211,11 +200,11 @@ function PhaseCard({ phase, isActive, onSelect }: PhaseCardProps): ReactElement 
 
       {/* Expanded content — only when active */}
       {isActive && (
-        <div>
+        <div className="mt-4 flex flex-col gap-4">
           {phase.body && (
-            <p className="mt-3 font-inter text-[13px] leading-relaxed text-[#3a3550]">{phase.body}</p>
+            <p className="font-inter text-[15px] leading-relaxed text-white/90">{phase.body}</p>
           )}
-          <AgentRow agent={phase.agent} />
+          <AgentPill agent={phase.agent} />
           {phase.actions && <ActionChecklist actions={phase.actions} />}
         </div>
       )}

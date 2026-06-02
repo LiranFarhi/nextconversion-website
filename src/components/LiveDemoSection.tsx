@@ -181,7 +181,7 @@ function PhaseCard({ phase, isActive, onSelect }: PhaseCardProps): ReactElement 
         "w-full rounded-2xl px-4 py-3.5 text-left backdrop-blur-md transition-all duration-300",
         isActive
           ? "bg-white shadow-[0_18px_50px_-20px_rgba(131,79,251,0.55)] ring-1 ring-white/60"
-          : "bg-white/55 ring-1 ring-white/30 hover:bg-white/70",
+          : "bg-white/75 ring-1 ring-white/40 hover:bg-white/85",
       ].join(" ")}
     >
       {/* Icon + eyebrow/title row */}
@@ -307,17 +307,18 @@ export default function LiveDemoSection(): ReactElement {
       </Reveal>
 
       {/* ------------------------------------------------------------------ */}
-      {/* MOBILE layout: phone on top, active phase card below                */}
+      {/* MOBILE layout: phone on top, full phase-card stack below            */}
       {/* ------------------------------------------------------------------ */}
       <div className="mt-10 lg:hidden">
-        {/* Phone with glow */}
+        {/* Phone with concentric glow */}
         <div className="relative flex items-center justify-center">
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[360px] w-[360px] -translate-x-1/2 -translate-y-1/2 rounded-full"
             style={{
               background:
-                "radial-gradient(circle, rgba(131,79,251,0.5) 0%, rgba(131,79,251,0.15) 45%, transparent 70%)",
+                "radial-gradient(circle, rgba(131,79,251,0.55) 0%, rgba(96,80,255,0.5) 22%, rgba(60,90,255,0.3) 42%, rgba(40,70,230,0.14) 60%, transparent 73%)",
+              filter: "blur(6px)",
             }}
           />
           <div style={{ transform: "scale(0.85)", transformOrigin: "center" }}>
@@ -325,29 +326,16 @@ export default function LiveDemoSection(): ReactElement {
           </div>
         </div>
 
-        {/* Phase tab pills */}
-        <div className="mt-8 flex items-center justify-center gap-1.5 flex-wrap px-4">
+        {/* Full phase-card stack (active expands) — matches Figma mobile */}
+        <div className="mx-auto mt-8 flex max-w-sm flex-col gap-3">
           {PHASES.map((phase, i) => (
-            <button
+            <PhaseCard
               key={phase.num}
-              type="button"
-              onClick={() => handleSelect(i)}
-              aria-pressed={i === active}
-              className={[
-                "rounded-full px-3 py-1 font-inter text-[11px] font-semibold transition-all",
-                i === active
-                  ? "bg-[#834ffb] text-white"
-                  : "bg-white/[0.06] text-white/50 hover:bg-white/[0.1]",
-              ].join(" ")}
-            >
-              {phase.title}
-            </button>
+              phase={phase}
+              isActive={i === active}
+              onSelect={() => handleSelect(i)}
+            />
           ))}
-        </div>
-
-        {/* Active phase card */}
-        <div className="mx-auto mt-5 max-w-sm">
-          <PhaseCard phase={activePhase} isActive onSelect={() => {}} />
         </div>
       </div>
     </section>

@@ -142,10 +142,14 @@ function ActionChecklist({ actions }: { actions: string[] }): ReactElement {
 
 function ResultMetric({ result }: { result: { value: string; label: string } }): ReactElement {
   return (
-    <div className="inline-flex items-center gap-3 self-start rounded-2xl border border-[#0fdd98]/30 bg-[#0fdd98]/10 px-4 py-2.5">
-      <TrendingUp size={20} strokeWidth={2.2} className="shrink-0 text-[#0fdd98]" />
-      <span className="font-display text-2xl font-semibold leading-none text-[#0fdd98]">{result.value}</span>
-      <span className="font-inter text-sm text-white/70">{result.label}</span>
+    <div className="flex max-w-full flex-wrap items-center gap-x-2.5 gap-y-0.5 self-start rounded-2xl border border-[#0fdd98]/30 bg-[#0fdd98]/10 px-3 py-2 sm:px-4 sm:py-2.5">
+      <span className="flex items-center gap-2">
+        <TrendingUp size={18} strokeWidth={2.2} className="shrink-0 text-[#0fdd98]" />
+        <span className="font-display text-xl font-semibold leading-none text-[#0fdd98] sm:text-2xl">
+          {result.value}
+        </span>
+      </span>
+      <span className="font-inter text-[13px] leading-tight text-white/70 sm:text-sm">{result.label}</span>
     </div>
   );
 }

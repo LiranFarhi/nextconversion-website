@@ -273,15 +273,15 @@ export default function LiveDemoSection(): ReactElement {
         <div className="relative flex shrink-0 items-center justify-center">
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 h-[240px] w-[240px] -translate-x-1/2 -translate-y-1/2 rounded-full sm:h-[420px] sm:w-[420px] lg:h-[540px] lg:w-[540px]"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[290px] w-[290px] -translate-x-1/2 -translate-y-1/2 rounded-full sm:h-[420px] sm:w-[420px] lg:h-[540px] lg:w-[540px]"
             style={{
               background:
                 "radial-gradient(circle, rgba(131,79,251,0.55) 0%, rgba(96,80,255,0.5) 22%, rgba(60,90,255,0.32) 40%, rgba(40,70,230,0.16) 58%, transparent 72%)",
               filter: "blur(6px)",
             }}
           />
-          <div className="relative z-[1] h-[259px] w-[120px] sm:h-[388px] sm:w-[180px] lg:h-[625px] lg:w-[290px]">
-            <div className="origin-top-left scale-[0.414] sm:scale-[0.62] lg:scale-100">
+          <div className="relative z-[1] h-[313px] w-[145px] sm:h-[388px] sm:w-[180px] lg:h-[625px] lg:w-[290px]">
+            <div className="origin-top-left scale-[0.5] sm:scale-[0.62] lg:scale-100">
               <DemoPhone step={activePhase.phoneStep} />
             </div>
           </div>

@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState, type ReactElement } from "react";
 import Image from "next/image";
 import { Check, Zap, Layers, Wand2, Tag, TrendingUp, type LucideIcon } from "lucide-react";
-import { useReducedMotion } from "framer-motion";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
 import DemoPhone from "./DemoPhone";
@@ -104,8 +103,6 @@ const PHASES: Phase[] = [
     phoneStep: 4,
   },
 ];
-
-const DWELL_MS = 4000;
 
 // ---------------------------------------------------------------------------
 // Sub-components (defined at module scope — never recreated inside render)
@@ -215,15 +212,16 @@ function PhaseCard({ phase, isActive, onSelect }: PhaseCardProps): ReactElement 
 // ---------------------------------------------------------------------------
 
 export default function LiveDemoSection(): ReactElement {
-  const reduce = useReducedMotion();
   const [active, setActive] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
   const [inView, setInView] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   // On small screens the phone slides down to sit next to the highlighted step
   const cardsRef = useRef<HTMLDivElement>(null);
   const phoneColRef = useRef<HTMLDivElement>(null);
   const [phoneY, setPhoneY] = useState(0);
+  // After a press, briefly ignore scroll-derived selection so the browser's
+  // scroll-anchoring (triggered by the card expanding) can't override the pick.
+  const selectLock = useRef(0);
 
   // Observe whether the section has entered the viewport
   useEffect(() => {
@@ -237,16 +235,36 @@ export default function LiveDemoSection(): ReactElement {
     return () => obs.disconnect();
   }, []);
 
-  // Auto-advance through phases while visible (skipped when reduce-motion is on)
+  // Selection follows scroll: the active phase is the last card whose top has
+  // crossed a reference line in the upper-middle of the viewport. Activating a
+  // card only pushes the cards below it, so this never oscillates.
   useEffect(() => {
-    if (reduce || !inView) return;
-    timerRef.current = setTimeout(() => {
-      setActive((a) => (a + 1) % PHASES.length);
-    }, DWELL_MS);
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
+    if (!inView) return;
+    let raf = 0;
+    const derive = () => {
+      raf = 0;
+      if (performance.now() < selectLock.current) return;
+      const cards = cardsRef.current;
+      if (!cards) return;
+      const line = window.innerHeight * 0.45;
+      let next = 0;
+      for (let i = 0; i < cards.children.length; i++) {
+        const top = (cards.children[i] as HTMLElement).getBoundingClientRect().top;
+        if (top <= line) next = i;
+        else break;
+      }
+      setActive((prev) => (prev === next ? prev : next));
     };
-  }, [reduce, inView, active]);
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(derive);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    derive();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [inView]);
 
   // Slide the phone to align with the active step (mobile/tablet only)
   useEffect(() => {
@@ -285,7 +303,7 @@ export default function LiveDemoSection(): ReactElement {
   }, [active]);
 
   const handleSelect = (i: number) => {
-    if (timerRef.current) clearTimeout(timerRef.current);
+    selectLock.current = performance.now() + 800;
     setActive(i);
   };
 

@@ -166,7 +166,7 @@ function PhaseCard({ phase, isActive, onSelect }: PhaseCardProps): ReactElement 
       aria-pressed={isActive}
       aria-label={`Select ${phase.title} phase`}
       className={[
-        "w-full rounded-[24px] border text-left transition-all duration-300",
+        "w-full snap-center scroll-my-24 rounded-[24px] border text-left transition-all duration-300",
         isActive
           ? "border-primary/30 bg-white/[0.05] p-4 shadow-[0_18px_50px_-26px_rgba(131,79,251,0.6)] sm:p-6"
           : "border-primary/15 bg-white/[0.03] p-3.5 hover:border-primary/30 sm:p-5",
@@ -246,12 +246,26 @@ export default function LiveDemoSection(): ReactElement {
       if (performance.now() < selectLock.current) return;
       const cards = cardsRef.current;
       if (!cards) return;
-      const line = window.innerHeight * 0.45;
+      // Match the snapport centre: viewport centre, shifted by the 6rem
+      // scroll-padding-top so the selected card lines up with where it snaps.
+      const line = (window.innerHeight + 96) / 2;
+      // Pick the card that straddles the centre line. This is stable: the active
+      // card expands downward, so it keeps straddling instead of flipping. In the
+      // small gaps between cards, fall back to the nearest card centre.
       let next = 0;
+      let nearest = Infinity;
       for (let i = 0; i < cards.children.length; i++) {
-        const top = (cards.children[i] as HTMLElement).getBoundingClientRect().top;
-        if (top <= line) next = i;
-        else break;
+        const r = (cards.children[i] as HTMLElement).getBoundingClientRect();
+        if (r.top <= line && r.bottom >= line) {
+          next = i;
+          nearest = -1;
+          break;
+        }
+        const dist = Math.abs(r.top + r.height / 2 - line);
+        if (nearest >= 0 && dist < nearest) {
+          nearest = dist;
+          next = i;
+        }
       }
       setActive((prev) => (prev === next ? prev : next));
     };

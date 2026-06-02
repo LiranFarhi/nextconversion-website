@@ -32,6 +32,38 @@ const CURATED: Card = {
   highlight: true,
 };
 
+/** A browser window whose viewport holds a storefront "screen". */
+function BrowserFrame({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="overflow-hidden rounded-xl bg-[#16161c] ring-1 ring-white/10 sm:rounded-2xl">
+      {/* browser chrome */}
+      <div className="flex h-6 items-center gap-1 px-2 sm:h-8 sm:gap-2 sm:px-4">
+        <span className="h-1.5 w-1.5 rounded-full bg-[#ff5f57] sm:h-3 sm:w-3" />
+        <span className="h-1.5 w-1.5 rounded-full bg-[#febc2e] sm:h-3 sm:w-3" />
+        <span className="h-1.5 w-1.5 rounded-full bg-[#28c840] sm:h-3 sm:w-3" />
+        <div className="mx-auto h-2.5 w-1/2 rounded-full bg-black/25 sm:h-4" />
+      </div>
+      {/* viewport */}
+      <div className="relative aspect-[1024/760] w-full overflow-hidden bg-white">{children}</div>
+    </div>
+  );
+}
+
+/** The static "one page for everyone" legacy storefront, in a browser window. */
+function LegacyShowcase() {
+  return (
+    <BrowserFrame>
+      <Image
+        src="/figma/legacy-store.jpg"
+        alt="A single generic storefront shown to every visitor"
+        fill
+        sizes="(max-width: 768px) 44vw, 540px"
+        className="object-cover object-top"
+      />
+    </BrowserFrame>
+  );
+}
+
 /**
  * Renders the real Figma storefront the agents built for the active visitor,
  * inside a browser window, and cross-fades to a new layout when the visitor
@@ -40,36 +72,26 @@ const CURATED: Card = {
 function CuratedShowcase({ id }: { id: StorefrontId }) {
   const reduce = useReducedMotion();
   return (
-    <div className="overflow-hidden rounded-2xl bg-[#16161c] ring-1 ring-white/10">
-      {/* browser chrome */}
-      <div className="flex h-8 items-center gap-2 px-4">
-        <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
-        <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
-        <span className="h-3 w-3 rounded-full bg-[#28c840]" />
-        <div className="mx-auto h-4 w-1/2 rounded-full bg-black/25" />
-      </div>
-      {/* storefront viewport */}
-      <div className="relative aspect-[1024/820] w-full overflow-hidden bg-white">
-        <AnimatePresence initial={false}>
-          <motion.div
-            key={id}
-            className="absolute inset-0"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: reduce ? 0 : 0.5, ease: "easeOut" }}
-          >
-            <Image
-              src={STOREFRONTS[id].src}
-              alt={STOREFRONTS[id].alt}
-              fill
-              sizes="(max-width: 768px) 88vw, 560px"
-              className="object-cover object-top"
-            />
-          </motion.div>
-        </AnimatePresence>
-      </div>
-    </div>
+    <BrowserFrame>
+      <AnimatePresence initial={false}>
+        <motion.div
+          key={id}
+          className="absolute inset-0"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: reduce ? 0 : 0.5, ease: "easeOut" }}
+        >
+          <Image
+            src={STOREFRONTS[id].src}
+            alt={STOREFRONTS[id].alt}
+            fill
+            sizes="(max-width: 768px) 44vw, 540px"
+            className="object-cover object-top"
+          />
+        </motion.div>
+      </AnimatePresence>
+    </BrowserFrame>
   );
 }
 
@@ -100,22 +122,7 @@ function StoreCard({
       <div className="relative hidden justify-center sm:mb-4 sm:flex">{badge}</div>
       <p className="relative font-display text-sm font-medium leading-tight text-white sm:text-2xl">{card.label}</p>
       <p className="relative mb-3 mt-1.5 font-inter text-xs leading-snug text-soft transition-colors sm:mb-6 sm:min-h-[24px] sm:text-base">{sub}</p>
-      <div
-        className={`relative mt-auto overflow-hidden rounded-2xl ${
-          card.highlight ? "ring-1 ring-primary/30" : "border border-border bg-black/30"
-        }`}
-      >
-        {media ?? (
-          <Image
-            src={card.src}
-            alt={card.alt}
-            width={card.w}
-            height={card.h}
-            className="h-auto w-full"
-            sizes="(max-width: 768px) 88vw, 560px"
-          />
-        )}
-      </div>
+      <div className="relative mt-auto">{media}</div>
     </div>
   );
 }
@@ -222,7 +229,7 @@ export default function StorefrontComparison() {
 
       {/* Legacy vs curated — side by side at every size */}
       <div className="grid grid-cols-2 gap-2.5 sm:gap-6">
-        <StoreCard card={LEGACY} sub={legacySub} badge={legacyBadge} />
+        <StoreCard card={LEGACY} sub={legacySub} badge={legacyBadge} media={<LegacyShowcase />} />
         <StoreCard
           card={CURATED}
           sub={curatedSub}

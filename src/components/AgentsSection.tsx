@@ -232,7 +232,7 @@ export default function AgentsSection(): ReactElement {
         subtitle="Meet your agent workforce that deliver autonomously behind the scenes"
       />
 
-      <div className="mt-12 grid items-center gap-6 md:grid-cols-2">
+      <div className="mt-12 grid items-start gap-6 md:grid-cols-2">
         {/* ── Left: illustration with click zones + name pills ── */}
         <div className="relative min-w-0 overflow-hidden rounded-3xl border border-primary/30 bg-white/[0.02] p-4">
           <Image

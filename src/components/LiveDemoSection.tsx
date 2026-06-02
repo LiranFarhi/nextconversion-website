@@ -2,169 +2,164 @@
 
 import { useEffect, useRef, useState, type ReactElement } from "react";
 import Image from "next/image";
-import { Check, ChevronLeft, ChevronRight } from "lucide-react";
+import { Check } from "lucide-react";
 import { useReducedMotion } from "framer-motion";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
 import DemoPhone from "./DemoPhone";
 
 // ---------------------------------------------------------------------------
-// Step data — titles and copy taken verbatim from the Figma "Use case" frames.
-// Agent images come from public/figma/agent-*.png (same paths used in AgentsSection).
+// Phase data — verbatim from the Figma "Use case" frames.
 // ---------------------------------------------------------------------------
 
-type Step = {
-  /** Step number label shown in the UI */
+type Phase = {
+  /** 1-based phase number */
   num: number;
-  /** Figma frame title */
+  /** Eyebrow label */
+  label: string;
+  /** Card title */
   title: string;
-  /** The scenario / body copy from Figma */
-  body: string;
-  /** Agent shown for this step (null = no single agent, e.g. the arrival or confirmed steps) */
-  agent?: {
+  /** Optional body copy (phase 1 has description but no actions) */
+  body?: string;
+  /** Agent shown in this phase */
+  agent: {
     name: string;
-    role?: string;
+    role: string;
     img: string;
-    /** tailwind text colour token */
-    color: string;
   };
-  /** "Agent Actions:" checklist items */
+  /** "Agent Actions:" checklist — undefined means no checklist (phase 1) */
   actions?: string[];
+  /** Which DemoPhone step to show */
+  phoneStep: number;
 };
 
-const STEPS: Step[] = [
+const PHASES: Phase[] = [
   {
     num: 1,
-    title: "Visitor Arrives",
-    body: "A visitor lands from a “sustainable activewear” ad — Danny reads the intent signal the moment they arrive.",
+    label: "PHASE 1",
+    title: "Trigger",
+    body: "Emilia generates a full shopping experience aligned specifically with “Sustainability” - not just a landing page.",
     agent: {
-      name: "Danny",
-      img: "/figma/agent-danny.png",
-      color: "text-cyan",
+      name: "Emilia",
+      role: "The Tailor",
+      img: "/figma/agent-emilia.png",
     },
-    actions: [
-      "Processes intent signals",
-      "Identifies sustainability interest",
-      "Activates personalisation pipeline",
-    ],
+    phoneStep: 0,
   },
   {
     num: 2,
-    title: "Storefront Personalised",
-    body: "Emilia generates a full shopping experience aligned specifically with 'Sustainability' — not just a landing page.",
+    label: "PHASE 2",
+    title: "Evolution",
+    body: "Full storefront adapts to sustainability",
     agent: {
       name: "Emilia",
-      role: "The Taylor",
+      role: "The Tailor",
       img: "/figma/agent-emilia.png",
-      color: "text-magenta",
     },
     actions: [
       "Personalize UX layouts",
       "Adapts Merchandising",
       "Adjust messaging tone",
     ],
+    phoneStep: 1,
   },
   {
     num: 3,
-    title: "Collection Curated",
-    body: "John enhances every product — descriptions, imagery and copy tuned so performance never drops.",
+    label: "PHASE 3",
+    title: "Adaptation",
     agent: {
       name: "John",
       role: "The Optimizer",
       img: "/figma/agent-john.png",
-      color: "text-green",
     },
     actions: [
-      "Generates product descriptions",
-      "Optimises imagery & copy",
-      "A/B tests product presentation",
+      "Iterates creative assets",
+      "A/B test copy styles",
+      "Prevent fatigue",
     ],
+    phoneStep: 2,
   },
   {
     num: 4,
-    title: "Cart Assisted",
-    body: "Donna chats with the visitor, intelligently bundling complementary products to lift average order value.",
+    label: "PHASE 4",
+    title: "Upsell",
+    body: "Shopping assistant suggests complementing sets at the right moment.",
     agent: {
       name: "Donna",
+      role: "The Shopping Assistant",
       img: "/figma/agent-donna.png",
-      color: "text-primary-3",
     },
     actions: [
-      "Engages in live chat",
-      "Bundles complementary products",
-      "Lifts average order value",
+      "Pairs product smartly",
+      "Offers dynamically",
+      "Optimizes carts",
     ],
+    phoneStep: 3,
   },
   {
     num: 5,
-    title: "Order Confirmed",
-    body: "A sustainable, higher-value order — confirmed and on its way. The storefront keeps adapting for the next visitor.",
+    label: "PHASE 5",
+    title: "Result",
+    body: "Optimization becomes continuous, ROAS improves, and the shopper feels the site truly “knows” her.",
+    agent: {
+      name: "Nova",
+      role: "The Performance Optimizer",
+      img: "/agents/agent-extra-1.png",
+    },
     actions: [
-      "Order processed successfully",
-      "Sustainable impact logged",
-      "Storefront resets for next visitor",
+      "Track conversion",
+      "Measure engagement",
+      "Update learning model",
     ],
+    phoneStep: 4,
   },
 ];
 
 const DWELL_MS = 4000;
 
 // ---------------------------------------------------------------------------
-// Sub-components (module scope so they are never recreated inside the render)
+// Sub-components (defined at module scope — never recreated inside render)
 // ---------------------------------------------------------------------------
 
-function StepIndicator({ total, active, onSelect }: { total: number; active: number; onSelect: (i: number) => void }): ReactElement {
+function AgentRow({ agent }: { agent: Phase["agent"] }): ReactElement {
   return (
-    <div className="flex items-center gap-1.5">
-      {Array.from({ length: total }, (_, i) => (
-        <button
-          key={i}
-          type="button"
-          aria-label={`Go to step ${i + 1}`}
-          onClick={() => onSelect(i)}
-          className={`h-1 rounded-full transition-all duration-300 ${
-            i === active
-              ? "w-6 bg-primary"
-              : "w-1.5 bg-white/25 hover:bg-white/50"
-          }`}
+    <div className="mt-4 flex items-center gap-3">
+      <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full border border-white/20">
+        <Image
+          src={agent.img}
+          alt={agent.name}
+          fill
+          sizes="36px"
+          className="object-cover"
         />
-      ))}
-    </div>
-  );
-}
-
-function AgentBadge({ agent }: { agent: NonNullable<Step["agent"]> }): ReactElement {
-  return (
-    <div className="flex items-center gap-3">
-      <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-white/20">
-        <Image src={agent.img} alt={agent.name} fill sizes="40px" className="object-cover" />
       </div>
-      <div className="flex flex-col">
-        <span className={`font-inter text-sm font-semibold leading-tight ${agent.color}`}>
+      <div>
+        <span className="font-inter text-sm font-semibold leading-tight text-[#834ffb]">
           {agent.name}
-          {agent.role && (
-            <span className="ml-1.5 font-normal text-white/50">[{agent.role}]</span>
-          )}
         </span>
-        <span className="font-inter text-[11px] text-white/40">Agent</span>
+        <span className="ml-1.5 font-inter text-sm font-normal text-white/50">
+          {agent.role} is working&hellip;
+        </span>
       </div>
     </div>
   );
 }
 
-function ActionsList({ actions }: { actions: string[] }): ReactElement {
+function ActionChecklist({ actions }: { actions: string[] }): ReactElement {
   return (
-    <div className="mt-5">
-      <p className="mb-3 font-inter text-[11px] font-semibold uppercase tracking-[0.12em] text-white/40">
-        Agent Actions
+    <div className="mt-4">
+      <p className="mb-2.5 font-inter text-[11px] font-semibold uppercase tracking-[0.12em] text-white/40">
+        Agent Actions:
       </p>
-      <div className="flex flex-col gap-2.5">
+      <div className="flex flex-col gap-2">
         {actions.map((action) => (
-          <div key={action} className="flex items-start gap-2.5">
-            <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-green/15">
-              <Check size={10} strokeWidth={2.5} className="text-green" />
+          <div key={action} className="flex items-center gap-2.5">
+            <span className="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-[#0fdd98]/15">
+              <Check size={10} strokeWidth={2.5} className="text-[#0fdd98]" />
             </span>
-            <span className="font-inter text-sm leading-snug text-white/80">{action}</span>
+            <span className="font-inter text-sm leading-snug text-white/80">
+              {action}
+            </span>
           </div>
         ))}
       </div>
@@ -172,33 +167,59 @@ function ActionsList({ actions }: { actions: string[] }): ReactElement {
   );
 }
 
-// A single phone in the filmstrip — scaled and dimmed based on offset from active
-function FilmstripPhone({
-  stepIndex,
-  offset,
-  onClick,
-}: {
-  stepIndex: number;
-  offset: number; // -1 | 0 | 1
-  onClick?: () => void;
-}): ReactElement {
-  const isCenter = offset === 0;
+type PhaseCardProps = {
+  phase: Phase;
+  isActive: boolean;
+  onSelect: () => void;
+};
 
+function PhaseCard({ phase, isActive, onSelect }: PhaseCardProps): ReactElement {
   return (
-    <div
-      onClick={onClick}
-      className={`relative flex-shrink-0 transition-all duration-500 ease-out ${
-        isCenter ? "z-10 cursor-default" : "cursor-pointer"
-      }`}
-      style={{
-        transform: isCenter ? "scale(1)" : "scale(0.82)",
-        opacity: isCenter ? 1 : 0.4,
-        filter: isCenter ? "none" : "blur(1px)",
-      }}
-      aria-hidden={!isCenter}
+    <button
+      type="button"
+      onClick={onSelect}
+      aria-pressed={isActive}
+      aria-label={`Select ${phase.title} phase`}
+      className={[
+        "w-full rounded-2xl border text-left transition-all duration-300",
+        isActive
+          ? "border-[#834ffb]/50 bg-white/[0.07] px-5 py-4 shadow-[0_0_24px_0_rgba(131,79,251,0.18)]"
+          : "border-white/[0.08] bg-white/[0.03] px-5 py-3.5 hover:bg-white/[0.05]",
+      ].join(" ")}
     >
-      <DemoPhone step={stepIndex} />
-    </div>
+      {/* Eyebrow + title row */}
+      <div className="flex items-center gap-3">
+        <span
+          className={[
+            "font-inter text-[10px] font-semibold uppercase tracking-[0.15em] transition-colors",
+            isActive ? "text-[#834ffb]" : "text-white/30",
+          ].join(" ")}
+        >
+          {phase.label}
+        </span>
+        <span
+          className={[
+            "font-display text-base font-semibold transition-colors",
+            isActive ? "text-white" : "text-white/50",
+          ].join(" ")}
+        >
+          {phase.title}
+        </span>
+      </div>
+
+      {/* Expanded content — only when active */}
+      {isActive && (
+        <div>
+          {phase.body && (
+            <p className="mt-3 font-inter text-sm leading-relaxed text-white/70">
+              {phase.body}
+            </p>
+          )}
+          <AgentRow agent={phase.agent} />
+          {phase.actions && <ActionChecklist actions={phase.actions} />}
+        </div>
+      )}
+    </button>
   );
 }
 
@@ -213,43 +234,35 @@ export default function LiveDemoSection(): ReactElement {
   const [inView, setInView] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Observe whether the section is on screen
+  // Observe whether the section has entered the viewport
   useEffect(() => {
     const node = sectionRef.current;
     if (!node) return;
-    const obs = new IntersectionObserver(([e]) => setInView(e.isIntersecting), {
-      threshold: 0.2,
-    });
+    const obs = new IntersectionObserver(
+      ([e]) => setInView(e.isIntersecting),
+      { threshold: 0.15 }
+    );
     obs.observe(node);
     return () => obs.disconnect();
   }, []);
 
-  // Subtle auto-advance when in view (no visible progress bar)
+  // Auto-advance through phases while visible (skipped when reduce-motion is on)
   useEffect(() => {
     if (reduce || !inView) return;
     timerRef.current = setTimeout(() => {
-      setActive((a) => (a + 1) % STEPS.length);
+      setActive((a) => (a + 1) % PHASES.length);
     }, DWELL_MS);
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, [reduce, inView, active]);
 
-  const goTo = (i: number) => {
+  const handleSelect = (i: number) => {
     if (timerRef.current) clearTimeout(timerRef.current);
-    setActive(Math.max(0, Math.min(STEPS.length - 1, i)));
+    setActive(i);
   };
 
-  const prev = () => goTo(active - 1);
-  const next = () => goTo(active + 1);
-
-  const step = STEPS[active];
-
-  // Indices for the filmstrip: [prev, active, next] — clamped, not wrapping
-  const prevIdx = Math.max(0, active - 1);
-  const nextIdx = Math.min(STEPS.length - 1, active + 1);
-  const hasPrev = active > 0;
-  const hasNext = active < STEPS.length - 1;
+  const activePhase = PHASES[active];
 
   return (
     <section
@@ -259,171 +272,98 @@ export default function LiveDemoSection(): ReactElement {
     >
       <SectionHeading
         title="Watch a Storefront Evolve in Real-Time"
-        subtitle="Meet your agent workforce that delivers autonomously behind the scenes."
+        subtitle="Meet your agent workforce that deliver autonomously behind the scenes."
       />
 
       {/* ------------------------------------------------------------------ */}
-      {/* DESKTOP layout: filmstrip left | info panel right                   */}
+      {/* DESKTOP layout: phone (left) | phase stack (right)                  */}
       {/* ------------------------------------------------------------------ */}
-      <Reveal className="mt-14 hidden lg:flex lg:items-center lg:gap-12">
-        {/* LEFT — filmstrip of 3 phones: prev · current · next */}
-        <div className="relative flex flex-1 items-center justify-center gap-4">
-          {/* ambient glow behind the centre phone */}
+      <Reveal className="mt-14 hidden lg:flex lg:items-center lg:gap-16">
+        {/* LEFT — single phone with purple radial glow */}
+        <div className="relative flex flex-1 items-center justify-center">
+          {/* Radial glow */}
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/35 blur-[100px]"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(131,79,251,0.55) 0%, rgba(131,79,251,0.18) 40%, transparent 70%)",
+            }}
           />
-
-          {/* Previous phone (only rendered when there is one) */}
-          {hasPrev && (
-            <FilmstripPhone stepIndex={prevIdx} offset={-1} onClick={prev} />
-          )}
-
-          {/* Active (centre) phone — always shown */}
-          <FilmstripPhone stepIndex={active} offset={0} />
-
-          {/* Next phone (only rendered when there is one) */}
-          {hasNext && (
-            <FilmstripPhone stepIndex={nextIdx} offset={1} onClick={next} />
-          )}
+          <DemoPhone step={activePhase.phoneStep} />
         </div>
 
-        {/* RIGHT — info panel */}
-        <div className="w-[380px] shrink-0">
-          {/* Step label + indicator dots */}
-          <div className="flex items-center justify-between">
-            <span className="font-inter text-[11px] font-semibold uppercase tracking-[0.15em] text-primary-3">
-              Step {step.num} of {STEPS.length}
-            </span>
-            <StepIndicator total={STEPS.length} active={active} onSelect={goTo} />
-          </div>
-
-          {/* Title */}
-          <h3 className="mt-3 font-display text-2xl font-semibold leading-tight text-white">
-            {step.title}
-          </h3>
-
-          {/* Body */}
-          <p className="mt-3 font-inter text-sm leading-relaxed text-white/70">{step.body}</p>
-
-          {/* Agent badge */}
-          {step.agent && (
-            <div className="mt-5 flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-              <AgentBadge agent={step.agent} />
-            </div>
-          )}
-
-          {/* Agent Actions */}
-          {step.actions && <ActionsList actions={step.actions} />}
-
-          {/* Prev / Next nav */}
-          <div className="mt-8 flex items-center gap-3">
-            <button
-              type="button"
-              onClick={prev}
-              disabled={!hasPrev}
-              aria-label="Previous step"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-white/60 transition-colors hover:bg-white/[0.1] disabled:pointer-events-none disabled:opacity-30"
-            >
-              <ChevronLeft size={16} />
-            </button>
-            <button
-              type="button"
-              onClick={next}
-              disabled={!hasNext}
-              aria-label="Next step"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-white/60 transition-colors hover:bg-white/[0.1] disabled:pointer-events-none disabled:opacity-30"
-            >
-              <ChevronRight size={16} />
-            </button>
-          </div>
+        {/* RIGHT — vertical phase card stack */}
+        <div className="w-[400px] shrink-0 flex flex-col gap-3">
+          {PHASES.map((phase, i) => (
+            <PhaseCard
+              key={phase.num}
+              phase={phase}
+              isActive={i === active}
+              onSelect={() => handleSelect(i)}
+            />
+          ))}
         </div>
       </Reveal>
 
       {/* ------------------------------------------------------------------ */}
-      {/* MOBILE layout: stacked phone → info card → nav                     */}
+      {/* MOBILE layout: phone on top, active phase card below                */}
       {/* ------------------------------------------------------------------ */}
       <div className="mt-10 lg:hidden">
-        {/* Filmstrip: three phones side by side — outer clips overflow */}
-        <div className="relative overflow-hidden">
+        {/* Phone with glow */}
+        <div className="relative flex items-center justify-center">
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/35 blur-[80px]"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(131,79,251,0.5) 0%, rgba(131,79,251,0.15) 45%, transparent 70%)",
+            }}
           />
-          {/* Inner flex row, centred, with the phones scaled to fit mobile */}
-          <div className="flex items-center justify-center gap-2">
-            {hasPrev && (
-              <div
-                onClick={prev}
-                className="relative shrink-0 cursor-pointer"
-                style={{ transform: "scale(0.62)", transformOrigin: "center", opacity: 0.4, filter: "blur(1px)", marginRight: "-40px" }}
-              >
-                <DemoPhone step={prevIdx} />
-              </div>
-            )}
+          <div style={{ transform: "scale(0.85)", transformOrigin: "center" }}>
+            <DemoPhone step={activePhase.phoneStep} />
+          </div>
+        </div>
 
-            {/* Centre — active, scaled to ~75% of the 290px design width */}
-            <div
-              className="relative shrink-0"
-              style={{ transform: "scale(0.78)", transformOrigin: "center" }}
+        {/* Phase tab pills */}
+        <div className="mt-8 flex items-center justify-center gap-1.5 flex-wrap px-4">
+          {PHASES.map((phase, i) => (
+            <button
+              key={phase.num}
+              type="button"
+              onClick={() => handleSelect(i)}
+              aria-pressed={i === active}
+              className={[
+                "rounded-full px-3 py-1 font-inter text-[11px] font-semibold transition-all",
+                i === active
+                  ? "bg-[#834ffb] text-white"
+                  : "bg-white/[0.06] text-white/50 hover:bg-white/[0.1]",
+              ].join(" ")}
             >
-              <DemoPhone step={active} />
-            </div>
-
-            {hasNext && (
-              <div
-                onClick={next}
-                className="relative shrink-0 cursor-pointer"
-                style={{ transform: "scale(0.62)", transformOrigin: "center", opacity: 0.4, filter: "blur(1px)", marginLeft: "-40px" }}
-              >
-                <DemoPhone step={nextIdx} />
-              </div>
-            )}
-          </div>
+              {phase.title}
+            </button>
+          ))}
         </div>
 
-        {/* Info card */}
-        <div className="mx-auto mt-8 max-w-sm rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-          <div className="flex items-center justify-between">
-            <span className="font-inter text-[11px] font-semibold uppercase tracking-[0.15em] text-primary-3">
-              Step {step.num} of {STEPS.length}
+        {/* Active phase card */}
+        <div className="mx-auto mt-5 max-w-sm rounded-2xl border border-[#834ffb]/40 bg-white/[0.06] px-5 py-5 shadow-[0_0_24px_0_rgba(131,79,251,0.15)]">
+          <div className="flex items-center gap-3">
+            <span className="font-inter text-[10px] font-semibold uppercase tracking-[0.15em] text-[#834ffb]">
+              {activePhase.label}
             </span>
-            <StepIndicator total={STEPS.length} active={active} onSelect={goTo} />
+            <span className="font-display text-lg font-semibold text-white">
+              {activePhase.title}
+            </span>
           </div>
-          <h3 className="mt-2 font-display text-lg font-semibold leading-tight text-white">
-            {step.title}
-          </h3>
-          <p className="mt-2 font-inter text-sm leading-relaxed text-white/70">{step.body}</p>
-
-          {step.agent && (
-            <div className="mt-4 flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2.5">
-              <AgentBadge agent={step.agent} />
-            </div>
+          {activePhase.body && (
+            <p className="mt-3 font-inter text-sm leading-relaxed text-white/70">
+              {activePhase.body}
+            </p>
           )}
-
-          {step.actions && <ActionsList actions={step.actions} />}
-        </div>
-
-        {/* Mobile nav arrows */}
-        <div className="mt-5 flex items-center justify-center gap-4">
-          <button
-            type="button"
-            onClick={prev}
-            disabled={!hasPrev}
-            aria-label="Previous step"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-white/60 transition-colors hover:bg-white/[0.1] disabled:pointer-events-none disabled:opacity-30"
-          >
-            <ChevronLeft size={16} />
-          </button>
-          <button
-            type="button"
-            onClick={next}
-            disabled={!hasNext}
-            aria-label="Next step"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-white/60 transition-colors hover:bg-white/[0.1] disabled:pointer-events-none disabled:opacity-30"
-          >
-            <ChevronRight size={16} />
-          </button>
+          <AgentRow agent={activePhase.agent} />
+          {activePhase.actions && (
+            <ActionChecklist actions={activePhase.actions} />
+          )}
         </div>
       </div>
     </section>

@@ -20,7 +20,7 @@ export default function CtaSection() {
           An agent-first engine turning static websites into profitable, adaptive shopping experiences.
         </h2>
         <div className="mt-10 flex justify-center">
-          <BookDemoButton />
+          <BookDemoButton variant="solid" />
         </div>
       </Reveal>
     </section>

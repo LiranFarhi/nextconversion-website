@@ -119,9 +119,12 @@ function StoreCard({
           className="pointer-events-none absolute -bottom-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-primary-2/30 blur-[90px]"
         />
       )}
-      <p className="relative font-display text-sm font-medium leading-tight text-white sm:text-2xl">{card.label}</p>
-      <p className="relative mb-3 mt-1.5 font-inter text-xs leading-snug text-soft transition-colors sm:mb-6 sm:min-h-[24px] sm:text-base">{sub}</p>
-      <div className="relative mt-auto">{media}</div>
+      {/* Fixed-height header so the frame below never shifts with text length */}
+      <div className="relative flex h-[76px] flex-col items-center justify-start overflow-hidden sm:h-[104px]">
+        <p className="font-display text-sm font-medium leading-tight text-white sm:text-2xl">{card.label}</p>
+        <p className="mt-1.5 font-inter text-xs leading-snug text-soft sm:text-base">{sub}</p>
+      </div>
+      <div className="relative mt-auto pt-3 sm:pt-5">{media}</div>
     </div>
   );
 }
@@ -151,9 +154,6 @@ export default function StorefrontComparison() {
     <section id="why" className="relative mx-auto max-w-[1200px] px-5 py-12 sm:px-8 sm:py-16">
       {/* Segments */}
       <Reveal>
-        <p className="mb-3 text-center font-inter text-sm text-muted">
-          Every click is a different person
-        </p>
         <PersonaStrip
           activeLabel={active.label}
           onSelect={(label) => pSelect(PERSONAS.findIndex((p) => p.label === label))}
@@ -161,8 +161,23 @@ export default function StorefrontComparison() {
         />
       </Reveal>
 
+      {/* Connector: the active visitor flows down into the curated storefront */}
+      <div aria-hidden className="relative flex flex-col items-center">
+        <span className="mt-5 h-6 w-px bg-gradient-to-b from-transparent to-primary/70 sm:mt-7 sm:h-8" />
+        <svg viewBox="0 0 600 40" preserveAspectRatio="none" className="h-8 w-[78%] max-w-[680px] sm:h-10">
+          <path d="M300 0 C300 26 150 6 150 40" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5" />
+          <path d="M300 0 C300 26 450 6 450 40" fill="none" stroke="url(#cg)" strokeWidth="2" />
+          <defs>
+            <linearGradient id="cg" x1="300" y1="0" x2="450" y2="40" gradientUnits="userSpaceOnUse">
+              <stop stopColor="#714dff" />
+              <stop offset="1" stopColor="#e151ff" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
       {/* Legacy vs curated — side by side at every size */}
-      <div ref={personaRef} className="mt-8 grid grid-cols-2 gap-2.5 sm:mt-12 sm:gap-6">
+      <div ref={personaRef} className="mt-3 grid grid-cols-2 gap-2.5 sm:mt-4 sm:gap-6">
         <StoreCard card={LEGACY} sub={legacySub} media={<LegacyShowcase />} />
         <StoreCard card={CURATED} sub={curatedSub} media={<CuratedShowcase id={active.storefront} />} />
       </div>

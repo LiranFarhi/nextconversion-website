@@ -32,47 +32,60 @@ const CURATED: Card = {
   highlight: true,
 };
 
-/** A browser window whose viewport holds a storefront "screen". */
-function BrowserFrame({ children }: { children: React.ReactNode }) {
+/** A storefront shown inside a desktop browser window (fills its container). */
+function BrowserScreen({ src, alt }: { src: string; alt: string }) {
   return (
-    <div className="overflow-hidden rounded-xl bg-[#16161c] ring-1 ring-white/10 sm:rounded-2xl">
-      {/* browser chrome */}
-      <div className="flex h-6 items-center gap-1 px-2 sm:h-8 sm:gap-2 sm:px-4">
+    <div className="flex h-full flex-col overflow-hidden rounded-xl bg-[#16161c] ring-1 ring-white/10 sm:rounded-2xl">
+      <div className="flex h-6 shrink-0 items-center gap-1 px-2 sm:h-8 sm:gap-2 sm:px-4">
         <span className="h-1.5 w-1.5 rounded-full bg-[#ff5f57] sm:h-3 sm:w-3" />
         <span className="h-1.5 w-1.5 rounded-full bg-[#febc2e] sm:h-3 sm:w-3" />
         <span className="h-1.5 w-1.5 rounded-full bg-[#28c840] sm:h-3 sm:w-3" />
         <div className="mx-auto h-2.5 w-1/2 rounded-full bg-black/25 sm:h-4" />
       </div>
-      {/* viewport */}
-      <div className="relative aspect-[1024/760] w-full overflow-hidden bg-white">{children}</div>
+      <div className="relative flex-1 overflow-hidden bg-white">
+        <Image src={src} alt={alt} fill sizes="(max-width: 768px) 44vw, 540px" className="object-cover object-top" />
+      </div>
     </div>
   );
 }
 
-/** The static "one page for everyone" legacy storefront, in a browser window. */
+/** A mobile-native storefront shown inside a phone, centred on a purple stage. */
+function PhoneScreen({ src, alt }: { src: string; alt: string }) {
+  return (
+    <div
+      className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-xl sm:rounded-2xl"
+      style={{ background: "radial-gradient(120% 95% at 50% 0%, #221b4d 0%, #0b0a1f 58%, #070617 100%)" }}
+    >
+      <div
+        className="relative h-[96%] overflow-hidden rounded-[1.1rem] bg-black p-1 shadow-[0_18px_45px_-18px_rgba(0,0,0,0.85)] ring-1 ring-white/10 sm:rounded-[1.6rem] sm:p-1.5"
+        style={{ aspectRatio: "320 / 690" }}
+      >
+        <div className="relative h-full w-full overflow-hidden rounded-[0.85rem] bg-black sm:rounded-[1.3rem]">
+          <Image src={src} alt={alt} fill sizes="(max-width: 768px) 28vw, 200px" className="object-cover object-top" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** The static "one page for everyone" legacy storefront. */
 function LegacyShowcase() {
   return (
-    <BrowserFrame>
-      <Image
-        src="/figma/legacy-store.jpg"
-        alt="A single generic storefront shown to every visitor"
-        fill
-        sizes="(max-width: 768px) 44vw, 540px"
-        className="object-cover object-top"
-      />
-    </BrowserFrame>
+    <div className="aspect-[1024/800] w-full">
+      <BrowserScreen src="/figma/legacy-store.jpg" alt="A single generic storefront shown to every visitor" />
+    </div>
   );
 }
 
 /**
- * Renders the real Figma storefront the agents built for the active visitor,
- * inside a browser window, and cross-fades to a new layout when the visitor
- * changes. The storefront's layout, theme and merchandising adapt per visitor.
+ * The real Figma storefront the agents built for the active visitor — desktop
+ * layouts in a browser, mobile-native layouts in a phone — cross-fading as the
+ * visitor changes.
  */
 function CuratedShowcase({ id }: { id: StorefrontId }) {
   const reduce = useReducedMotion();
   return (
-    <BrowserFrame>
+    <div className="relative aspect-[1024/800] w-full">
       <AnimatePresence initial={false}>
         <motion.div
           key={id}
@@ -82,16 +95,14 @@ function CuratedShowcase({ id }: { id: StorefrontId }) {
           exit={{ opacity: 0 }}
           transition={{ duration: reduce ? 0 : 0.5, ease: "easeOut" }}
         >
-          <Image
-            src={STOREFRONTS[id].src}
-            alt={STOREFRONTS[id].alt}
-            fill
-            sizes="(max-width: 768px) 44vw, 540px"
-            className="object-cover object-top"
-          />
+          {STOREFRONTS[id].device === "phone" ? (
+            <PhoneScreen src={STOREFRONTS[id].src} alt={STOREFRONTS[id].alt} />
+          ) : (
+            <BrowserScreen src={STOREFRONTS[id].src} alt={STOREFRONTS[id].alt} />
+          )}
         </motion.div>
       </AnimatePresence>
-    </BrowserFrame>
+    </div>
   );
 }
 

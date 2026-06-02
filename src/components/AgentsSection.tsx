@@ -232,60 +232,58 @@ export default function AgentsSection(): ReactElement {
         subtitle="Meet your agent workforce that deliver autonomously behind the scenes"
       />
 
-      <div className="mt-12 grid items-start gap-6 md:grid-cols-2">
+      <div className="mt-12 grid items-stretch gap-6 md:grid-cols-2">
         {/* ── Left: illustration with click zones + name pills ── */}
-        <div className="relative min-w-0 overflow-hidden rounded-3xl border border-primary/30 bg-white/[0.02] p-4">
-          <Image
-            src="/figma/agents-table.png"
-            alt="Emilia, Donna, Danny and John — the AI agent workforce at a table"
-            width={1327}
-            height={752}
-            className="h-auto w-full rounded-2xl"
-            sizes="(max-width: 1024px) 92vw, 560px"
-          />
-
-          {/* Purple spotlight that tracks the active agent */}
-          <span
-            aria-hidden
-            style={{ left: `${active.x * 100}%` }}
-            className="pointer-events-none absolute top-[30%] h-36 w-36 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/35 blur-[55px] transition-[left] duration-500 ease-out"
-          />
-
-          {/*
-           * ── Illustration click areas ──────────────────────────────────────
-           * Four evenly-spaced transparent buttons laid over the illustration.
-           * Left→right = Emilia(0), Donna(1), Danny(2), John(3).
-           * Each button occupies exactly 25% of the width and the full height
-           * of the image so clicking anywhere on that character selects them.
-           */}
-          {AGENTS.map((a, i) => (
-            <button
-              key={`zone-${a.name}`}
-              type="button"
-              onClick={() => select(i)}
-              aria-label={`Select ${a.name}`}
-              style={{ left: `${i * 25}%`, width: "25%", top: 0, bottom: 0 }}
-              className="absolute cursor-pointer bg-transparent"
+        <div className="relative flex min-w-0 items-center justify-center overflow-hidden rounded-3xl border border-primary/30 bg-white/[0.02] p-4">
+          {/* image wrapper — overlays are positioned relative to the image so
+              they stay aligned when the card is stretched to equal height */}
+          <div className="relative w-full">
+            <Image
+              src="/figma/agents-table.jpg"
+              alt="Emilia, Donna, Danny and John — the AI agent workforce at a table"
+              width={1327}
+              height={752}
+              className="h-auto w-full rounded-2xl"
+              sizes="(max-width: 1024px) 92vw, 560px"
             />
-          ))}
 
-          {/* Name pills — rendered on top of click areas via z-index */}
-          {AGENTS.map((a, i) => (
-            <button
-              key={a.name}
-              type="button"
-              onClick={() => select(i)}
-              aria-label={`Show ${a.name}`}
-              style={{ left: `${a.x * 100}%`, top: "16%", zIndex: 10 }}
-              className={`absolute -translate-x-1/2 rounded-full border px-3 py-1 font-inter text-xs font-normal backdrop-blur-sm transition-all duration-500 ${
-                i === index
-                  ? "scale-110 border-primary bg-background/80 text-white shadow-[0_0_24px_-6px_rgba(131,79,251,0.85)] opacity-100"
-                  : "border-white/15 bg-background/40 text-white/70 opacity-30 hover:opacity-70"
-              }`}
-            >
-              {a.name}
-            </button>
-          ))}
+            {/* Purple spotlight that tracks the active agent */}
+            <span
+              aria-hidden
+              style={{ left: `${active.x * 100}%` }}
+              className="pointer-events-none absolute top-[30%] h-36 w-36 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/35 blur-[55px] transition-[left] duration-500 ease-out"
+            />
+
+            {/* Four even click areas over the illustration (Emilia→John) */}
+            {AGENTS.map((a, i) => (
+              <button
+                key={`zone-${a.name}`}
+                type="button"
+                onClick={() => select(i)}
+                aria-label={`Select ${a.name}`}
+                style={{ left: `${i * 25}%`, width: "25%", top: 0, bottom: 0 }}
+                className="absolute cursor-pointer bg-transparent"
+              />
+            ))}
+
+            {/* Name pills — on top of the click areas via z-index */}
+            {AGENTS.map((a, i) => (
+              <button
+                key={a.name}
+                type="button"
+                onClick={() => select(i)}
+                aria-label={`Show ${a.name}`}
+                style={{ left: `${a.x * 100}%`, top: "16%", zIndex: 10 }}
+                className={`absolute -translate-x-1/2 rounded-full border px-3 py-1 font-inter text-xs font-normal backdrop-blur-sm transition-all duration-500 ${
+                  i === index
+                    ? "scale-110 border-primary bg-background/80 text-white shadow-[0_0_24px_-6px_rgba(131,79,251,0.85)] opacity-100"
+                    : "border-white/15 bg-background/40 text-white/70 opacity-30 hover:opacity-70"
+                }`}
+              >
+                {a.name}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* ── Right: carousel of agent detail cards ── */}

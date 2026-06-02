@@ -264,11 +264,23 @@ export default function LiveDemoSection(): ReactElement {
       const max = cards.offsetHeight - phone.offsetHeight;
       setPhoneY(Math.max(0, Math.min(target, Math.max(0, max))));
     };
-    const id = requestAnimationFrame(align);
+    // Measure now and again after layout settles — the cards animate in (Reveal)
+    // and the active card expands, so a single measurement can be stale.
+    const raf = requestAnimationFrame(align);
+    const timers = [setTimeout(align, 250), setTimeout(align, 650)];
+
+    // Keep it aligned through scroll/resize and any height change of the stack
+    window.addEventListener("scroll", align, { passive: true });
     window.addEventListener("resize", align);
+    const ro = new ResizeObserver(align);
+    if (cardsRef.current) ro.observe(cardsRef.current);
+
     return () => {
-      cancelAnimationFrame(id);
+      cancelAnimationFrame(raf);
+      timers.forEach(clearTimeout);
+      window.removeEventListener("scroll", align);
       window.removeEventListener("resize", align);
+      ro.disconnect();
     };
   }, [active]);
 

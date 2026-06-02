@@ -21,16 +21,18 @@ type Phase = {
   title: string;
   /** Phase icon */
   icon: LucideIcon;
-  /** Optional body copy (phase 1 has description but no actions) */
+  /** Optional body copy */
   body?: string;
-  /** Agent shown in this phase */
-  agent: {
+  /** Agent shown in this phase (omitted on the final result step) */
+  agent?: {
     name: string;
     role: string;
     img: string;
   };
-  /** "Agent Actions:" checklist — undefined means no checklist (phase 1) */
+  /** "Agent Actions:" checklist */
   actions?: string[];
+  /** Conversion result metric shown on the final step (instead of an agent) */
+  result?: { value: string; label: string };
   /** Which DemoPhone step to show */
   phoneStep: number;
 };
@@ -41,12 +43,13 @@ const PHASES: Phase[] = [
     label: "PHASE 1",
     title: "Trigger",
     icon: Zap,
-    body: "Emilia generates a full shopping experience aligned specifically with “Sustainability” - not just a landing page.",
+    body: "Danny reads the intent signals and social trends behind the click to trigger the right experience.",
     agent: {
-      name: "Emilia",
-      role: "The Tailor",
-      img: "/figma/agent-emilia.png",
+      name: "Danny",
+      role: "The Analyst",
+      img: "/figma/agent-danny.png",
     },
+    actions: ["Maps intent signals", "Trend forecasting", "Segment discovery"],
     phoneStep: 0,
   },
   {
@@ -54,17 +57,13 @@ const PHASES: Phase[] = [
     label: "PHASE 2",
     title: "Evolution",
     icon: Layers,
-    body: "Full storefront adapts to sustainability",
+    body: "Emilia builds a full storefront that adapts to sustainability — not just a landing page.",
     agent: {
       name: "Emilia",
       role: "The Tailor",
       img: "/figma/agent-emilia.png",
     },
-    actions: [
-      "Personalize UX layouts",
-      "Adapts Merchandising",
-      "Adjust messaging tone",
-    ],
+    actions: ["Personalize UX layouts", "Adapts Merchandising", "Adjust messaging tone"],
     phoneStep: 1,
   },
   {
@@ -72,16 +71,13 @@ const PHASES: Phase[] = [
     label: "PHASE 3",
     title: "Adaptation",
     icon: Wand2,
+    body: "John enhances every product — descriptions, imagery and copy — so performance never drops.",
     agent: {
       name: "John",
       role: "The Optimizer",
       img: "/figma/agent-john.png",
     },
-    actions: [
-      "Iterates creative assets",
-      "A/B test copy styles",
-      "Prevent fatigue",
-    ],
+    actions: ["Iterates creative assets", "A/B test copy styles", "Prevent fatigue"],
     phoneStep: 2,
   },
   {
@@ -89,17 +85,13 @@ const PHASES: Phase[] = [
     label: "PHASE 4",
     title: "Upsell",
     icon: Tag,
-    body: "Shopping assistant suggests complementing sets at the right moment.",
+    body: "Donna suggests complementing sets at the right moment to lift average order value.",
     agent: {
       name: "Donna",
       role: "The Shopping Assistant",
       img: "/figma/agent-donna.png",
     },
-    actions: [
-      "Pairs product smartly",
-      "Offers dynamically",
-      "Optimizes carts",
-    ],
+    actions: ["Pairs product smartly", "Offers dynamically", "Optimizes carts"],
     phoneStep: 3,
   },
   {
@@ -107,17 +99,8 @@ const PHASES: Phase[] = [
     label: "PHASE 5",
     title: "Result",
     icon: TrendingUp,
-    body: "Optimization becomes continuous, ROAS improves, and the shopper feels the site truly “knows” her.",
-    agent: {
-      name: "Nova",
-      role: "The Performance Optimizer",
-      img: "/agents/agent-extra-1.png",
-    },
-    actions: [
-      "Track conversion",
-      "Measure engagement",
-      "Update learning model",
-    ],
+    body: "A higher-intent visitor converts — ROAS climbs and the storefront keeps learning for the next click.",
+    result: { value: "+200%", label: "Conversion Rate" },
     phoneStep: 4,
   },
 ];
@@ -128,7 +111,7 @@ const DWELL_MS = 4000;
 // Sub-components (defined at module scope — never recreated inside render)
 // ---------------------------------------------------------------------------
 
-function AgentPill({ agent }: { agent: Phase["agent"] }): ReactElement {
+function AgentPill({ agent }: { agent: NonNullable<Phase["agent"]> }): ReactElement {
   return (
     <div className="inline-flex flex-wrap items-center gap-x-1.5 gap-y-1 self-start rounded-2xl border border-white/10 bg-white/[0.05] px-2.5 py-1.5 sm:rounded-full sm:py-1.5 sm:pl-1.5 sm:pr-4">
       <span className="relative h-6 w-6 shrink-0 overflow-hidden rounded-full">
@@ -153,6 +136,16 @@ function ActionChecklist({ actions }: { actions: string[] }): ReactElement {
           <span className="font-inter text-sm leading-snug text-white/80">{action}</span>
         </div>
       ))}
+    </div>
+  );
+}
+
+function ResultMetric({ result }: { result: { value: string; label: string } }): ReactElement {
+  return (
+    <div className="inline-flex items-center gap-3 self-start rounded-2xl border border-[#0fdd98]/30 bg-[#0fdd98]/10 px-4 py-2.5">
+      <TrendingUp size={20} strokeWidth={2.2} className="shrink-0 text-[#0fdd98]" />
+      <span className="font-display text-2xl font-semibold leading-none text-[#0fdd98]">{result.value}</span>
+      <span className="font-inter text-sm text-white/70">{result.label}</span>
     </div>
   );
 }
@@ -204,8 +197,9 @@ function PhaseCard({ phase, isActive, onSelect }: PhaseCardProps): ReactElement 
           {phase.body && (
             <p className="font-inter text-[15px] leading-relaxed text-white/90">{phase.body}</p>
           )}
-          <AgentPill agent={phase.agent} />
+          {phase.agent && <AgentPill agent={phase.agent} />}
           {phase.actions && <ActionChecklist actions={phase.actions} />}
+          {phase.result && <ResultMetric result={phase.result} />}
         </div>
       )}
     </button>
@@ -222,6 +216,10 @@ export default function LiveDemoSection(): ReactElement {
   const sectionRef = useRef<HTMLElement>(null);
   const [inView, setInView] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // On small screens the phone slides down to sit next to the highlighted step
+  const cardsRef = useRef<HTMLDivElement>(null);
+  const phoneColRef = useRef<HTMLDivElement>(null);
+  const [phoneY, setPhoneY] = useState(0);
 
   // Observe whether the section has entered the viewport
   useEffect(() => {
@@ -245,6 +243,30 @@ export default function LiveDemoSection(): ReactElement {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, [reduce, inView, active]);
+
+  // Slide the phone to align with the active step (mobile/tablet only)
+  useEffect(() => {
+    const align = () => {
+      const cards = cardsRef.current;
+      const phone = phoneColRef.current;
+      if (!cards || !phone) return;
+      if (window.matchMedia("(min-width: 1024px)").matches) {
+        setPhoneY(0);
+        return;
+      }
+      const card = cards.children[active] as HTMLElement | undefined;
+      if (!card) return;
+      const target = card.offsetTop + card.offsetHeight / 2 - phone.offsetHeight / 2;
+      const max = cards.offsetHeight - phone.offsetHeight;
+      setPhoneY(Math.max(0, Math.min(target, Math.max(0, max))));
+    };
+    const id = requestAnimationFrame(align);
+    window.addEventListener("resize", align);
+    return () => {
+      cancelAnimationFrame(id);
+      window.removeEventListener("resize", align);
+    };
+  }, [active]);
 
   const handleSelect = (i: number) => {
     if (timerRef.current) clearTimeout(timerRef.current);
@@ -270,7 +292,11 @@ export default function LiveDemoSection(): ReactElement {
       {/* Phone (left) and phase cards (right) — side by side, centered on desktop */}
       <Reveal className="mt-10 flex items-start gap-3 sm:mt-14 sm:gap-8 lg:items-center lg:justify-center lg:gap-16">
         {/* Phone with concentric purple/blue glow (scaled down on small screens) */}
-        <div className="relative flex shrink-0 items-center justify-center">
+        <div
+          ref={phoneColRef}
+          className="relative flex shrink-0 items-center justify-center transition-transform duration-500 ease-out"
+          style={{ transform: `translateY(${phoneY}px)` }}
+        >
           <div
             aria-hidden
             className="pointer-events-none absolute left-1/2 top-1/2 h-[290px] w-[290px] -translate-x-1/2 -translate-y-1/2 rounded-full sm:h-[420px] sm:w-[420px] lg:h-[540px] lg:w-[540px]"
@@ -288,7 +314,7 @@ export default function LiveDemoSection(): ReactElement {
         </div>
 
         {/* Phase card stack — active expands */}
-        <div className="flex min-w-0 flex-1 flex-col gap-2.5 sm:gap-3 lg:w-[400px] lg:flex-none">
+        <div ref={cardsRef} className="flex min-w-0 flex-1 flex-col gap-2.5 sm:gap-3 lg:w-[400px] lg:flex-none">
           {PHASES.map((phase, i) => (
             <PhaseCard
               key={phase.num}

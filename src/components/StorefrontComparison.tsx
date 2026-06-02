@@ -3,8 +3,6 @@
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Reveal from "./Reveal";
-import SnapRow from "./SnapRow";
-import CarouselDots from "./CarouselDots";
 import PersonaStrip, { PERSONAS } from "./PersonaStrip";
 import { STOREFRONTS, type StorefrontId } from "./storefronts";
 import { useAutoAdvance } from "./useAutoAdvance";
@@ -127,8 +125,6 @@ export default function StorefrontComparison() {
     dwell: 3000,
   });
   const active = PERSONAS[pIdx];
-  // mobile card carousel (legacy <-> curated)
-  const { index: cIdx, select: cSelect, playing: cPlaying } = useAutoAdvance(2);
 
   const legacyBadge = (
     <span className="inline-flex items-center gap-1.5 rounded-full border border-white/12 bg-white/[0.04] px-3 py-1 font-inter text-xs text-muted">
@@ -233,20 +229,15 @@ export default function StorefrontComparison() {
         />
       </div>
 
-      {/* Mobile: swipe carousel */}
-      <div className="mt-2 md:hidden">
-        <SnapRow active={cIdx} onSelect={cSelect} className="gap-4 px-1 pb-1" itemClassName="basis-[86%] pr-1">
-          <StoreCard card={LEGACY} sub={legacySub} badge={legacyBadge} />
-          <StoreCard
-            card={CURATED}
-            sub={curatedSub}
-            badge={curatedBadge}
-            media={<CuratedShowcase id={active.storefront} />}
-          />
-        </SnapRow>
-        <div className="mt-4 flex justify-center">
-          <CarouselDots count={2} active={cIdx} onSelect={cSelect} dwellMs={4200} playing={cPlaying} label="Storefront" />
-        </div>
+      {/* Mobile: both shown together (stacked) */}
+      <div className="mt-2 flex flex-col gap-4 md:hidden">
+        <StoreCard card={LEGACY} sub={legacySub} badge={legacyBadge} />
+        <StoreCard
+          card={CURATED}
+          sub={curatedSub}
+          badge={curatedBadge}
+          media={<CuratedShowcase id={active.storefront} />}
+        />
       </div>
     </section>
   );

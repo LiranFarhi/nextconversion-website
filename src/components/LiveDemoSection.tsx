@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type ReactElement } from "react";
 import Image from "next/image";
-import { Check } from "lucide-react";
+import { Check, Zap, Layers, Wand2, Tag, TrendingUp, type LucideIcon } from "lucide-react";
 import { useReducedMotion } from "framer-motion";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
@@ -19,6 +19,8 @@ type Phase = {
   label: string;
   /** Card title */
   title: string;
+  /** Phase icon */
+  icon: LucideIcon;
   /** Optional body copy (phase 1 has description but no actions) */
   body?: string;
   /** Agent shown in this phase */
@@ -38,6 +40,7 @@ const PHASES: Phase[] = [
     num: 1,
     label: "PHASE 1",
     title: "Trigger",
+    icon: Zap,
     body: "Emilia generates a full shopping experience aligned specifically with “Sustainability” - not just a landing page.",
     agent: {
       name: "Emilia",
@@ -50,6 +53,7 @@ const PHASES: Phase[] = [
     num: 2,
     label: "PHASE 2",
     title: "Evolution",
+    icon: Layers,
     body: "Full storefront adapts to sustainability",
     agent: {
       name: "Emilia",
@@ -67,6 +71,7 @@ const PHASES: Phase[] = [
     num: 3,
     label: "PHASE 3",
     title: "Adaptation",
+    icon: Wand2,
     agent: {
       name: "John",
       role: "The Optimizer",
@@ -83,6 +88,7 @@ const PHASES: Phase[] = [
     num: 4,
     label: "PHASE 4",
     title: "Upsell",
+    icon: Tag,
     body: "Shopping assistant suggests complementing sets at the right moment.",
     agent: {
       name: "Donna",
@@ -100,6 +106,7 @@ const PHASES: Phase[] = [
     num: 5,
     label: "PHASE 5",
     title: "Result",
+    icon: TrendingUp,
     body: "Optimization becomes continuous, ROAS improves, and the shopper feels the site truly “knows” her.",
     agent: {
       name: "Nova",
@@ -123,43 +130,32 @@ const DWELL_MS = 4000;
 
 function AgentRow({ agent }: { agent: Phase["agent"] }): ReactElement {
   return (
-    <div className="mt-4 flex items-center gap-3">
-      <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full border border-white/20">
-        <Image
-          src={agent.img}
-          alt={agent.name}
-          fill
-          sizes="36px"
-          className="object-cover"
-        />
+    <div className="mt-3.5 flex items-center gap-2.5">
+      <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full ring-2 ring-[#834ffb]/30">
+        <Image src={agent.img} alt={agent.name} fill sizes="32px" className="object-cover" />
       </div>
-      <div>
-        <span className="font-inter text-sm font-semibold leading-tight text-[#834ffb]">
-          {agent.name}
-        </span>
-        <span className="ml-1.5 font-inter text-sm font-normal text-white/50">
-          {agent.role} is working&hellip;
-        </span>
-      </div>
+      <p className="font-inter text-[13px] leading-tight">
+        <span className="font-semibold text-[#834ffb]">{agent.name}</span>{" "}
+        <span className="text-[#5b5470]">[{agent.role}]</span>{" "}
+        <span className="text-[#8a8499]">is working&hellip;</span>
+      </p>
     </div>
   );
 }
 
 function ActionChecklist({ actions }: { actions: string[] }): ReactElement {
   return (
-    <div className="mt-4">
-      <p className="mb-2.5 font-inter text-[11px] font-semibold uppercase tracking-[0.12em] text-white/40">
+    <div className="mt-3.5">
+      <p className="mb-2 font-inter text-[11px] font-semibold uppercase tracking-[0.1em] text-[#9a93ad]">
         Agent Actions:
       </p>
       <div className="flex flex-col gap-2">
         {actions.map((action) => (
           <div key={action} className="flex items-center gap-2.5">
-            <span className="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-[#0fdd98]/15">
-              <Check size={10} strokeWidth={2.5} className="text-[#0fdd98]" />
+            <span className="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-[#0fdd98]">
+              <Check size={11} strokeWidth={3} className="text-white" />
             </span>
-            <span className="font-inter text-sm leading-snug text-white/80">
-              {action}
-            </span>
+            <span className="font-inter text-[13px] leading-snug text-[#3a3550]">{action}</span>
           </div>
         ))}
       </div>
@@ -174,6 +170,7 @@ type PhaseCardProps = {
 };
 
 function PhaseCard({ phase, isActive, onSelect }: PhaseCardProps): ReactElement {
+  const Icon = phase.icon;
   return (
     <button
       type="button"
@@ -181,39 +178,42 @@ function PhaseCard({ phase, isActive, onSelect }: PhaseCardProps): ReactElement 
       aria-pressed={isActive}
       aria-label={`Select ${phase.title} phase`}
       className={[
-        "w-full rounded-2xl border text-left transition-all duration-300",
+        "w-full rounded-2xl px-4 py-3.5 text-left backdrop-blur-md transition-all duration-300",
         isActive
-          ? "border-[#834ffb]/50 bg-white/[0.07] px-5 py-4 shadow-[0_0_24px_0_rgba(131,79,251,0.18)]"
-          : "border-white/[0.08] bg-white/[0.03] px-5 py-3.5 hover:bg-white/[0.05]",
+          ? "bg-white shadow-[0_18px_50px_-20px_rgba(131,79,251,0.55)] ring-1 ring-white/60"
+          : "bg-white/55 ring-1 ring-white/30 hover:bg-white/70",
       ].join(" ")}
     >
-      {/* Eyebrow + title row */}
+      {/* Icon + eyebrow/title row */}
       <div className="flex items-center gap-3">
         <span
           className={[
-            "font-inter text-[10px] font-semibold uppercase tracking-[0.15em] transition-colors",
-            isActive ? "text-[#834ffb]" : "text-white/30",
+            "grid h-9 w-9 shrink-0 place-items-center rounded-xl transition-colors",
+            isActive ? "bg-[#834ffb] text-white" : "bg-[#834ffb]/12 text-[#834ffb]",
           ].join(" ")}
         >
-          {phase.label}
+          <Icon size={17} strokeWidth={2} />
         </span>
-        <span
-          className={[
-            "font-display text-base font-semibold transition-colors",
-            isActive ? "text-white" : "text-white/50",
-          ].join(" ")}
-        >
-          {phase.title}
-        </span>
+        <div className="flex flex-col">
+          <span className="font-inter text-[10px] font-semibold uppercase tracking-[0.16em] text-[#9a7bf3]">
+            {phase.label}
+          </span>
+          <span
+            className={[
+              "font-display text-base font-semibold leading-tight",
+              isActive ? "text-[#1a1430]" : "text-[#1a1430]/55",
+            ].join(" ")}
+          >
+            {phase.title}
+          </span>
+        </div>
       </div>
 
       {/* Expanded content — only when active */}
       {isActive && (
         <div>
           {phase.body && (
-            <p className="mt-3 font-inter text-sm leading-relaxed text-white/70">
-              {phase.body}
-            </p>
+            <p className="mt-3 font-inter text-[13px] leading-relaxed text-[#3a3550]">{phase.body}</p>
           )}
           <AgentRow agent={phase.agent} />
           {phase.actions && <ActionChecklist actions={phase.actions} />}
@@ -279,15 +279,15 @@ export default function LiveDemoSection(): ReactElement {
       {/* DESKTOP layout: phone (left) | phase stack (right)                  */}
       {/* ------------------------------------------------------------------ */}
       <Reveal className="mt-14 hidden lg:flex lg:items-center lg:gap-16">
-        {/* LEFT — single phone with purple radial glow */}
+        {/* LEFT — single phone with concentric purple/blue glow */}
         <div className="relative flex flex-1 items-center justify-center">
-          {/* Radial glow */}
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[540px] w-[540px] -translate-x-1/2 -translate-y-1/2 rounded-full"
             style={{
               background:
-                "radial-gradient(circle, rgba(131,79,251,0.55) 0%, rgba(131,79,251,0.18) 40%, transparent 70%)",
+                "radial-gradient(circle, rgba(131,79,251,0.55) 0%, rgba(96,80,255,0.5) 22%, rgba(60,90,255,0.32) 40%, rgba(40,70,230,0.16) 58%, transparent 72%)",
+              filter: "blur(6px)",
             }}
           />
           <DemoPhone step={activePhase.phoneStep} />
@@ -346,24 +346,8 @@ export default function LiveDemoSection(): ReactElement {
         </div>
 
         {/* Active phase card */}
-        <div className="mx-auto mt-5 max-w-sm rounded-2xl border border-[#834ffb]/40 bg-white/[0.06] px-5 py-5 shadow-[0_0_24px_0_rgba(131,79,251,0.15)]">
-          <div className="flex items-center gap-3">
-            <span className="font-inter text-[10px] font-semibold uppercase tracking-[0.15em] text-[#834ffb]">
-              {activePhase.label}
-            </span>
-            <span className="font-display text-lg font-semibold text-white">
-              {activePhase.title}
-            </span>
-          </div>
-          {activePhase.body && (
-            <p className="mt-3 font-inter text-sm leading-relaxed text-white/70">
-              {activePhase.body}
-            </p>
-          )}
-          <AgentRow agent={activePhase.agent} />
-          {activePhase.actions && (
-            <ActionChecklist actions={activePhase.actions} />
-          )}
+        <div className="mx-auto mt-5 max-w-sm">
+          <PhaseCard phase={activePhase} isActive onSelect={() => {}} />
         </div>
       </div>
     </section>

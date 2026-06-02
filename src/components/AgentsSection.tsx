@@ -133,7 +133,7 @@ function AgentCard({ agent }: { agent: Agent }): ReactElement {
       className="flex h-full flex-col gap-6 rounded-3xl border border-primary/30 p-6"
       style={{
         background:
-          "linear-gradient(135deg, rgba(131,79,251,0.18) 0%, rgba(113,77,255,0.10) 40%, rgba(131,79,251,0.06) 100%)",
+          "linear-gradient(135deg, rgba(131,79,251,0.30) 0%, rgba(113,77,255,0.13) 45%, rgba(225,81,255,0.06) 100%)",
       }}
     >
       {/* Header: avatar + name/role/quote */}
@@ -331,7 +331,11 @@ export default function AgentsSection(): ReactElement {
           {IMPACT.map(({ icon: Icon, value, color, label }) => (
             <div
               key={label}
-              className="flex flex-col gap-4 rounded-3xl border border-primary/30 bg-white/[0.05] p-6"
+              className="flex flex-col gap-4 rounded-3xl border border-primary/30 p-6"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(131,79,251,0.30) 0%, rgba(113,77,255,0.13) 45%, rgba(225,81,255,0.06) 100%)",
+              }}
             >
               <Icon size={16} className="text-soft" strokeWidth={2} />
               <div className="flex flex-col gap-2">

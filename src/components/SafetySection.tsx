@@ -1,6 +1,6 @@
 import type { ReactElement } from "react";
 import Image from "next/image";
-import { Check, Boxes } from "lucide-react";
+import { Check } from "lucide-react";
 import TiltCard from "./TiltCard";
 import SectionHeading from "./SectionHeading";
 import Logo from "./Logo";
@@ -48,100 +48,68 @@ export default function SafetySection(): ReactElement {
   );
 }
 
-/* ---- Visual 1: overlapping policy documents with connecting flow line ---- */
-function EnforcementVisual(): ReactElement {
-  // Three policy rules shown in Figma: Stock, Discount, Margin
-  const docs = [
-    { label: "Stock", rot: "-rotate-[8deg]", x: "-translate-x-[68px]", z: "z-10" },
-    { label: "Discount", rot: "rotate-[8deg]", x: "translate-x-[68px]", z: "z-20" },
-    { label: "Margin Policy", rot: "rotate-0", x: "translate-x-0", z: "z-30" },
-  ];
+/* ---- Visual 1: policy rules connected by a visible flow line ---- */
+const POLICY_DOCS = [
+  { label: "Stock", color: "#0fdd98" },
+  { label: "Margin", color: "#834ffb" },
+  { label: "Discount", color: "#14bced" },
+];
+
+function DocCard({ label, color }: { label: string; color: string }): ReactElement {
   return (
-    <div className="relative grid h-[220px] place-items-center">
+    <div className="relative flex h-[118px] w-[76px] flex-col rounded-xl border border-border-strong bg-surface-card p-2.5 shadow-lg">
+      <span
+        aria-hidden
+        className="absolute left-1/2 top-0 h-1 w-9 -translate-x-1/2 rounded-b-full"
+        style={{ background: color }}
+      />
+      <svg viewBox="0 0 16 16" width={14} height={14} fill="none" className="mt-1" aria-hidden style={{ color }}>
+        <rect x="2" y="1" width="10" height="13" rx="1.5" stroke="currentColor" strokeWidth="1.2" />
+        <line x1="5" y1="5" x2="10" y2="5" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+        <line x1="5" y1="7.5" x2="10" y2="7.5" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+        <line x1="5" y1="10" x2="8" y2="10" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+      </svg>
+      <span className="mt-1.5 font-inter text-[11px] text-white/80">{label}</span>
+      <div className="mt-1.5 space-y-1">
+        <span className="block h-1 w-full rounded bg-white/10" />
+        <span className="block h-1 w-3/4 rounded bg-white/10" />
+      </div>
+      <span className="mt-auto grid h-5 w-5 place-items-center self-end rounded-full bg-green/20 text-green">
+        <Check size={11} />
+      </span>
+    </div>
+  );
+}
+
+function EnforcementVisual(): ReactElement {
+  return (
+    <div className="relative flex h-[220px] flex-col items-center justify-center gap-1 pb-12">
       {/* Policy Check badge */}
-      <span className="absolute left-1/2 top-2 z-40 flex -translate-x-1/2 items-center gap-2 rounded-full border border-green/30 bg-green/10 px-3 py-1 font-inter text-xs text-green">
+      <span className="flex items-center gap-2 rounded-full border border-green/30 bg-green/10 px-3 py-1 font-inter text-xs text-green">
         <span className="h-1.5 w-1.5 rounded-full bg-green" />
         Policy Check
       </span>
 
-      {/* Connecting flow line — SVG that visually links the 3 rule cards */}
-      <svg
-        aria-hidden
-        className="absolute inset-0 z-0 h-full w-full"
-        viewBox="0 0 280 220"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {/* Horizontal connector spanning all three cards at mid-height */}
-        <line
-          x1="70"
-          y1="130"
-          x2="210"
-          y2="130"
-          stroke="rgba(131,79,251,0.35)"
-          strokeWidth="1.5"
-          strokeDasharray="4 3"
-        />
-        {/* Left tick down to Stock card */}
-        <line
-          x1="70"
-          y1="130"
-          x2="70"
-          y2="155"
-          stroke="rgba(131,79,251,0.35)"
-          strokeWidth="1.5"
-          strokeDasharray="4 3"
-        />
-        {/* Center tick — not needed, line passes through centre card */}
-        {/* Right tick down to Discount card */}
-        <line
-          x1="210"
-          y1="130"
-          x2="210"
-          y2="155"
-          stroke="rgba(131,79,251,0.35)"
-          strokeWidth="1.5"
-          strokeDasharray="4 3"
-        />
-        {/* Small dot nodes at each junction */}
-        <circle cx="70"  cy="130" r="3" fill="rgba(131,79,251,0.6)" />
-        <circle cx="140" cy="130" r="3" fill="rgba(131,79,251,0.6)" />
-        <circle cx="210" cy="130" r="3" fill="rgba(131,79,251,0.6)" />
+      {/* Connecting flow line linking the three rules */}
+      <svg viewBox="0 0 252 26" preserveAspectRatio="none" className="mt-1 h-[26px] w-[252px]" aria-hidden>
+        <line x1="38" y1="6" x2="214" y2="6" stroke="rgba(131,79,251,0.5)" strokeWidth="1.5" strokeDasharray="4 3" />
+        {[38, 126, 214].map((x) => (
+          <g key={x}>
+            <line x1={x} y1="6" x2={x} y2="24" stroke="rgba(131,79,251,0.5)" strokeWidth="1.5" strokeDasharray="4 3" />
+            <circle cx={x} cy="6" r="3" fill="#834ffb" />
+          </g>
+        ))}
       </svg>
 
-      {/* Agent fact strip — Emilia confirming policies are within bounds */}
-      <AgentFact />
+      {/* Policy rule cards */}
+      <div className="flex items-start gap-3">
+        {POLICY_DOCS.map((d) => (
+          <DocCard key={d.label} label={d.label} color={d.color} />
+        ))}
+      </div>
 
-      {docs.map((d) => (
-        <div
-          key={d.label}
-          className={`absolute mt-6 flex h-[150px] w-[118px] flex-col rounded-2xl border border-border-strong bg-surface-card p-3 shadow-xl ${d.rot} ${d.x} ${d.z}`}
-        >
-          {/* Document icon row */}
-          <svg
-            viewBox="0 0 16 16"
-            width={16}
-            height={16}
-            fill="none"
-            className="text-primary-3"
-            aria-hidden
-          >
-            <rect x="2" y="1" width="10" height="13" rx="1.5" stroke="currentColor" strokeWidth="1.2" />
-            <line x1="5" y1="5" x2="10" y2="5" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
-            <line x1="5" y1="7.5" x2="10" y2="7.5" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
-            <line x1="5" y1="10" x2="8" y2="10" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
-          </svg>
-          <span className="mt-2 font-inter text-xs text-white/80">{d.label}</span>
-          <div className="mt-2 space-y-1.5">
-            <span className="block h-1 w-full rounded bg-white/10" />
-            <span className="block h-1 w-3/4 rounded bg-white/10" />
-            <span className="block h-1 w-5/6 rounded bg-white/10" />
-          </div>
-          <span className="mt-auto grid h-6 w-6 place-items-center self-end rounded-full bg-green/20 text-green">
-            <Check size={13} />
-          </span>
-        </div>
-      ))}
+      {/* Agent fact — Emilia confirming policies are within bounds */}
+      <AgentFact />
     </div>
   );
 }
@@ -207,72 +175,44 @@ function BrandVisual(): ReactElement {
   );
 }
 
-/* ---- Visual 3: real brand logos connected to the engine ---- */
+/* ---- Visual 3: source platforms feeding data down into NextConversion ---- */
 function IntegrationVisual(): ReactElement {
   return (
-    <div className="relative flex h-[220px] flex-col items-center justify-center gap-0">
-      {/* Logos row */}
-      <LogosRow />
-      {/* Dotted vertical connector from logos to engine */}
-      <div
-        aria-hidden
-        className="my-3 h-8 w-px border-l border-dashed border-border-strong"
-      />
-      {/* Engine node */}
-      <span className="grid h-14 w-14 place-items-center rounded-2xl bg-primary text-white shadow-[0_0_30px_-4px_rgba(131,79,251,0.7)]">
-        <Boxes size={26} />
-      </span>
-    </div>
-  );
-}
+    <div className="relative flex h-[220px] flex-col items-center justify-center">
+      {/* Source platforms (Shopify · Google Analytics · BigCommerce) */}
+      <div className="flex w-[210px] items-center justify-between">
+        <LogoChip label="Shopify" color="#96BF48">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/brand/shopify.svg" alt="Shopify" width={20} height={20} style={{ filter: "brightness(0) invert(1)" }} className="h-5 w-5" />
+        </LogoChip>
+        <LogoChip label="Google Analytics" color="#E37400">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/brand/googleanalytics.svg" alt="Google Analytics" width={20} height={20} style={{ filter: "brightness(0) invert(1)" }} className="h-5 w-5" />
+        </LogoChip>
+        <LogoChip label="BigCommerce" color="#34313F">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/brand/bigcommerce.svg" alt="BigCommerce" width={20} height={20} style={{ filter: "brightness(0) invert(1)" }} className="h-5 w-5" />
+        </LogoChip>
+      </div>
 
-/* Logos row: Shopify · Google Analytics · BigCommerce · NextConversion */
-function LogosRow(): ReactElement {
-  return (
-    <div className="flex items-center gap-3">
-      {/* Shopify */}
-      <LogoChip label="Shopify" color="#96BF48">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/brand/shopify.svg"
-          alt="Shopify"
-          width={20}
-          height={20}
-          style={{ filter: "brightness(0) invert(1)" }}
-          className="h-5 w-5"
-        />
-      </LogoChip>
+      {/* Connectors converging down into NextConversion */}
+      <svg viewBox="0 0 210 56" preserveAspectRatio="none" className="h-12 w-[210px]" aria-hidden>
+        <defs>
+          <linearGradient id="ncFlow" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="rgba(131,79,251,0.18)" />
+            <stop offset="1" stopColor="rgba(131,79,251,0.85)" />
+          </linearGradient>
+        </defs>
+        <path d="M22 0 C22 34 105 22 105 56" fill="none" stroke="url(#ncFlow)" strokeWidth="1.5" strokeDasharray="4 3" />
+        <path d="M105 0 L105 56" fill="none" stroke="url(#ncFlow)" strokeWidth="1.5" strokeDasharray="4 3" />
+        <path d="M188 0 C188 34 105 22 105 56" fill="none" stroke="url(#ncFlow)" strokeWidth="1.5" strokeDasharray="4 3" />
+      </svg>
 
-      {/* Google Analytics */}
-      <LogoChip label="Google Analytics" color="#E37400">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/brand/googleanalytics.svg"
-          alt="Google Analytics"
-          width={20}
-          height={20}
-          style={{ filter: "brightness(0) invert(1)" }}
-          className="h-5 w-5"
-        />
-      </LogoChip>
-
-      {/* BigCommerce */}
-      <LogoChip label="BigCommerce" color="#34313F">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/brand/bigcommerce.svg"
-          alt="BigCommerce"
-          width={20}
-          height={20}
-          style={{ filter: "brightness(0) invert(1)" }}
-          className="h-5 w-5"
-        />
-      </LogoChip>
-
-      {/* NextConversion mark */}
-      <LogoChip label="NextConversion" color="#834ffb">
+      {/* NextConversion — receives the data below */}
+      <div className="flex items-center gap-2 rounded-2xl border border-primary/40 bg-primary/15 px-4 py-2.5 shadow-[0_0_34px_-6px_rgba(131,79,251,0.75)]">
         <Logo size={20} withWordmark={false} />
-      </LogoChip>
+        <span className="font-display text-sm font-semibold text-white">NextConversion</span>
+      </div>
     </div>
   );
 }

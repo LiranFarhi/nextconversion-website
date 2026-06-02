@@ -9,7 +9,7 @@ const NAV = [
   { label: "Why", href: "#why" },
   { label: "Agents", href: "#agents" },
   { label: "How it works", href: "#how-it-works" },
-  { label: "Safety", href: "#safety" },
+  { label: "Governance", href: "#safety" },
 ];
 
 export default function Header() {

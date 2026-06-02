@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import BookDemoButton from "./BookDemoButton";
+import Logo from "./Logo";
 
 const NAV = [
   { label: "Why", href: "#why" },
@@ -50,14 +51,8 @@ export default function Header() {
       }`}
     >
       <nav className="mx-auto flex h-[72px] max-w-[1280px] items-center justify-between px-5 sm:px-8 lg:px-10">
-        <a
-          href="#top"
-          className="flex items-center gap-2.5 font-display text-[18px] font-semibold tracking-[-0.01em] text-white"
-        >
-          <span className="grid h-7 w-7 place-items-center rounded-[9px] bg-gradient-to-br from-primary-2 via-magenta to-yellow text-[13px] font-bold text-background">
-            N
-          </span>
-          NextConversion
+        <a href="#top" aria-label="NextConversion home">
+          <Logo />
         </a>
 
         <ul className="hidden items-center gap-9 md:flex">

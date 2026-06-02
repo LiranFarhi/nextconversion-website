@@ -2,7 +2,6 @@
 
 import { type PointerEvent } from "react";
 import { motion, useMotionValue, useSpring, useReducedMotion, type Variants } from "framer-motion";
-import { Sparkles } from "lucide-react";
 import BookDemoButton from "./BookDemoButton";
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -46,19 +45,11 @@ export default function Hero() {
         variants={container}
         initial="hidden"
         animate="show"
-        className="relative mx-auto max-w-[1000px] px-5 pb-20 pt-[72px] text-center sm:pt-[96px]"
+        className="relative mx-auto max-w-[900px] px-5 pb-16 pt-[60px] text-center sm:pt-[80px]"
       >
-        <motion.p
-          variants={item}
-          className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 font-inter text-[14px] font-normal text-white/80 backdrop-blur-sm"
-        >
-          <Sparkles size={16} className="text-primary-3" />
-          AI-Powered E-Commerce Evolution
-        </motion.p>
-
         <motion.h1
           variants={item}
-          className="mx-auto mt-7 max-w-[15ch] font-display text-[clamp(2.75rem,7.2vw,5.5625rem)] font-light leading-[1.0] tracking-[-0.01em] text-white"
+          className="mx-auto max-w-[16ch] font-display text-[clamp(2.25rem,5.5vw,4.25rem)] font-light leading-[1.05] tracking-[-0.02em] text-white"
         >
           Turning Static Storefronts Into Endless{" "}
           <span className="gradient-text gradient-animate font-normal">Self-Adaptive Experiences</span>
@@ -66,14 +57,14 @@ export default function Hero() {
 
         <motion.p
           variants={item}
-          className="mx-auto mt-7 max-w-[620px] font-inter text-base font-medium leading-[1.65] text-soft sm:text-[18px]"
+          className="mx-auto mt-5 max-w-[540px] font-inter text-[15px] font-medium leading-[1.5] text-soft sm:text-[16px]"
         >
           Stop directing targeted ad traffic to generic websites. NextConversion transforms each click into
           a personalized, real-time storefront that optimizes continuously.
         </motion.p>
 
-        <motion.div variants={item} className="mt-9 flex justify-center">
-          <BookDemoButton />
+        <motion.div variants={item} className="mt-7 flex justify-center">
+          <BookDemoButton variant="solid" />
         </motion.div>
       </motion.div>
     </section>

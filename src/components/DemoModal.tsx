@@ -202,8 +202,9 @@ export default function DemoModal(): ReactElement {
       message: data.get("message"),
     };
 
-    // eslint-disable-next-line no-console
-    console.log("[DemoModal] submit payload:", payload);
+    // payload (with normalized website, e.g. http://aghion.com) is ready to
+    // POST to the email/Airtable endpoint here.
+    void payload;
 
     setSent(true);
     setDirty(false);

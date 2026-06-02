@@ -10,14 +10,14 @@ export type Persona = { tag: string; label: string; img: number; storefront: Sto
 // Each visitor gets a bespoke storefront — a different *format* per person
 // (modern shop, magazine, lookbook, video feed, pin board, social shop, chat, deals).
 export const PERSONAS: Persona[] = [
-  { tag: "34 • F", label: "Sophisticated Sportwear", img: 1, storefront: "sport" },
-  { tag: "24 • M", label: "Sustainable Hiking Gear", img: 2, storefront: "hiking" },
+  { tag: "34 • F", label: "Sophisticated Sportwear", img: 1, storefront: "sportswear" },
+  { tag: "24 • M", label: "Sustainable Hiking Gear", img: 2, storefront: "activewear" },
   { tag: "52 • F", label: "Luxury coats", img: 3, storefront: "luxury" },
-  { tag: "19 • M", label: "Streetwear", img: 4, storefront: "street" },
-  { tag: "41 • F", label: "Organic Skincare", img: 5, storefront: "skincare" },
-  { tag: "30 • M", label: "Vintage Accesories", img: 6, storefront: "vintage" },
-  { tag: "61 • F", label: "Handcrafted Jewelry", img: 7, storefront: "jewelry" },
-  { tag: "28 • F", label: "Budget-Friendly", img: 8, storefront: "budget" },
+  { tag: "19 • M", label: "Streetwear", img: 4, storefront: "streetwear" },
+  { tag: "41 • F", label: "Organic Skincare", img: 5, storefront: "swimwear" },
+  { tag: "30 • M", label: "Vintage Accesories", img: 6, storefront: "swimwear" },
+  { tag: "61 • F", label: "Handcrafted Jewelry", img: 7, storefront: "luxury" },
+  { tag: "28 • F", label: "Budget-Friendly", img: 8, storefront: "streetwear" },
 ];
 
 function DeviceIcon() {

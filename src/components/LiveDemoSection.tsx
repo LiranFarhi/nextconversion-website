@@ -130,11 +130,11 @@ const DWELL_MS = 4000;
 
 function AgentPill({ agent }: { agent: Phase["agent"] }): ReactElement {
   return (
-    <div className="inline-flex items-center gap-2 self-start rounded-full border border-white/10 bg-white/[0.05] py-1.5 pl-1.5 pr-4">
+    <div className="inline-flex flex-wrap items-center gap-x-1.5 gap-y-1 self-start rounded-2xl border border-white/10 bg-white/[0.05] px-2.5 py-1.5 sm:rounded-full sm:py-1.5 sm:pl-1.5 sm:pr-4">
       <span className="relative h-6 w-6 shrink-0 overflow-hidden rounded-full">
         <Image src={agent.img} alt={agent.name} fill sizes="24px" className="object-cover" />
       </span>
-      <span className="font-inter text-sm leading-none">
+      <span className="font-inter text-[13px] leading-tight sm:text-sm">
         <span className="font-semibold text-[#ff6eba]">{agent.name}</span>{" "}
         <span className="text-soft/60">[{agent.role}]</span>{" "}
         <span className="text-white/80">is working&hellip;</span>
@@ -174,8 +174,8 @@ function PhaseCard({ phase, isActive, onSelect }: PhaseCardProps): ReactElement 
       className={[
         "w-full rounded-[24px] border text-left transition-all duration-300",
         isActive
-          ? "border-primary/30 bg-white/[0.05] p-6 shadow-[0_18px_50px_-26px_rgba(131,79,251,0.6)]"
-          : "border-primary/15 bg-white/[0.03] p-5 hover:border-primary/30",
+          ? "border-primary/30 bg-white/[0.05] p-4 shadow-[0_18px_50px_-26px_rgba(131,79,251,0.6)] sm:p-6"
+          : "border-primary/15 bg-white/[0.03] p-3.5 hover:border-primary/30 sm:p-5",
       ].join(" ")}
     >
       {/* Icon badge + eyebrow/title */}
@@ -267,23 +267,28 @@ export default function LiveDemoSection(): ReactElement {
       {/* ------------------------------------------------------------------ */}
       {/* DESKTOP layout: phone (left) | phase stack (right)                  */}
       {/* ------------------------------------------------------------------ */}
-      <Reveal className="mt-14 hidden lg:flex lg:items-center lg:gap-16">
-        {/* LEFT — single phone with concentric purple/blue glow */}
-        <div className="relative flex flex-1 items-center justify-center">
+      {/* Phone (left) and phase cards (right) — side by side at every size */}
+      <Reveal className="mt-10 flex items-start gap-3 sm:mt-14 sm:gap-8 lg:items-center lg:gap-16">
+        {/* Phone with concentric purple/blue glow (scaled down on small screens) */}
+        <div className="relative flex shrink-0 items-center justify-center">
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 h-[540px] w-[540px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[240px] w-[240px] -translate-x-1/2 -translate-y-1/2 rounded-full sm:h-[420px] sm:w-[420px] lg:h-[540px] lg:w-[540px]"
             style={{
               background:
                 "radial-gradient(circle, rgba(131,79,251,0.55) 0%, rgba(96,80,255,0.5) 22%, rgba(60,90,255,0.32) 40%, rgba(40,70,230,0.16) 58%, transparent 72%)",
               filter: "blur(6px)",
             }}
           />
-          <DemoPhone step={activePhase.phoneStep} />
+          <div className="relative z-[1] h-[259px] w-[120px] sm:h-[388px] sm:w-[180px] lg:h-[625px] lg:w-[290px]">
+            <div className="origin-top-left scale-[0.414] sm:scale-[0.62] lg:scale-100">
+              <DemoPhone step={activePhase.phoneStep} />
+            </div>
+          </div>
         </div>
 
-        {/* RIGHT — vertical phase card stack */}
-        <div className="w-[400px] shrink-0 flex flex-col gap-3">
+        {/* Phase card stack — active expands */}
+        <div className="flex min-w-0 flex-1 flex-col gap-2.5 sm:gap-3 lg:max-w-[400px]">
           {PHASES.map((phase, i) => (
             <PhaseCard
               key={phase.num}
@@ -294,39 +299,6 @@ export default function LiveDemoSection(): ReactElement {
           ))}
         </div>
       </Reveal>
-
-      {/* ------------------------------------------------------------------ */}
-      {/* MOBILE layout: phone on top, full phase-card stack below            */}
-      {/* ------------------------------------------------------------------ */}
-      <div className="mt-10 lg:hidden">
-        {/* Phone with concentric glow */}
-        <div className="relative flex items-center justify-center">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 h-[360px] w-[360px] -translate-x-1/2 -translate-y-1/2 rounded-full"
-            style={{
-              background:
-                "radial-gradient(circle, rgba(131,79,251,0.55) 0%, rgba(96,80,255,0.5) 22%, rgba(60,90,255,0.3) 42%, rgba(40,70,230,0.14) 60%, transparent 73%)",
-              filter: "blur(6px)",
-            }}
-          />
-          <div style={{ transform: "scale(0.85)", transformOrigin: "center" }}>
-            <DemoPhone step={activePhase.phoneStep} />
-          </div>
-        </div>
-
-        {/* Full phase-card stack (active expands) — matches Figma mobile */}
-        <div className="mx-auto mt-8 flex max-w-sm flex-col gap-3">
-          {PHASES.map((phase, i) => (
-            <PhaseCard
-              key={phase.num}
-              phase={phase}
-              isActive={i === active}
-              onSelect={() => handleSelect(i)}
-            />
-          ))}
-        </div>
-      </div>
     </section>
   );
 }

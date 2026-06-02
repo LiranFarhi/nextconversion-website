@@ -9,32 +9,26 @@ type Props = {
 };
 
 /**
- * NextConversion brand logo — a rounded-square gradient icon mark + wordmark.
- * Single source of truth used by the header and footer.
+ * NextConversion brand logo — the real Figma mark (two purple blocks) + the
+ * "NextConversion" wordmark. Single source of truth for header and footer.
  */
-export default function Logo({ size = 28, withWordmark = true, className = "" }: Props): ReactElement {
-  const radius = Math.round(size * 0.32);
-  const fontSize = Math.round(size * 0.52);
-
+export default function Logo({ size = 26, withWordmark = true, className = "" }: Props): ReactElement {
   return (
     <span
-      className={`inline-flex items-center gap-2.5 font-display text-[18px] font-semibold tracking-[-0.01em] text-white ${className}`}
+      className={`inline-flex items-center gap-2.5 font-display text-[19px] font-semibold tracking-[-0.02em] text-white ${className}`}
     >
-      {/* Icon mark: rounded square with brand gradient + bold "N" letterform */}
-      <span
+      <svg
+        width={size}
+        height={size}
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
         aria-hidden
-        style={{
-          width: size,
-          height: size,
-          borderRadius: radius,
-          fontSize: fontSize,
-          lineHeight: 1,
-        }}
-        className="relative grid shrink-0 place-items-center overflow-hidden bg-gradient-to-br from-primary-2 via-magenta to-yellow font-bold text-background"
+        className="shrink-0"
       >
-        N
-      </span>
-
+        <rect y="13.7143" width="10.2857" height="10.2857" fill="#834FFB" />
+        <path d="M24 24H23.9971L16 16.0947V8.28613H8.10059L0 0.27832V0H24V24Z" fill="#834FFB" />
+      </svg>
       {withWordmark && <span>NextConversion</span>}
     </span>
   );

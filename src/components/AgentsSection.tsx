@@ -61,39 +61,39 @@ type Agent = {
 const AGENTS: Agent[] = [
   {
     name: "Emilia",
-    role: "The Taylor",
+    role: "The Tailor",
     img: "/figma/agent-emilia.png",
     quote: "“I adjust your site design, UX, and merchandising in live sessions.”",
     x: 0.16,
     skills: [
-      { icon: LayoutTemplate, label: "Personalize UX layouts" },
-      { icon: Package, label: "Adapts Merchandising" },
-      { icon: Eraser, label: "Adjust messaging tone" },
+      { icon: LayoutTemplate, label: "Dynamic UX Layouts" },
+      { icon: Package, label: "Adaptive merchandising" },
+      { icon: Eraser, label: "Friction removal" },
     ],
   },
   {
     name: "Donna",
-    role: "The Bundler",
+    role: "The Shopping Assistant",
     img: "/figma/agent-donna.png",
     quote:
       "“While chatting with the user I intelligently bundle products to maximize Average Order Value (AOV)”",
     x: 0.37,
     skills: [
-      { icon: Crown, label: "Smart upsell recommendations" },
-      { icon: BadgePercent, label: "Dynamic discount engine" },
-      { icon: ShoppingCart, label: "Product bundle optimization" },
+      { icon: Crown, label: "Smart product pairing" },
+      { icon: BadgePercent, label: "Dynamic offers" },
+      { icon: ShoppingCart, label: "Cart optimization" },
     ],
   },
   {
     name: "Danny",
-    role: "The Scout",
+    role: "The Analyst",
     img: "/figma/agent-danny.png",
     quote: "“I process intent signals and social trends that human teams miss.”",
     x: 0.61,
     skills: [
       { icon: Cpu, label: "Intent signal processing" },
-      { icon: MessageCircle, label: "Conversation trend tracking" },
-      { icon: Compass, label: "Real-time trend discovery" },
+      { icon: MessageCircle, label: "Trend forecasting" },
+      { icon: Compass, label: "Segment discovery" },
     ],
   },
   {
@@ -101,7 +101,7 @@ const AGENTS: Agent[] = [
     role: "The Optimizer",
     img: "/figma/agent-john.png",
     quote:
-      "“I enhance product details — generating descriptions, images and videos, copy styles to ensure your performance never drops.”",
+      "“I enhance product details - generating descriptions, images and videos, copy styles to ensure your performance never drops.”",
     x: 0.83,
     skills: [
       { icon: Images, label: "Creative assets generation" },

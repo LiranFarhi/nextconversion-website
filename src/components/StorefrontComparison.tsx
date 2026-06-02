@@ -86,7 +86,7 @@ function StoreCard({
 }) {
   return (
     <div
-      className={`card relative flex h-full flex-col overflow-hidden p-6 text-center sm:p-7 ${
+      className={`card relative flex h-full flex-col overflow-hidden p-3 text-center sm:p-7 ${
         card.highlight ? "border-primary/40 shadow-[0_0_60px_-24px_rgba(131,79,251,0.6)]" : ""
       }`}
     >
@@ -96,9 +96,9 @@ function StoreCard({
           className="pointer-events-none absolute -bottom-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-primary-2/30 blur-[90px]"
         />
       )}
-      <div className="relative mb-4 flex justify-center">{badge}</div>
-      <p className="relative font-display text-xl font-medium text-white sm:text-2xl">{card.label}</p>
-      <p className="relative mb-6 mt-1 min-h-[24px] font-inter text-base text-soft transition-colors">{sub}</p>
+      <div className="relative mb-2.5 flex justify-center sm:mb-4">{badge}</div>
+      <p className="relative font-display text-sm font-medium leading-tight text-white sm:text-2xl">{card.label}</p>
+      <p className="relative mb-3 mt-1 font-inter text-[11px] leading-snug text-soft transition-colors sm:mb-6 sm:min-h-[24px] sm:text-base">{sub}</p>
       <div
         className={`relative mt-auto overflow-hidden rounded-2xl ${
           card.highlight ? "ring-1 ring-primary/30" : "border border-border bg-black/30"
@@ -218,19 +218,8 @@ export default function StorefrontComparison() {
         </svg>
       </div>
 
-      {/* Desktop: legacy vs curated, connected to the active visitor */}
-      <div className="hidden gap-6 md:grid md:grid-cols-2">
-        <StoreCard card={LEGACY} sub={legacySub} badge={legacyBadge} />
-        <StoreCard
-          card={CURATED}
-          sub={curatedSub}
-          badge={curatedBadge}
-          media={<CuratedShowcase id={active.storefront} />}
-        />
-      </div>
-
-      {/* Mobile: both shown together (stacked) */}
-      <div className="mt-2 flex flex-col gap-4 md:hidden">
+      {/* Legacy vs curated — side by side at every size */}
+      <div className="grid grid-cols-2 gap-2.5 sm:gap-6">
         <StoreCard card={LEGACY} sub={legacySub} badge={legacyBadge} />
         <StoreCard
           card={CURATED}

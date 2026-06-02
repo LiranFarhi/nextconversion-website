@@ -267,8 +267,8 @@ export default function LiveDemoSection(): ReactElement {
       {/* ------------------------------------------------------------------ */}
       {/* DESKTOP layout: phone (left) | phase stack (right)                  */}
       {/* ------------------------------------------------------------------ */}
-      {/* Phone (left) and phase cards (right) — side by side at every size */}
-      <Reveal className="mt-10 flex items-start gap-3 sm:mt-14 sm:gap-8 lg:items-center lg:gap-16">
+      {/* Phone (left) and phase cards (right) — side by side, centered on desktop */}
+      <Reveal className="mt-10 flex items-start gap-3 sm:mt-14 sm:gap-8 lg:items-center lg:justify-center lg:gap-16">
         {/* Phone with concentric purple/blue glow (scaled down on small screens) */}
         <div className="relative flex shrink-0 items-center justify-center">
           <div
@@ -288,7 +288,7 @@ export default function LiveDemoSection(): ReactElement {
         </div>
 
         {/* Phase card stack — active expands */}
-        <div className="flex min-w-0 flex-1 flex-col gap-2.5 sm:gap-3 lg:max-w-[400px]">
+        <div className="flex min-w-0 flex-1 flex-col gap-2.5 sm:gap-3 lg:w-[400px] lg:flex-none">
           {PHASES.map((phase, i) => (
             <PhaseCard
               key={phase.num}

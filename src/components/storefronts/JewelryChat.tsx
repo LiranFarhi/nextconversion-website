@@ -1,354 +1,473 @@
-import { Phone, Info, Heart, ShoppingBag, Paperclip, Send, Check } from "lucide-react";
+import {
+  ChevronLeft,
+  Phone,
+  MoreVertical,
+  ShoppingBag,
+  Mic,
+  Send,
+  Plus,
+} from "lucide-react";
 
-// ── Inline SVG illustrations ───────────────────────────────────────────────
+// ── Jewellery SVG illustrations ────────────────────────────────────────────
 
 function HoopsIllustration() {
   return (
     <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       {/* left hoop */}
-      <ellipse cx="26" cy="38" rx="14" ry="15" stroke="#c9a84c" strokeWidth="5" fill="none"/>
-      <ellipse cx="26" cy="38" rx="14" ry="15" stroke="#f0d060" strokeWidth="2.5" fill="none" opacity="0.5"/>
-      {/* hammered texture marks on left hoop */}
-      <circle cx="14" cy="32" r="1.2" fill="#b8842a" opacity="0.7"/>
-      <circle cx="17" cy="25" r="1" fill="#b8842a" opacity="0.6"/>
-      <circle cx="25" cy="23" r="1.1" fill="#b8842a" opacity="0.5"/>
-      <circle cx="37" cy="30" r="1" fill="#b8842a" opacity="0.6"/>
-      {/* earring post left */}
-      <rect x="24.5" y="21" width="3" height="5" rx="1.5" fill="#c9a84c"/>
+      <ellipse cx="22" cy="40" rx="14" ry="15" stroke="#a07820" strokeWidth="6" fill="none" />
+      <ellipse cx="22" cy="40" rx="14" ry="15" stroke="#f5d860" strokeWidth="2.5" fill="none" opacity="0.5" />
+      <ellipse cx="22" cy="40" rx="14" ry="15" stroke="white" strokeWidth="1" fill="none" opacity="0.15" />
+      {/* hammered dots left */}
+      <circle cx="10" cy="34" r="1.2" fill="#7a5a10" opacity="0.7" />
+      <circle cx="14" cy="26" r="1" fill="#7a5a10" opacity="0.6" />
+      <circle cx="22" cy="24" r="1.1" fill="#7a5a10" opacity="0.55" />
+      <circle cx="33" cy="32" r="1" fill="#7a5a10" opacity="0.6" />
+      <circle cx="34" cy="42" r="0.9" fill="#7a5a10" opacity="0.5" />
+      {/* post left */}
+      <rect x="20.5" y="23" width="3" height="6" rx="1.5" fill="#d4a030" />
+      <rect x="21.2" y="23" width="1.2" height="3" rx="0.6" fill="white" opacity="0.4" />
       {/* right hoop */}
-      <ellipse cx="48" cy="38" rx="14" ry="15" stroke="#c9a84c" strokeWidth="5" fill="none"/>
-      <ellipse cx="48" cy="38" rx="14" ry="15" stroke="#f0d060" strokeWidth="2.5" fill="none" opacity="0.5"/>
-      {/* hammered texture marks on right hoop */}
-      <circle cx="36" cy="32" r="1.2" fill="#b8842a" opacity="0.7"/>
-      <circle cx="39" cy="25" r="1" fill="#b8842a" opacity="0.6"/>
-      <circle cx="47" cy="23" r="1.1" fill="#b8842a" opacity="0.5"/>
-      <circle cx="59" cy="30" r="1" fill="#b8842a" opacity="0.6"/>
-      {/* earring post right */}
-      <rect x="46.5" y="21" width="3" height="5" rx="1.5" fill="#c9a84c"/>
-      {/* shine highlights */}
-      <path d="M14 32 Q12 28 16 25" stroke="#f5e070" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.7"/>
-      <path d="M36 32 Q34 28 38 25" stroke="#f5e070" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.7"/>
+      <ellipse cx="50" cy="40" rx="14" ry="15" stroke="#a07820" strokeWidth="6" fill="none" />
+      <ellipse cx="50" cy="40" rx="14" ry="15" stroke="#f5d860" strokeWidth="2.5" fill="none" opacity="0.5" />
+      <ellipse cx="50" cy="40" rx="14" ry="15" stroke="white" strokeWidth="1" fill="none" opacity="0.15" />
+      {/* hammered dots right */}
+      <circle cx="38" cy="34" r="1.2" fill="#7a5a10" opacity="0.7" />
+      <circle cx="42" cy="26" r="1" fill="#7a5a10" opacity="0.6" />
+      <circle cx="50" cy="24" r="1.1" fill="#7a5a10" opacity="0.55" />
+      <circle cx="61" cy="32" r="1" fill="#7a5a10" opacity="0.6" />
+      <circle cx="62" cy="42" r="0.9" fill="#7a5a10" opacity="0.5" />
+      {/* post right */}
+      <rect x="48.5" y="23" width="3" height="6" rx="1.5" fill="#d4a030" />
+      <rect x="49.2" y="23" width="1.2" height="3" rx="0.6" fill="white" opacity="0.4" />
+      {/* shine arcs */}
+      <path d="M10 34 Q8 28 13 25" stroke="#fce870" strokeWidth="1.6" fill="none" strokeLinecap="round" opacity="0.65" />
+      <path d="M38 34 Q36 28 41 25" stroke="#fce870" strokeWidth="1.6" fill="none" strokeLinecap="round" opacity="0.65" />
     </svg>
   );
 }
 
 function PearlPendantIllustration() {
   return (
-    <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      {/* chain links */}
-      <path d="M36 6 L36 22" stroke="#c9a84c" strokeWidth="1.8" strokeDasharray="3 2"/>
-      {/* bail / connector */}
-      <ellipse cx="36" cy="24" rx="4" ry="3" stroke="#c9a84c" strokeWidth="2" fill="none"/>
-      {/* thin drop chain segment */}
-      <line x1="36" y1="27" x2="36" y2="36" stroke="#c9a84c" strokeWidth="1.5"/>
-      {/* main pearl */}
-      <circle cx="36" cy="47" r="12" fill="url(#pearlGrad)" stroke="#d4c9b0" strokeWidth="1"/>
-      {/* pearl lustre / highlight */}
-      <ellipse cx="32" cy="42" rx="4" ry="3" fill="white" opacity="0.55"/>
-      <ellipse cx="31" cy="41" rx="2" ry="1.5" fill="white" opacity="0.75"/>
-      {/* soft shadow edge */}
-      <circle cx="36" cy="47" r="12" stroke="#b0a090" strokeWidth="0.5" fill="none" opacity="0.4"/>
-      {/* small accent pearl */}
-      <circle cx="44" cy="55" r="3.5" fill="url(#pearlGrad2)" stroke="#d4c9b0" strokeWidth="0.8"/>
-      <ellipse cx="43" cy="54" rx="1.2" ry="0.9" fill="white" opacity="0.65"/>
+    <svg width="48" height="56" viewBox="0 0 48 56" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <defs>
-        <radialGradient id="pearlGrad" cx="38%" cy="35%" r="60%">
-          <stop offset="0%" stopColor="#ffffff"/>
-          <stop offset="40%" stopColor="#f0ece4"/>
-          <stop offset="100%" stopColor="#d8d0c0"/>
-        </radialGradient>
-        <radialGradient id="pearlGrad2" cx="38%" cy="35%" r="60%">
-          <stop offset="0%" stopColor="#ffffff"/>
-          <stop offset="100%" stopColor="#d8d0c0"/>
+        <radialGradient id="pearl-mini-1" cx="38%" cy="33%" r="60%">
+          <stop offset="0%" stopColor="#ffffff" />
+          <stop offset="50%" stopColor="#f0ece4" />
+          <stop offset="100%" stopColor="#c8bfad" />
         </radialGradient>
       </defs>
+      {/* chain */}
+      <path d="M24 3 L24 16" stroke="#c9a84c" strokeWidth="1.4" strokeDasharray="2 2" />
+      {/* bail */}
+      <ellipse cx="24" cy="18" rx="3" ry="2" stroke="#c9a84c" strokeWidth="1.6" fill="none" />
+      <line x1="24" y1="20" x2="24" y2="27" stroke="#c9a84c" strokeWidth="1.2" />
+      {/* pearl */}
+      <circle cx="24" cy="38" r="12" fill="url(#pearl-mini-1)" stroke="#c0b8a8" strokeWidth="0.8" />
+      <ellipse cx="20" cy="33" rx="4" ry="2.8" fill="white" opacity="0.45" />
+      <ellipse cx="19" cy="32" rx="2" ry="1.3" fill="white" opacity="0.7" />
+      {/* accent pearl */}
+      <circle cx="32" cy="46" r="4" fill="url(#pearl-mini-1)" stroke="#c0b8a8" strokeWidth="0.6" />
+      <ellipse cx="31" cy="45" rx="1.3" ry="0.9" fill="white" opacity="0.6" />
     </svg>
   );
 }
 
 function StackingRingsIllustration() {
   return (
-    <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      {/* bottom ring — wider band, rose gold tint */}
-      <ellipse cx="36" cy="54" rx="20" ry="6" stroke="#d4956a" strokeWidth="5" fill="none"/>
-      <ellipse cx="36" cy="54" rx="20" ry="6" stroke="#f0b07a" strokeWidth="2" fill="none" opacity="0.5"/>
-      {/* middle ring — plain gold */}
-      <ellipse cx="36" cy="44" rx="18" ry="5.5" stroke="#c9a84c" strokeWidth="5" fill="none"/>
-      <ellipse cx="36" cy="44" rx="18" ry="5.5" stroke="#f0d060" strokeWidth="2" fill="none" opacity="0.5"/>
-      {/* top ring — thin with gem */}
-      <ellipse cx="36" cy="34" rx="16" ry="5" stroke="#c9a84c" strokeWidth="4" fill="none"/>
-      <ellipse cx="36" cy="34" rx="16" ry="5" stroke="#f0d060" strokeWidth="1.5" fill="none" opacity="0.5"/>
-      {/* gem on top ring */}
-      <polygon points="36,26 40,31 36,32 32,31" fill="#a8c8e0" opacity="0.9"/>
-      <polygon points="36,26 40,31 36,29" fill="white" opacity="0.5"/>
-      <polygon points="36,32 40,31 36,34 32,31" fill="#6898b8" opacity="0.7"/>
-      {/* inner band fills to look solid */}
-      <ellipse cx="36" cy="54" rx="15" ry="2" fill="#f0e8d8" opacity="0.6"/>
-      <ellipse cx="36" cy="44" rx="13" ry="1.8" fill="#f0e8d8" opacity="0.6"/>
-      <ellipse cx="36" cy="34" rx="12" ry="1.5" fill="#f0e8d8" opacity="0.6"/>
-      {/* shine highlights */}
-      <path d="M20 52 Q18 50 22 48" stroke="#f5e070" strokeWidth="1.2" fill="none" strokeLinecap="round" opacity="0.6"/>
-      <path d="M20 42 Q18 40 22 38" stroke="#f5e070" strokeWidth="1.2" fill="none" strokeLinecap="round" opacity="0.6"/>
+    <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      {/* bottom ring — rose gold */}
+      <ellipse cx="26" cy="43" rx="17" ry="5" stroke="#c87040" strokeWidth="5" fill="none" />
+      <ellipse cx="26" cy="43" rx="17" ry="5" stroke="#f0a870" strokeWidth="2" fill="none" opacity="0.5" />
+      {/* middle ring — yellow gold */}
+      <ellipse cx="26" cy="33" rx="15" ry="4.5" stroke="#a07820" strokeWidth="5" fill="none" />
+      <ellipse cx="26" cy="33" rx="15" ry="4.5" stroke="#f5d860" strokeWidth="2" fill="none" opacity="0.5" />
+      {/* top ring — gem */}
+      <ellipse cx="26" cy="23" rx="13" ry="4" stroke="#a07820" strokeWidth="4" fill="none" />
+      <ellipse cx="26" cy="23" rx="13" ry="4" stroke="#f5d860" strokeWidth="1.5" fill="none" opacity="0.5" />
+      {/* gem */}
+      <polygon points="26,14 30,20 26,22 22,20" fill="#90c0e0" opacity="0.9" />
+      <polygon points="26,14 30,20 26,17" fill="white" opacity="0.5" />
+      <polygon points="26,22 30,20 26,24 22,20" fill="#4880b0" opacity="0.7" />
+      {/* shine */}
+      <path d="M11 41 Q9 39 13 37" stroke="#f5e070" strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.55" />
+      <path d="M11 31 Q9 29 13 27" stroke="#f5e070" strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.5" />
     </svg>
   );
 }
 
-function TwistBangleIllustration() {
+// ── Aurelia avatar SVG ─────────────────────────────────────────────────────
+
+function AureliaAvatar({ size }: { size: number }) {
   return (
-    <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      {/* outer bangle ellipse */}
-      <ellipse cx="36" cy="40" rx="24" ry="11" stroke="#c9a84c" strokeWidth="6" fill="none"/>
-      <ellipse cx="36" cy="40" rx="24" ry="11" stroke="#f0d060" strokeWidth="2.5" fill="none" opacity="0.4"/>
-      {/* twist grooves — upper arc */}
-      <path d="M14 36 Q20 30 36 29 Q52 30 58 36" stroke="#b8842a" strokeWidth="1.2" fill="none" strokeLinecap="round" opacity="0.7"/>
-      <path d="M14 38 Q20 32 36 31 Q52 32 58 38" stroke="#f5e070" strokeWidth="0.8" fill="none" strokeLinecap="round" opacity="0.5"/>
-      <path d="M14 40 Q20 34 36 33 Q52 34 58 40" stroke="#b8842a" strokeWidth="1.2" fill="none" strokeLinecap="round" opacity="0.6"/>
-      {/* twist grooves — lower arc */}
-      <path d="M14 42 Q20 48 36 49 Q52 48 58 42" stroke="#b8842a" strokeWidth="1.2" fill="none" strokeLinecap="round" opacity="0.5"/>
-      <path d="M14 44 Q20 50 36 51 Q52 50 58 44" stroke="#f5e070" strokeWidth="0.8" fill="none" strokeLinecap="round" opacity="0.4"/>
-      {/* inner ellipse for 3-D look */}
-      <ellipse cx="36" cy="40" rx="18" ry="5" fill="#f5edda" opacity="0.5"/>
-      {/* shine highlight on top-left */}
-      <path d="M15 37 Q22 30 32 29" stroke="white" strokeWidth="1.8" fill="none" strokeLinecap="round" opacity="0.6"/>
-      {/* small gold balls at ends of twist (decorative) */}
-      <circle cx="12" cy="40" r="3.5" fill="url(#ballGrad)"/>
-      <circle cx="60" cy="40" r="3.5" fill="url(#ballGrad)"/>
+    <svg width={size} height={size} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <defs>
-        <radialGradient id="ballGrad" cx="35%" cy="30%" r="65%">
-          <stop offset="0%" stopColor="#f5e080"/>
-          <stop offset="100%" stopColor="#9c6a20"/>
+        <radialGradient id="av-gold" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stopColor="#e8c96a" />
+          <stop offset="55%" stopColor="#c49830" />
+          <stop offset="100%" stopColor="#7a4c10" />
         </radialGradient>
       </defs>
+      <circle cx="20" cy="20" r="20" fill="url(#av-gold)" />
+      {/* stylised A */}
+      <path d="M20 9 L27.5 30 M12.5 30 L27.5 30 M15.5 22 H24.5" stroke="white" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.92" />
+      {/* diamond accent */}
+      <polygon points="20,5 22.5,8.5 20,11 17.5,8.5" fill="white" opacity="0.65" />
     </svg>
   );
 }
 
-// ── Product data ───────────────────────────────────────────────────────────
+// ── Seen double-tick ───────────────────────────────────────────────────────
 
-const products = [
-  {
-    id: "hoops",
-    name: "Hammered Gold Hoops",
-    price: "$240",
-    sub: "18k gold-plated · hand-finished",
-    badge: "Bestseller",
-    Illustration: HoopsIllustration,
-    bg: "from-[#f7e9c0] to-[#edd690]",
-  },
-  {
-    id: "pearl",
-    name: "Pearl Drop Pendant",
-    price: "$310",
-    sub: "Freshwater pearl · gold chain",
-    badge: "New",
-    Illustration: PearlPendantIllustration,
-    bg: "from-[#f0ece4] to-[#ddd8cc]",
-  },
-  {
-    id: "rings",
-    name: "Stacking Ring Set",
-    price: "$185",
-    sub: "Set of 3 · mixed metals",
-    badge: null,
-    Illustration: StackingRingsIllustration,
-    bg: "from-[#f7e9c0] to-[#e8d08a]",
-  },
-  {
-    id: "bangle",
-    name: "Twist Bangle",
-    price: "$260",
-    sub: "Hand-twisted · solid brass",
-    badge: null,
-    Illustration: TwistBangleIllustration,
-    bg: "from-[#f7e9c0] to-[#edd690]",
-  },
+function SeenTick() {
+  return (
+    <svg width="15" height="9" viewBox="0 0 15 9" fill="none" aria-hidden="true">
+      <path d="M1 4.5 L3.5 7 L8.5 1" stroke="#c9a84c" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M5.5 4.5 L8 7 L13 1" stroke="#c9a84c" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+// ── Mini star ─────────────────────────────────────────────────────────────
+
+function Star({ filled }: { filled: boolean }) {
+  return (
+    <svg width="8" height="8" viewBox="0 0 10 10" aria-hidden="true">
+      <polygon
+        points="5,0.5 6.5,3.8 10,4 7.2,6.5 8,10 5,8.2 2,10 2.8,6.5 0,4 3.5,3.8"
+        fill={filled ? "#c9a84c" : "#ddd0a0"}
+      />
+    </svg>
+  );
+}
+
+// ── Quick-reply chips ─────────────────────────────────────────────────────
+
+const chips = ["Show earrings", "Under $250", "Gift wrap"] as const;
+
+// ── Mini product cards ("You may also like") ──────────────────────────────
+
+const miniCards = [
+  { id: "pearl", name: "Pearl Drop Pendant", price: "$310", Illustration: PearlPendantIllustration },
+  { id: "rings", name: "Stacking Ring Set", price: "$185", Illustration: StackingRingsIllustration },
 ] as const;
 
 // ── Component ──────────────────────────────────────────────────────────────
 
 export default function JewelryChat() {
   return (
-    <div className="relative flex h-full w-full flex-col overflow-hidden bg-[#faf7f2]">
+    <div className="relative flex h-full w-full flex-col overflow-hidden" style={{ background: "#f7f0e6", fontFamily: "'Helvetica Neue', Arial, sans-serif" }}>
 
-      {/* ── Header ── */}
-      <div className="flex items-center gap-2.5 bg-white px-3 py-2.5 shadow-sm border-b border-[#e8dfc8] shrink-0">
-        <div className="relative shrink-0">
-          <div className="h-9 w-9 rounded-full bg-gradient-to-br from-[#c9a84c] via-[#e8c96a] to-[#b8965a] flex items-center justify-center shadow-sm">
-            <span className="text-white text-sm font-semibold select-none">A</span>
-          </div>
-          <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-500 ring-2 ring-white" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-[11px] font-semibold text-[#3a1f3a] leading-tight truncate">Aurelia Concierge</p>
-          <p className="text-[9px] text-green-600 leading-tight">Personal stylist · online</p>
-        </div>
-        <div className="flex items-center gap-2 shrink-0">
-          <Phone className="h-4 w-4 text-[#9c7a3c]" />
-          <Info className="h-4 w-4 text-[#9c7a3c]" />
+      {/* ── STATUS BAR (decorative) ── */}
+      <div
+        className="shrink-0 flex items-center justify-between px-4"
+        style={{ height: 22, background: "linear-gradient(135deg,#1e1008 0%,#2d1a0e 100%)" }}
+      >
+        <span className="text-[9px] font-semibold text-[#d4aa60]">9:41</span>
+        <div className="flex items-center gap-1.5">
+          {/* signal bars */}
+          <svg width="14" height="9" viewBox="0 0 14 9" fill="none" aria-hidden="true">
+            <rect x="0" y="6" width="2.5" height="3" rx="0.5" fill="#d4aa60" />
+            <rect x="3.5" y="4" width="2.5" height="5" rx="0.5" fill="#d4aa60" />
+            <rect x="7" y="2" width="2.5" height="7" rx="0.5" fill="#d4aa60" />
+            <rect x="10.5" y="0" width="2.5" height="9" rx="0.5" fill="#d4aa60" opacity="0.4" />
+          </svg>
+          {/* wifi */}
+          <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true">
+            <path d="M6.5 8.5 L6.5 8.5" stroke="#d4aa60" strokeWidth="2" strokeLinecap="round" />
+            <path d="M3.5 6 Q6.5 4 9.5 6" stroke="#d4aa60" strokeWidth="1.3" fill="none" strokeLinecap="round" />
+            <path d="M1 3.5 Q6.5 0.5 12 3.5" stroke="#d4aa60" strokeWidth="1.3" fill="none" strokeLinecap="round" opacity="0.6" />
+          </svg>
+          {/* battery */}
+          <svg width="18" height="9" viewBox="0 0 18 9" fill="none" aria-hidden="true">
+            <rect x="0.5" y="0.5" width="15" height="8" rx="2" stroke="#d4aa60" strokeWidth="1" />
+            <rect x="2" y="2" width="10" height="5" rx="1" fill="#d4aa60" />
+            <path d="M16.5 3 L16.5 6" stroke="#d4aa60" strokeWidth="1.2" strokeLinecap="round" />
+          </svg>
         </div>
       </div>
 
-      {/* ── Message thread ── */}
-      <div className="flex flex-1 flex-col gap-2.5 overflow-y-auto px-3 py-3 min-h-0">
+      {/* ── HEADER ── */}
+      <div
+        className="shrink-0 flex items-center gap-2 px-2 py-2 border-b border-[#1a0a02]"
+        style={{ background: "linear-gradient(135deg,#1e1008 0%,#2d1a0e 80%,#3e2512 100%)" }}
+      >
+        {/* back */}
+        <button className="shrink-0 text-[#d4aa60] active:opacity-70" aria-label="Back">
+          <ChevronLeft className="h-[18px] w-[18px]" />
+        </button>
 
-        {/* date divider */}
-        <div className="flex items-center gap-2">
-          <div className="flex-1 h-px bg-[#e0d5bf]" />
-          <span className="text-[8px] text-[#a0896e] px-1 select-none">Today</span>
-          <div className="flex-1 h-px bg-[#e0d5bf]" />
+        {/* avatar + online ring */}
+        <div className="relative shrink-0">
+          <div className="rounded-full overflow-hidden shadow-md" style={{ width: 34, height: 34, outline: "2px solid #c9a84c", outlineOffset: 1 }}>
+            <AureliaAvatar size={34} />
+          </div>
+          <span
+            className="absolute bottom-0 right-0 block rounded-full bg-emerald-400"
+            style={{ width: 8, height: 8, outline: "1.5px solid #1e1008" }}
+          />
         </div>
 
-        {/* assistant greeting */}
-        <div className="flex items-end gap-1.5" style={{ maxWidth: "84%" }}>
-          <div className="h-6 w-6 rounded-full bg-gradient-to-br from-[#c9a84c] to-[#b8965a] flex items-center justify-center shrink-0 mb-0.5 select-none">
-            <span className="text-white text-[9px] font-semibold">A</span>
+        {/* name + status */}
+        <div className="flex-1 min-w-0">
+          <p className="text-[11px] font-bold text-[#f0e0b0] tracking-wide leading-tight truncate">
+            Aurelia · Personal Jeweller
+          </p>
+          <p className="text-[8.5px] text-emerald-400 leading-tight mt-px">
+            ● online
+          </p>
+        </div>
+
+        {/* action icons */}
+        <div className="flex items-center gap-2.5 shrink-0">
+          <button aria-label="Call" className="text-[#c9a84c]">
+            <Phone className="h-[14px] w-[14px]" />
+          </button>
+          <button aria-label="More" className="text-[#c9a84c]">
+            <MoreVertical className="h-[14px] w-[14px]" />
+          </button>
+        </div>
+      </div>
+
+      {/* ── CHAT BODY ── */}
+      <div className="flex flex-1 flex-col overflow-hidden px-2.5 pt-2 pb-1 min-h-0">
+        {/* inner column — no scroll, just tight layout */}
+        <div className="flex flex-col gap-2 shrink-0">
+
+          {/* date divider */}
+          <div className="flex items-center gap-2">
+            <div className="flex-1 h-px" style={{ background: "#d8ccb0" }} />
+            <span className="text-[7.5px] text-[#9a8060] tracking-widest uppercase select-none">Today</span>
+            <div className="flex-1 h-px" style={{ background: "#d8ccb0" }} />
           </div>
-          <div>
-            <div className="rounded-2xl rounded-bl-sm bg-white px-3 py-2 shadow-sm border border-[#ede4d0]">
-              <p className="text-[10px] text-[#3a1f3a] leading-relaxed">
-                Welcome to <span className="font-semibold text-[#9c7a3c]">Aurelia</span> ✨ I&apos;m your personal stylist. Treating yourself or looking for a beautiful gift today?
-              </p>
+
+          {/* ── Aurelia greeting ── */}
+          <div className="flex items-end gap-1.5" style={{ maxWidth: "88%" }}>
+            <div className="shrink-0 rounded-full overflow-hidden mb-0.5 shadow-sm" style={{ width: 22, height: 22 }}>
+              <AureliaAvatar size={22} />
             </div>
-            <p className="mt-0.5 text-[8px] text-[#a0896e] pl-1">10:14 AM</p>
-          </div>
-        </div>
-
-        {/* assistant lead-in to recommendations */}
-        <div className="flex items-end gap-1.5" style={{ maxWidth: "84%" }}>
-          <div className="h-6 w-6 rounded-full bg-gradient-to-br from-[#c9a84c] to-[#b8965a] flex items-center justify-center shrink-0 mb-0.5 select-none">
-            <span className="text-white text-[9px] font-semibold">A</span>
-          </div>
-          <div className="rounded-2xl rounded-bl-sm bg-white px-3 py-2 shadow-sm border border-[#ede4d0]">
-            <p className="text-[10px] text-[#3a1f3a] leading-relaxed">
-              Here are our most-loved handcrafted pieces right now — each one made to last and designed to feel effortless every day ✨
-            </p>
-          </div>
-        </div>
-
-        {/* ── Product carousel row ── */}
-        <div className="flex items-end gap-1.5 w-full">
-          <div className="h-6 w-6 rounded-full bg-gradient-to-br from-[#c9a84c] to-[#b8965a] flex items-center justify-center shrink-0 mb-0.5 self-end select-none">
-            <span className="text-white text-[9px] font-semibold">A</span>
-          </div>
-          {/* scrollable row — clips gracefully, no page overflow */}
-          <div className="flex gap-2 overflow-x-auto pb-1 min-w-0 flex-1" style={{ scrollbarWidth: "none" }}>
-            {products.map(({ id, name, price, sub, badge, Illustration, bg }) => (
+            <div>
               <div
-                key={id}
-                className="shrink-0 w-[130px] rounded-2xl bg-white overflow-hidden shadow border border-[#ede4d0] flex flex-col"
+                className="rounded-2xl rounded-bl-sm px-3 py-1.5 shadow-sm"
+                style={{ background: "linear-gradient(135deg,#fffdf7 0%,#fef6e4 100%)", border: "1px solid #e8dcc8" }}
               >
-                {/* illustration tile */}
-                <div className={`relative flex items-center justify-center h-[100px] bg-gradient-to-br ${bg}`}>
-                  <Illustration />
-                  {badge && (
-                    <span className="absolute top-1.5 left-1.5 bg-[#3a1f3a] text-[#f0e0a0] text-[7px] font-semibold px-1.5 py-0.5 rounded-full leading-none">
-                      {badge}
-                    </span>
-                  )}
-                  <button
-                    className="absolute top-1.5 right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-white/80 text-[#c9a84c] shadow-sm"
-                    aria-label={`Wishlist ${name}`}
-                  >
-                    <Heart className="h-3 w-3" />
-                  </button>
-                </div>
-                {/* card body */}
-                <div className="px-2 pt-1.5 pb-2 flex flex-col gap-1 flex-1">
-                  <p className="text-[9.5px] font-semibold text-[#3a1f3a] leading-tight line-clamp-2">{name}</p>
-                  <p className="text-[10px] text-[#9c7a3c] font-bold leading-none">{price}</p>
-                  <p className="text-[8px] text-[#8a7060] leading-snug">{sub}</p>
-                  <button className="mt-auto w-full bg-[#3a1f3a] text-white text-[8px] font-semibold rounded-full py-1 flex items-center justify-center gap-1">
-                    <ShoppingBag className="h-2.5 w-2.5" />
-                    Add to bag
-                  </button>
-                </div>
+                <p className="text-[9.5px] text-[#2d1a0e] leading-relaxed">
+                  Hello! I&apos;m <span className="font-bold text-[#9a6820]">Aurelia</span>, your personal jewellery concierge. Treating yourself or finding a gift? ✨
+                </p>
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* user reply */}
-        <div className="flex justify-end">
-          <div style={{ maxWidth: "72%" }}>
-            <div className="rounded-2xl rounded-br-sm bg-gradient-to-br from-[#c9a84c] to-[#9c7a3c] px-3 py-2 shadow-sm">
-              <p className="text-[10px] text-white leading-relaxed">
-                Love the hoops — gift wrapped? 🎁
-              </p>
-            </div>
-            <div className="mt-0.5 flex items-center justify-end gap-1 pr-1">
-              <p className="text-[8px] text-[#a0896e]">10:17 AM</p>
-              <Check className="h-2.5 w-2.5 text-[#c9a84c]" />
-              <Check className="h-2.5 w-2.5 -ml-1.5 text-[#c9a84c]" />
+              <p className="mt-px text-[7px] text-[#b0987a] pl-1">10:14 AM</p>
             </div>
           </div>
-        </div>
 
-        {/* assistant reply with mini product chip */}
-        <div className="flex items-end gap-1.5" style={{ maxWidth: "88%" }}>
-          <div className="h-6 w-6 rounded-full bg-gradient-to-br from-[#c9a84c] to-[#b8965a] flex items-center justify-center shrink-0 mb-0.5 select-none">
-            <span className="text-white text-[9px] font-semibold">A</span>
+          {/* ── User reply ── */}
+          <div className="flex justify-end">
+            <div style={{ maxWidth: "68%" }}>
+              <div
+                className="rounded-2xl rounded-br-sm px-3 py-1.5 shadow-sm"
+                style={{ background: "linear-gradient(135deg,#c9a84c 0%,#7a4e10 100%)" }}
+              >
+                <p className="text-[9.5px] text-white leading-relaxed">
+                  Something elegant for a 30th birthday — earrings maybe? 🎁
+                </p>
+              </div>
+              <div className="mt-px flex items-center justify-end gap-0.5">
+                <p className="text-[7px] text-[#b0987a]">10:15 AM</p>
+                <SeenTick />
+              </div>
+            </div>
           </div>
-          <div>
-            <div className="rounded-2xl rounded-bl-sm bg-white px-3 py-2 shadow-sm border border-[#ede4d0]">
-              <p className="text-[10px] text-[#3a1f3a] leading-relaxed">
-                Absolutely! Every order ships in our signature ivory box with a satin ribbon — gift-ready at no extra charge. I&apos;ve added the Hoops:
+
+          {/* ── Aurelia lead-in ── */}
+          <div className="flex items-end gap-1.5" style={{ maxWidth: "88%" }}>
+            <div className="shrink-0 rounded-full overflow-hidden mb-0.5 shadow-sm" style={{ width: 22, height: 22 }}>
+              <AureliaAvatar size={22} />
+            </div>
+            <div
+              className="rounded-2xl rounded-bl-sm px-3 py-1.5 shadow-sm"
+              style={{ background: "linear-gradient(135deg,#fffdf7 0%,#fef6e4 100%)", border: "1px solid #e8dcc8" }}
+            >
+              <p className="text-[9.5px] text-[#2d1a0e] leading-relaxed">
+                Perfect choice! Our <span className="font-bold text-[#9a6820]">Hammered Gold Hoops</span> are a milestone favourite — hand-finished and endlessly wearable:
               </p>
-              {/* mini product chip */}
-              <div className="mt-2 flex items-center gap-2 rounded-xl bg-[#faf7f2] border border-[#e8dfc8] px-2 py-1.5">
-                <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-[#f7e9c0] to-[#edd690] flex items-center justify-center shrink-0 overflow-hidden">
-                  <HoopsIllustration />
+            </div>
+          </div>
+
+          {/* ── FEATURED PRODUCT CARD ── */}
+          <div className="flex items-end gap-1.5">
+            <div className="shrink-0 rounded-full overflow-hidden mb-0.5 shadow-sm" style={{ width: 22, height: 22 }}>
+              <AureliaAvatar size={22} />
+            </div>
+            <div
+              className="rounded-2xl overflow-hidden shadow-md flex-col"
+              style={{ width: 214, border: "1px solid #ddd0b0", background: "linear-gradient(160deg,#fffdf7 0%,#fff5e0 100%)" }}
+            >
+              {/* illustration tile */}
+              <div
+                className="relative flex items-center justify-center"
+                style={{ height: 100, background: "linear-gradient(135deg,#fbefc4 0%,#e8cc78 55%,#b89030 100%)" }}
+              >
+                {/* decorative rings */}
+                <svg width="100" height="100" viewBox="0 0 100 100" className="absolute inset-0" aria-hidden="true">
+                  <circle cx="50" cy="50" r="42" stroke="white" strokeWidth="0.5" fill="none" opacity="0.2" />
+                  <circle cx="50" cy="50" r="32" stroke="white" strokeWidth="0.5" fill="none" opacity="0.15" />
+                </svg>
+                <HoopsIllustration />
+                {/* badges */}
+                <span
+                  className="absolute top-1.5 left-1.5 text-[6.5px] font-bold tracking-widest uppercase px-1.5 py-0.5 rounded-full"
+                  style={{ background: "#1e1008", color: "#f0d488" }}
+                >
+                  Bestseller
+                </span>
+                <span
+                  className="absolute top-1.5 right-1.5 text-[9px] font-bold px-2 py-0.5 rounded-full shadow"
+                  style={{ background: "rgba(30,16,8,0.85)", color: "#f5d860" }}
+                >
+                  $240
+                </span>
+              </div>
+
+              {/* card content */}
+              <div className="px-2.5 pt-1.5 pb-2 flex flex-col gap-1">
+                <p className="text-[10.5px] font-bold text-[#1e1008] leading-tight">Hammered Gold Hoops</p>
+                <p className="text-[8px] text-[#7a6040] leading-tight">18k gold-plated · hand-hammered · hypoallergenic</p>
+
+                {/* attribute chips */}
+                <div className="flex items-center gap-1 flex-wrap">
+                  {["Gold", "35 mm", "Free shipping"].map((attr) => (
+                    <span key={attr} className="text-[7px] font-medium px-1.5 py-0.5 rounded" style={{ background: "#f5e9c8", color: "#7a5a18" }}>
+                      {attr}
+                    </span>
+                  ))}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[9px] font-semibold text-[#3a1f3a] leading-tight truncate">Hammered Gold Hoops</p>
-                  <p className="text-[9px] text-[#9c7a3c] font-bold">$240 · Gift wrap ✓</p>
+
+                {/* stars */}
+                <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-0.5">
+                    {[1, 2, 3, 4, 5].map((n) => <Star key={n} filled={n <= 5} />)}
+                  </div>
+                  <span className="text-[7.5px] text-[#8a7050]">4.9 · 148 reviews</span>
                 </div>
-                <button className="shrink-0 bg-[#3a1f3a] text-white text-[7px] font-semibold rounded-full px-2 py-0.5">
-                  View
+
+                {/* CTA */}
+                <button
+                  className="w-full flex items-center justify-center gap-1.5 rounded-full text-[9px] font-bold text-white shadow"
+                  style={{ background: "linear-gradient(135deg,#3e2512 0%,#7a4a10 100%)", paddingTop: 5, paddingBottom: 5 }}
+                >
+                  <ShoppingBag className="h-2.5 w-2.5" />
+                  Add to bag
                 </button>
               </div>
             </div>
-            <p className="mt-0.5 text-[8px] text-[#a0896e] pl-1">10:18 AM</p>
           </div>
-        </div>
 
-        {/* typing indicator */}
-        <div className="flex items-end gap-1.5">
-          <div className="h-6 w-6 rounded-full bg-gradient-to-br from-[#c9a84c] to-[#b8965a] flex items-center justify-center shrink-0 mb-0.5 select-none">
-            <span className="text-white text-[9px] font-semibold">A</span>
-          </div>
-          <div className="rounded-2xl rounded-bl-sm bg-white px-3.5 py-2.5 shadow-sm border border-[#ede4d0]">
-            <div className="flex items-center gap-1">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#c9a84c] animate-bounce" style={{ animationDelay: "0ms" }} />
-              <span className="h-1.5 w-1.5 rounded-full bg-[#c9a84c] animate-bounce" style={{ animationDelay: "150ms" }} />
-              <span className="h-1.5 w-1.5 rounded-full bg-[#c9a84c] animate-bounce" style={{ animationDelay: "300ms" }} />
+          {/* ── "You may also like" mini-carousel ── */}
+          <div className="flex items-end gap-1.5">
+            <div className="shrink-0 rounded-full overflow-hidden mb-0.5 shadow-sm" style={{ width: 22, height: 22 }}>
+              <AureliaAvatar size={22} />
+            </div>
+            <div>
+              <p className="text-[7.5px] text-[#9a7850] mb-1 pl-0.5 font-medium tracking-wide">You may also like</p>
+              <div className="flex gap-1.5">
+                {miniCards.map(({ id, name, price, Illustration }) => (
+                  <div
+                    key={id}
+                    className="flex flex-col overflow-hidden rounded-xl shadow"
+                    style={{ width: 92, border: "1px solid #ddd0b0", background: "linear-gradient(160deg,#fffdf7 0%,#fef3d8 100%)" }}
+                  >
+                    <div
+                      className="flex items-center justify-center"
+                      style={{ height: 64, background: "linear-gradient(135deg,#f8efd5 0%,#e8d490 50%,#d0b060 100%)" }}
+                    >
+                      <Illustration />
+                    </div>
+                    <div className="px-1.5 py-1.5 flex flex-col gap-0.5">
+                      <p className="text-[7.5px] font-semibold text-[#1e1008] leading-tight">{name}</p>
+                      <p className="text-[8px] font-bold text-[#9a6820]">{price}</p>
+                      <button
+                        className="mt-0.5 w-full text-[6.5px] font-bold rounded-full text-white"
+                        style={{ background: "linear-gradient(135deg,#c9a84c 0%,#7a4e10 100%)", paddingTop: 3, paddingBottom: 3 }}
+                      >
+                        View
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
 
+          {/* ── typing indicator ── */}
+          <div className="flex items-end gap-1.5">
+            <div className="shrink-0 rounded-full overflow-hidden mb-0.5 shadow-sm" style={{ width: 22, height: 22 }}>
+              <AureliaAvatar size={22} />
+            </div>
+            <div
+              className="rounded-2xl rounded-bl-sm px-3 py-2.5 shadow-sm flex items-center gap-1"
+              style={{ background: "#fffdf7", border: "1px solid #e8dcc8" }}
+            >
+              {[0, 140, 280].map((delay) => (
+                <span
+                  key={delay}
+                  className="block rounded-full animate-bounce"
+                  style={{ width: 5, height: 5, background: "#c9a84c", animationDelay: `${delay}ms` }}
+                />
+              ))}
+            </div>
+          </div>
+
+        </div>
       </div>
 
-      {/* ── Quick-reply chips ── */}
-      <div className="flex gap-1.5 overflow-x-auto px-3 py-2 bg-[#faf7f2] border-t border-[#e8dfc8] shrink-0" style={{ scrollbarWidth: "none" }}>
-        {["Earrings", "Under $250", "Gift wrap", "Book a call"].map((chip) => (
+      {/* ── QUICK-REPLY CHIPS ── */}
+      <div
+        className="shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 border-t border-[#e0d0b0]"
+        style={{ background: "#f2e8d8" }}
+      >
+        {chips.map((chip) => (
           <button
             key={chip}
-            className="shrink-0 rounded-full border border-[#c9a84c] bg-white px-2.5 py-1 text-[9px] font-medium text-[#9c7a3c] whitespace-nowrap"
+            className="shrink-0 whitespace-nowrap text-[8px] font-semibold rounded-full px-2.5 py-1"
+            style={{ border: "1.5px solid #c9a84c", color: "#7a4e10", background: "linear-gradient(135deg,#fffdf7 0%,#fef0cc 100%)" }}
           >
             {chip}
           </button>
         ))}
       </div>
 
-      {/* ── Input bar ── */}
-      <div className="flex items-center gap-2 bg-white px-3 py-2.5 border-t border-[#e8dfc8] shrink-0">
-        <button className="shrink-0 text-[#a0896e]" aria-label="Attach file">
-          <Paperclip className="h-4 w-4" />
+      {/* ── INPUT BAR ── */}
+      <div
+        className="shrink-0 flex items-center gap-2 px-2.5 py-2 border-t border-[#e0d0b0]"
+        style={{ background: "#fffdf7" }}
+      >
+        {/* + attach */}
+        <button
+          className="shrink-0 flex items-center justify-center rounded-full shadow-sm"
+          style={{ width: 28, height: 28, background: "linear-gradient(135deg,#f0e4c0 0%,#dfc870 100%)", color: "#6a3e10" }}
+          aria-label="Add attachment"
+        >
+          <Plus className="h-3.5 w-3.5" />
         </button>
-        <div className="flex-1 rounded-full bg-[#faf7f2] border border-[#e0d5bf] px-3 py-1.5">
-          <p className="text-[10px] text-[#c4aa88]">Message Aurelia...</p>
+
+        {/* text field */}
+        <div
+          className="flex-1 flex items-center rounded-full px-3"
+          style={{ height: 28, background: "#f5ede0", border: "1.5px solid #d8c8a0" }}
+        >
+          <p className="text-[9px] text-[#b8a080] select-none">Message Aurelia…</p>
         </div>
-        <button className="shrink-0 flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-[#c9a84c] to-[#9c7a3c] shadow-sm" aria-label="Send message">
-          <Send className="h-3.5 w-3.5 text-white" />
+
+        {/* mic */}
+        <button className="shrink-0 text-[#b0987a]" aria-label="Voice message">
+          <Mic className="h-[15px] w-[15px]" />
+        </button>
+
+        {/* send */}
+        <button
+          className="shrink-0 flex items-center justify-center rounded-full shadow"
+          style={{ width: 28, height: 28, background: "linear-gradient(135deg,#c9a84c 0%,#7a4e10 100%)" }}
+          aria-label="Send message"
+        >
+          <Send className="h-3 w-3 text-white" />
         </button>
       </div>
 

@@ -18,15 +18,27 @@ export type StorefrontId =
   | "jewelry"
   | "budget";
 
+export type DeviceType = "phone" | "browser";
+
+// The fixed design canvas each storefront is authored to. The showcase scales
+// the whole device to FIT the card (contain), so a screen is never cropped.
+export const SCREEN: Record<DeviceType, { w: number; h: number }> = {
+  phone: { w: 320, h: 680 },
+  browser: { w: 1180, h: 720 },
+};
+
 // Each visitor gets a storefront built in a different format — not just
-// different products, a different *kind* of experience.
-export const STOREFRONTS: Record<StorefrontId, { Component: ComponentType; format: string }> = {
-  sport: { Component: SportStore, format: "Modern storefront" },
-  hiking: { Component: HikingMagazine, format: "Editorial magazine" },
-  luxury: { Component: LuxuryLookbook, format: "Fashion lookbook" },
-  street: { Component: StreetTikTok, format: "Short-video feed" },
-  skincare: { Component: SkincarePinterest, format: "Discovery board" },
-  vintage: { Component: VintageInstagram, format: "Social shop" },
-  jewelry: { Component: JewelryChat, format: "Concierge chat" },
-  budget: { Component: BudgetDeals, format: "Flash-deals market" },
+// different products, a different *kind* of experience, on its native device.
+export const STOREFRONTS: Record<
+  StorefrontId,
+  { Component: ComponentType; format: string; device: DeviceType }
+> = {
+  sport: { Component: SportStore, format: "Modern storefront", device: "browser" },
+  hiking: { Component: HikingMagazine, format: "Editorial magazine", device: "browser" },
+  luxury: { Component: LuxuryLookbook, format: "Fashion lookbook", device: "browser" },
+  street: { Component: StreetTikTok, format: "Short-video feed", device: "phone" },
+  skincare: { Component: SkincarePinterest, format: "Discovery board", device: "phone" },
+  vintage: { Component: VintageInstagram, format: "Social shop", device: "phone" },
+  jewelry: { Component: JewelryChat, format: "Concierge chat", device: "phone" },
+  budget: { Component: BudgetDeals, format: "Flash-deals market", device: "phone" },
 };

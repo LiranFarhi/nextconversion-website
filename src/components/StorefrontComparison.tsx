@@ -1,12 +1,13 @@
 "use client";
 
 import Image from "next/image";
+import { useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Reveal from "./Reveal";
 import SnapRow from "./SnapRow";
 import CarouselDots from "./CarouselDots";
 import PersonaStrip, { PERSONAS } from "./PersonaStrip";
-import { STOREFRONTS, type StorefrontId } from "./storefronts";
+import { STOREFRONTS, SCREEN, type StorefrontId, type DeviceType } from "./storefronts";
 import { useAutoAdvance } from "./useAutoAdvance";
 
 type Card = {
@@ -34,26 +35,97 @@ const CURATED: Card = {
   highlight: true,
 };
 
+// Outer device dimensions (screen + chrome) used to scale the device to fit.
+const PADDING = 0.92; // leave a little breathing room around the device
+const OUTER: Record<DeviceType, { w: number; h: number }> = {
+  phone: { w: SCREEN.phone.w + 16, h: SCREEN.phone.h + 16 },
+  browser: { w: SCREEN.browser.w, h: SCREEN.browser.h + 28 },
+};
+
+/** A phone bezel / browser window around the fixed-size storefront screen. */
+function DeviceFrame({ type, children }: { type: DeviceType; children: React.ReactNode }) {
+  if (type === "phone") {
+    return (
+      <div className="rounded-[2.3rem] bg-[#0b0b12] p-2 shadow-[0_40px_90px_-30px_rgba(0,0,0,0.85)] ring-1 ring-white/10">
+        <div
+          className="relative overflow-hidden rounded-[1.7rem] bg-white"
+          style={{ width: SCREEN.phone.w, height: SCREEN.phone.h }}
+        >
+          {children}
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="overflow-hidden rounded-xl bg-[#23232b] shadow-[0_40px_90px_-30px_rgba(0,0,0,0.85)] ring-1 ring-white/10">
+      <div className="flex h-7 items-center gap-2 px-3.5">
+        <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
+        <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
+        <span className="h-3 w-3 rounded-full bg-[#28c840]" />
+        <div className="mx-auto h-4 w-1/2 rounded-full bg-black/25" />
+      </div>
+      <div
+        className="relative overflow-hidden bg-white"
+        style={{ width: SCREEN.browser.w, height: SCREEN.browser.h }}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+
 /**
- * Renders the live storefront the agents built for the active visitor and
- * cross-fades to a new one when the visitor changes. Each visitor gets a
- * different *format* (modern shop, magazine, video feed, chat, …).
+ * Renders the live storefront the agents built for the active visitor on its
+ * native device, scaled to FIT the card (never cropped), and cross-fades to a
+ * new one when the visitor changes. Each visitor gets a different *format*.
  */
 function CuratedShowcase({ id }: { id: StorefrontId }) {
   const reduce = useReducedMotion();
-  const { Component } = STOREFRONTS[id];
+  const { Component, device } = STOREFRONTS[id];
+  const frameRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(0);
+  const outer = OUTER[device];
+
+  useLayoutEffect(() => {
+    const el = frameRef.current;
+    if (!el) return;
+    const fit = () => {
+      const { width, height } = el.getBoundingClientRect();
+      setScale(Math.min(width / outer.w, height / outer.h) * PADDING);
+    };
+    fit();
+    const ro = new ResizeObserver(fit);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [outer.w, outer.h]);
+
   return (
-    <div className="relative aspect-[1024/1004] w-full bg-[#0b0a1f]">
+    <div
+      ref={frameRef}
+      className="relative aspect-[1024/1004] w-full overflow-hidden rounded-2xl bg-[radial-gradient(120%_90%_at_50%_-10%,#221b4d_0%,#0b0a1f_55%,#070617_100%)]"
+    >
+      {/* subtle dotted stage backdrop */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-[0.18]"
+        style={{
+          backgroundImage: "radial-gradient(rgba(255,255,255,0.5) 1px, transparent 1px)",
+          backgroundSize: "16px 16px",
+        }}
+      />
       <AnimatePresence initial={false}>
         <motion.div
           key={id}
-          className="absolute inset-0"
+          className="absolute left-1/2 top-1/2"
+          style={{ transform: `translate(-50%, -50%) scale(${scale})` }}
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          animate={{ opacity: scale > 0 ? 1 : 0 }}
           exit={{ opacity: 0 }}
           transition={{ duration: reduce ? 0 : 0.45, ease: "easeOut" }}
         >
-          <Component />
+          <DeviceFrame type={device}>
+            <Component />
+          </DeviceFrame>
         </motion.div>
       </AnimatePresence>
     </div>

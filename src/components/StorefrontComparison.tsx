@@ -18,14 +18,14 @@ type Card = {
 
 const LEGACY: Card = {
   label: "Legacy website",
-  src: "/figma/legacy-store.png",
+  src: "/figma/legacy-store.jpg",
   w: 1024,
   h: 1004,
   alt: "A single generic storefront shown to every visitor",
 };
 const CURATED: Card = {
   label: "Endless curated storefronts",
-  src: "/figma/legacy-store.png",
+  src: "/figma/legacy-store.jpg",
   w: 1024,
   h: 1004,
   alt: "A curated storefront, personalized to the active visitor",

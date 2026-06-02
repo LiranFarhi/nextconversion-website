@@ -7,7 +7,8 @@ export type StorefrontId =
   | "activewear"
   | "luxury"
   | "streetwear"
-  | "swimwear";
+  | "swimwear"
+  | "dresses";
 
 export const STOREFRONTS: Record<StorefrontId, { src: string; label: string; alt: string }> = {
   sportswear: {
@@ -34,5 +35,10 @@ export const STOREFRONTS: Record<StorefrontId, { src: string; label: string; alt
     src: "/storefronts/swimwear.jpg",
     label: "Sunlit Swim Edit",
     alt: "Swimwear storefront — crafted for sunlit elegance",
+  },
+  dresses: {
+    src: "/storefronts/dresses.jpg",
+    label: "Summer Dresses",
+    alt: "Summer dresses storefront — Shop All New",
   },
 };

@@ -287,40 +287,41 @@ export default function AgentsSection(): ReactElement {
         </div>
 
         {/* ── Right: carousel of agent detail cards ── */}
-        <div className="flex min-w-0 flex-col gap-4">
-          <SnapRow active={index} onSelect={select} itemClassName="basis-full">
+        <div className="min-w-0">
+          <SnapRow active={index} onSelect={select} className="h-full" itemClassName="h-full basis-full">
             {AGENTS.map((a) => (
               <AgentCard key={a.name} agent={a} />
             ))}
           </SnapRow>
-
-          <div className="flex items-center justify-center gap-3">
-            <button
-              type="button"
-              onClick={() => go(-1)}
-              aria-label="Previous agent"
-              className="grid h-9 w-9 place-items-center rounded-full border border-border-strong bg-white/[0.03] text-soft transition-colors hover:bg-white/[0.1]"
-            >
-              <ChevronLeft size={16} />
-            </button>
-            <CarouselDots
-              count={AGENTS.length}
-              active={index}
-              onSelect={select}
-              dwellMs={4200}
-              playing={playing}
-              label="Agent"
-            />
-            <button
-              type="button"
-              onClick={() => go(1)}
-              aria-label="Next agent"
-              className="grid h-9 w-9 place-items-center rounded-full border border-border-strong bg-white/[0.03] text-soft transition-colors hover:bg-white/[0.1]"
-            >
-              <ChevronRight size={16} />
-            </button>
-          </div>
         </div>
+      </div>
+
+      {/* ── Agent scroller — under both the illustration and the card ── */}
+      <div className="mt-6 flex items-center justify-center gap-3">
+        <button
+          type="button"
+          onClick={() => go(-1)}
+          aria-label="Previous agent"
+          className="grid h-9 w-9 place-items-center rounded-full border border-border-strong bg-white/[0.03] text-soft transition-colors hover:bg-white/[0.1]"
+        >
+          <ChevronLeft size={16} />
+        </button>
+        <CarouselDots
+          count={AGENTS.length}
+          active={index}
+          onSelect={select}
+          dwellMs={4200}
+          playing={playing}
+          label="Agent"
+        />
+        <button
+          type="button"
+          onClick={() => go(1)}
+          aria-label="Next agent"
+          className="grid h-9 w-9 place-items-center rounded-full border border-border-strong bg-white/[0.03] text-soft transition-colors hover:bg-white/[0.1]"
+        >
+          <ChevronRight size={16} />
+        </button>
       </div>
 
       {/* ── Impact stats ── */}

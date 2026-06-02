@@ -1,384 +1,478 @@
-import { Search, User, ShoppingCart, Heart, Truck, RotateCcw, Leaf, Plus } from "lucide-react";
+import { Search, User, ShoppingCart, Heart, Truck, RotateCcw, Leaf, ChevronRight } from "lucide-react";
 
-/* ── Garment SVG illustrations ── */
+/* ─────────────────────────────────────────────
+   Garment SVG illustrations  (module scope)
+───────────────────────────────────────────── */
 function LeggingsSVG() {
   return (
-    <svg viewBox="0 0 80 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-3/5 h-auto drop-shadow-sm">
+    <svg viewBox="0 0 120 160" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
       {/* Waistband */}
-      <rect x="18" y="10" width="44" height="8" rx="4" fill="#6b6b8a" opacity="0.9"/>
+      <rect x="28" y="18" width="64" height="14" rx="7" fill="#7c7ca8" />
+      <rect x="28" y="18" width="64" height="6" rx="3" fill="#8f8fbc" />
       {/* Left leg */}
-      <path d="M18 18 L28 18 L22 92 L10 92 Z" fill="#7c7c9e" rx="3"/>
+      <path d="M28 32 L50 32 L42 148 L16 148 Z" fill="#8080aa" />
       {/* Right leg */}
-      <path d="M52 18 L62 18 L70 92 L58 92 Z" fill="#7c7c9e"/>
+      <path d="M70 32 L92 32 L104 148 L78 148 Z" fill="#8080aa" />
       {/* Center panel */}
-      <path d="M28 18 L52 18 L52 55 L40 60 L28 55 Z" fill="#8888b0"/>
-      {/* Seam lines */}
-      <line x1="40" y1="60" x2="40" y2="92" stroke="#9999bb" strokeWidth="1.5" strokeDasharray="3,2"/>
-      <line x1="28" y1="18" x2="22" y2="92" stroke="#9999bb" strokeWidth="0.8" opacity="0.5"/>
-      <line x1="52" y1="18" x2="58" y2="92" stroke="#9999bb" strokeWidth="0.8" opacity="0.5"/>
+      <path d="M50 32 L70 32 L70 88 L60 96 L50 88 Z" fill="#9090be" />
+      {/* Highlight sheen left */}
+      <path d="M32 36 Q36 70 34 110" stroke="#a0a0cc" strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.5" />
+      {/* Seam */}
+      <line x1="60" y1="96" x2="60" y2="148" stroke="#a0a0cc" strokeWidth="2" strokeDasharray="5,4" opacity="0.6" />
       {/* Ankle bands */}
-      <rect x="7" y="88" width="16" height="5" rx="2.5" fill="#6b6b8a" opacity="0.9"/>
-      <rect x="55" y="88" width="16" height="5" rx="2.5" fill="#6b6b8a" opacity="0.9"/>
+      <rect x="13" y="142" width="30" height="8" rx="4" fill="#6a6a90" />
+      <rect x="76" y="142" width="30" height="8" rx="4" fill="#6a6a90" />
+      {/* Subtle texture dots */}
+      <circle cx="38" cy="60" r="1.5" fill="#b0b0d8" opacity="0.4" />
+      <circle cx="38" cy="80" r="1.5" fill="#b0b0d8" opacity="0.4" />
+      <circle cx="38" cy="100" r="1.5" fill="#b0b0d8" opacity="0.4" />
+      <circle cx="82" cy="60" r="1.5" fill="#b0b0d8" opacity="0.4" />
+      <circle cx="82" cy="80" r="1.5" fill="#b0b0d8" opacity="0.4" />
+      <circle cx="82" cy="100" r="1.5" fill="#b0b0d8" opacity="0.4" />
     </svg>
   );
 }
 
 function BraSVG() {
   return (
-    <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-3/5 h-auto drop-shadow-sm">
+    <svg viewBox="0 0 120 110" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
       {/* Straps */}
-      <path d="M26 18 Q22 10 28 8 Q32 6 34 14" stroke="#b08fa0" strokeWidth="3" strokeLinecap="round" fill="none"/>
-      <path d="M54 18 Q58 10 52 8 Q48 6 46 14" stroke="#b08fa0" strokeWidth="3" strokeLinecap="round" fill="none"/>
-      {/* Band across top */}
-      <path d="M24 18 Q40 14 56 18" stroke="#c4a0b4" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
+      <path d="M42 28 Q38 14 46 10 Q52 7 54 22" stroke="#9f7fa0" strokeWidth="4.5" strokeLinecap="round" fill="none" />
+      <path d="M78 28 Q82 14 74 10 Q68 7 66 22" stroke="#9f7fa0" strokeWidth="4.5" strokeLinecap="round" fill="none" />
+      {/* Top band */}
+      <path d="M38 30 Q60 23 82 30" stroke="#b892b8" strokeWidth="3" strokeLinecap="round" fill="none" />
       {/* Left cup */}
-      <path d="M18 30 Q24 18 40 20 Q30 26 28 38 Q22 38 18 30 Z" fill="#c4a0b4" opacity="0.95"/>
+      <path d="M24 50 Q32 28 60 30 Q44 38 40 60 Q30 62 24 50 Z" fill="#c8a0c0" />
       {/* Right cup */}
-      <path d="M62 30 Q56 18 40 20 Q50 26 52 38 Q58 38 62 30 Z" fill="#c4a0b4" opacity="0.95"/>
+      <path d="M96 50 Q88 28 60 30 Q76 38 80 60 Q90 62 96 50 Z" fill="#c8a0c0" />
+      {/* Cup highlight */}
+      <path d="M34 36 Q38 32 44 34" stroke="#dcc0da" strokeWidth="1.8" fill="none" strokeLinecap="round" opacity="0.8" />
+      <path d="M86 36 Q82 32 76 34" stroke="#dcc0da" strokeWidth="1.8" fill="none" strokeLinecap="round" opacity="0.8" />
       {/* Center gore */}
-      <path d="M38 20 Q40 24 42 20" stroke="#b08fa0" strokeWidth="1.5" fill="none"/>
+      <path d="M57 30 Q60 36 63 30" stroke="#9f7fa0" strokeWidth="2" fill="none" />
       {/* Underbust band */}
-      <path d="M18 30 Q40 42 62 30 Q62 44 40 48 Q18 44 18 30 Z" fill="#b897aa" opacity="0.9"/>
-      {/* Back clasp hint */}
-      <rect x="37" y="44" width="6" height="4" rx="2" fill="#a08090" opacity="0.8"/>
-      {/* Mesh texture dots */}
-      <circle cx="30" cy="27" r="1" fill="white" opacity="0.3"/>
-      <circle cx="35" cy="30" r="1" fill="white" opacity="0.3"/>
-      <circle cx="50" cy="27" r="1" fill="white" opacity="0.3"/>
-      <circle cx="45" cy="30" r="1" fill="white" opacity="0.3"/>
+      <path d="M24 50 Q60 68 96 50 Q96 70 60 76 Q24 70 24 50 Z" fill="#b490b2" />
+      {/* Clasp */}
+      <rect x="56" y="72" width="8" height="5" rx="2.5" fill="#987890" />
+      {/* Mesh dots */}
+      <circle cx="46" cy="43" r="1.5" fill="white" opacity="0.35" />
+      <circle cx="54" cy="48" r="1.5" fill="white" opacity="0.35" />
+      <circle cx="74" cy="43" r="1.5" fill="white" opacity="0.35" />
+      <circle cx="66" cy="48" r="1.5" fill="white" opacity="0.35" />
+      <circle cx="50" cy="55" r="1.5" fill="white" opacity="0.25" />
+      <circle cx="70" cy="55" r="1.5" fill="white" opacity="0.25" />
     </svg>
   );
 }
 
 function JacketSVG() {
   return (
-    <svg viewBox="0 0 80 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-3/5 h-auto drop-shadow-sm">
+    <svg viewBox="0 0 120 148" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
       {/* Body */}
-      <path d="M22 28 L14 38 L14 88 L66 88 L66 38 L58 28 Z" fill="#6b7c6e" opacity="0.9"/>
+      <path d="M34 42 L20 58 L20 132 L100 132 L100 58 L86 42 Z" fill="#6b8c70" />
       {/* Left sleeve */}
-      <path d="M22 28 L8 34 L8 62 L18 62 L22 36 Z" fill="#5e7060" opacity="0.95"/>
+      <path d="M34 42 L12 52 L12 94 L28 94 L34 56 Z" fill="#5e7d63" />
       {/* Right sleeve */}
-      <path d="M58 28 L72 34 L72 62 L62 62 L58 36 Z" fill="#5e7060" opacity="0.95"/>
-      {/* Collar/hood area */}
-      <path d="M28 20 L32 14 L40 12 L48 14 L52 20 L58 28 L22 28 Z" fill="#5e7060"/>
+      <path d="M86 42 L108 52 L108 94 L92 94 L86 56 Z" fill="#5e7d63" />
       {/* Hood */}
-      <path d="M30 20 Q30 8 40 8 Q50 8 50 20 Z" fill="#7a8f7d" opacity="0.8"/>
-      {/* Zip line */}
-      <line x1="40" y1="28" x2="40" y2="88" stroke="#90a890" strokeWidth="1.5"/>
-      {/* Zip pull */}
-      <rect x="37" y="38" width="6" height="3" rx="1.5" fill="#c8d8c8" opacity="0.9"/>
-      {/* Left pocket */}
-      <path d="M20 62 Q22 58 28 60 L28 72 Q22 72 20 68 Z" fill="#5e7060" stroke="#4a5e4c" strokeWidth="0.8"/>
-      {/* Right pocket */}
-      <path d="M60 62 Q58 58 52 60 L52 72 Q58 72 60 68 Z" fill="#5e7060" stroke="#4a5e4c" strokeWidth="0.8"/>
+      <path d="M44 30 Q44 10 60 8 Q76 10 76 30 Z" fill="#7a9f80" />
+      {/* Collar */}
+      <path d="M40 30 L46 40 L60 36 L74 40 L80 30 L86 42 L34 42 Z" fill="#6b8c70" />
+      {/* Zip */}
+      <line x1="60" y1="42" x2="60" y2="132" stroke="#90b898" strokeWidth="2.5" />
+      <rect x="56" y="56" width="8" height="5" rx="2.5" fill="#d0e8d0" />
+      {/* Pockets */}
+      <path d="M28 96 Q30 88 40 90 L40 108 Q30 108 28 100 Z" fill="#5e7d63" stroke="#4a6650" strokeWidth="1" />
+      <path d="M92 96 Q90 88 80 90 L80 108 Q90 108 92 100 Z" fill="#5e7d63" stroke="#4a6650" strokeWidth="1" />
       {/* Cuffs */}
-      <rect x="6" y="60" width="14" height="5" rx="2.5" fill="#4a5e4c" opacity="0.9"/>
-      <rect x="60" y="60" width="14" height="5" rx="2.5" fill="#4a5e4c" opacity="0.9"/>
-      {/* Hem band */}
-      <rect x="14" y="84" width="52" height="6" rx="3" fill="#4a5e4c" opacity="0.9"/>
+      <rect x="10" y="90" width="20" height="8" rx="4" fill="#4a6650" />
+      <rect x="90" y="90" width="20" height="8" rx="4" fill="#4a6650" />
+      {/* Hem */}
+      <rect x="20" y="126" width="80" height="8" rx="4" fill="#4a6650" />
+      {/* Chest seam */}
+      <path d="M34 42 L34 132" stroke="#7aaa80" strokeWidth="0.8" opacity="0.3" />
+      <path d="M86 42 L86 132" stroke="#7aaa80" strokeWidth="0.8" opacity="0.3" />
+      {/* Sheen */}
+      <path d="M22 62 Q26 90 24 118" stroke="#90b898" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.4" />
     </svg>
   );
 }
 
 function TeeSVG() {
   return (
-    <svg viewBox="0 0 80 90" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-3/5 h-auto drop-shadow-sm">
+    <svg viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
       {/* Body */}
-      <path d="M24 26 L18 82 L62 82 L56 26 Z" fill="#9e9e8e" opacity="0.9"/>
+      <path d="M36 40 L26 126 L94 126 L84 40 Z" fill="#a8a898" />
       {/* Left sleeve */}
-      <path d="M24 26 L10 24 L8 44 L22 44 Z" fill="#8e8e7e" opacity="0.95"/>
+      <path d="M36 40 L14 36 L10 68 L32 70 Z" fill="#989888" />
       {/* Right sleeve */}
-      <path d="M56 26 L70 24 L72 44 L58 44 Z" fill="#8e8e7e" opacity="0.95"/>
+      <path d="M84 40 L106 36 L110 68 L88 70 Z" fill="#989888" />
       {/* Neckline */}
-      <path d="M28 22 Q40 16 52 22 Q48 28 40 28 Q32 28 28 22 Z" fill="#b8b8a4" opacity="0.9"/>
+      <path d="M42 34 Q60 24 78 34 Q72 44 60 46 Q48 44 42 34 Z" fill="#bcbcaa" />
+      {/* Fabric highlight */}
+      <path d="M30 48 Q34 80 32 112" stroke="#bcbcaa" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.45" />
       {/* Shoulder seams */}
-      <line x1="24" y1="26" x2="22" y2="44" stroke="#b4b4a0" strokeWidth="0.8" opacity="0.6"/>
-      <line x1="56" y1="26" x2="58" y2="44" stroke="#b4b4a0" strokeWidth="0.8" opacity="0.6"/>
-      {/* Center seam / texture hint */}
-      <line x1="40" y1="28" x2="40" y2="82" stroke="#b4b4a0" strokeWidth="0.8" strokeDasharray="4,3" opacity="0.4"/>
-      {/* Small logo mark */}
-      <circle cx="34" cy="38" r="3" stroke="#b4b4a0" strokeWidth="1" fill="none" opacity="0.7"/>
-      <path d="M33 38 L35 37 L35 39 Z" fill="#b4b4a0" opacity="0.7"/>
+      <line x1="36" y1="40" x2="32" y2="70" stroke="#bcbcaa" strokeWidth="1" opacity="0.4" />
+      <line x1="84" y1="40" x2="88" y2="70" stroke="#bcbcaa" strokeWidth="1" opacity="0.4" />
+      {/* Logo mark */}
+      <circle cx="52" cy="60" r="5" stroke="#c8c8b4" strokeWidth="1.5" fill="none" opacity="0.7" />
+      <path d="M50.5 60 L53 58.5 L53 61.5 Z" fill="#c8c8b4" opacity="0.7" />
+      {/* Side seams */}
+      <line x1="36" y1="40" x2="26" y2="126" stroke="#bcbcaa" strokeWidth="0.8" opacity="0.3" />
+      <line x1="84" y1="40" x2="94" y2="126" stroke="#bcbcaa" strokeWidth="0.8" opacity="0.3" />
       {/* Hem */}
-      <path d="M18 78 Q40 84 62 78 L62 82 L18 82 Z" fill="#8a8a7a" opacity="0.8"/>
+      <path d="M26 120 Q60 130 94 120 L94 126 L26 126 Z" fill="#909080" />
     </svg>
   );
 }
 
-function ShortsSVG() {
+/* ─────────────────────────────────────────────
+   Hero athlete SVG  (module scope)
+───────────────────────────────────────────── */
+function HeroAthleteIllustration() {
   return (
-    <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-3/5 h-auto drop-shadow-sm">
+    <svg viewBox="0 0 340 480" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+      {/* Background shape */}
+      <ellipse cx="170" cy="300" rx="130" ry="160" fill="url(#heroGrad)" opacity="0.3" />
+
+      {/* Floating orbs */}
+      <circle cx="290" cy="80" r="36" fill="#a78bfa" opacity="0.18" />
+      <circle cx="60" cy="130" r="20" fill="#c4b5fd" opacity="0.14" />
+      <circle cx="310" cy="370" r="28" fill="#8b5cf6" opacity="0.12" />
+
+      {/* Figure — minimalist athlete in motion */}
+      {/* Head */}
+      <circle cx="170" cy="72" r="24" fill="#f0e8df" />
+      {/* Hair */}
+      <path d="M148 60 Q160 44 180 46 Q196 48 194 62 Q186 52 170 50 Q154 52 148 60 Z" fill="#3a2a18" />
+      {/* Neck */}
+      <rect x="162" y="94" width="16" height="18" rx="8" fill="#f0e8df" />
+      {/* Sports bra / top — violet */}
+      <path d="M136 112 Q152 104 170 106 Q188 104 204 112 L208 148 Q188 158 170 156 Q152 158 132 148 Z" fill="#8b5cf6" />
+      {/* Bra straps */}
+      <path d="M155 106 L162 94" stroke="#7c3aed" strokeWidth="4" strokeLinecap="round" />
+      <path d="M185 106 L178 94" stroke="#7c3aed" strokeWidth="4" strokeLinecap="round" />
+      {/* Leggings — deep violet */}
+      <path d="M132 148 L126 148 L118 310 L148 310 L158 220 L162 148 Z" fill="#6d28d9" />
+      <path d="M208 148 L214 148 L222 310 L192 310 L182 220 L178 148 Z" fill="#6d28d9" />
+      {/* Center panel leggings */}
+      <path d="M162 148 L178 148 L176 220 L170 230 L164 220 Z" fill="#7c3aed" />
+      {/* Left arm — extended back/up */}
+      <path d="M136 112 Q110 100 90 86 Q82 80 86 74 Q90 68 98 74 Q118 90 140 108" fill="#f0e8df" />
+      {/* Right arm — forward sweep */}
+      <path d="M204 112 Q230 106 252 118 Q262 124 258 132 Q254 140 244 136 Q224 126 206 116" fill="#f0e8df" />
+      {/* Shoes */}
+      <ellipse cx="133" cy="316" rx="20" ry="8" fill="#1e1b4b" />
+      <ellipse cx="207" cy="316" rx="20" ry="8" fill="#1e1b4b" />
+      <rect x="113" y="308" width="40" height="10" rx="5" fill="#2e2a6b" />
+      <rect x="187" y="308" width="40" height="10" rx="5" fill="#2e2a6b" />
+      {/* Shoe accent */}
+      <path d="M118 310 L148 310" stroke="#a78bfa" strokeWidth="2" opacity="0.7" />
+      <path d="M192 310 L222 310" stroke="#a78bfa" strokeWidth="2" opacity="0.7" />
+      {/* Legging seam */}
+      <line x1="170" y1="230" x2="170" y2="310" stroke="#a78bfa" strokeWidth="2" strokeDasharray="5,4" opacity="0.5" />
       {/* Waistband */}
-      <rect x="16" y="10" width="48" height="9" rx="4.5" fill="#5a6e82" opacity="0.95"/>
-      {/* Left leg */}
-      <path d="M16 19 L28 19 L26 70 L12 70 Q10 60 12 50 Z" fill="#6e84a0" opacity="0.9"/>
-      {/* Right leg */}
-      <path d="M64 19 L52 19 L54 70 L68 70 Q70 60 68 50 Z" fill="#6e84a0" opacity="0.9"/>
-      {/* Center panel */}
-      <path d="M28 19 L52 19 L52 42 L40 46 L28 42 Z" fill="#7a92b0"/>
-      {/* Inseam */}
-      <line x1="40" y1="46" x2="40" y2="70" stroke="#8aA2c0" strokeWidth="1.5" strokeDasharray="3,2"/>
-      {/* Side stripes */}
-      <line x1="18" y1="22" x2="15" y2="68" stroke="#4a6070" strokeWidth="2" opacity="0.6"/>
-      <line x1="62" y1="22" x2="65" y2="68" stroke="#4a6070" strokeWidth="2" opacity="0.6"/>
-      {/* Drawstring */}
-      <line x1="32" y1="14" x2="36" y2="19" stroke="#9ab0c8" strokeWidth="1.5" strokeLinecap="round"/>
-      <line x1="48" y1="14" x2="44" y2="19" stroke="#9ab0c8" strokeWidth="1.5" strokeLinecap="round"/>
-      <circle cx="32" cy="13" r="1.5" fill="#9ab0c8"/>
-      <circle cx="48" cy="13" r="1.5" fill="#9ab0c8"/>
-      {/* Leg hem */}
-      <path d="M10 67 Q19 72 27 70" stroke="#5a6e82" strokeWidth="2" strokeLinecap="round" fill="none"/>
-      <path d="M53 70 Q61 72 70 67" stroke="#5a6e82" strokeWidth="2" strokeLinecap="round" fill="none"/>
+      <rect x="126" y="144" width="88" height="12" rx="6" fill="#5b21b6" />
+      {/* Motion lines */}
+      <path d="M72 100 Q60 106 56 120" stroke="#a78bfa" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.5" strokeDasharray="4,3" />
+      <path d="M256 126 Q270 128 278 140" stroke="#a78bfa" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.5" strokeDasharray="4,3" />
+      {/* Floating accent dots */}
+      <circle cx="96" cy="168" r="4" fill="#c4b5fd" opacity="0.6" />
+      <circle cx="250" cy="200" r="3" fill="#c4b5fd" opacity="0.5" />
+      <circle cx="280" cy="290" r="5" fill="#a78bfa" opacity="0.35" />
+      <circle cx="80" cy="260" r="3" fill="#c4b5fd" opacity="0.4" />
+
+      {/* "Brand tag" ribbon */}
+      <rect x="140" y="350" width="60" height="22" rx="11" fill="#5b21b6" opacity="0.85" />
+      <text x="170" y="366" textAnchor="middle" fill="white" fontSize="9" fontFamily="ui-sans-serif,system-ui,sans-serif" fontWeight="700" letterSpacing="2">AERIS</text>
+
+      <defs>
+        <radialGradient id="heroGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#ddd6fe" />
+          <stop offset="100%" stopColor="#ede9fe" stopOpacity="0" />
+        </radialGradient>
+      </defs>
     </svg>
   );
 }
 
-function TankSVG() {
+/* ─────────────────────────────────────────────
+   Sub-components  (module scope — lint safe)
+───────────────────────────────────────────── */
+interface ProductCardProps {
+  name: string;
+  price: string;
+  bg: string;
+  tag: string | null;
+  swatches: string[];
+  illustration: React.ReactNode;
+}
+
+function ProductCard({ name, price, bg, tag, swatches, illustration }: ProductCardProps) {
   return (
-    <svg viewBox="0 0 80 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-3/5 h-auto drop-shadow-sm">
-      {/* Body */}
-      <path d="M26 22 L20 88 L60 88 L54 22 Z" fill="#a89878" opacity="0.9"/>
-      {/* Left strap */}
-      <path d="M28 14 Q26 8 32 6 Q36 4 36 14 Z" fill="#b8a888" opacity="0.95"/>
-      {/* Right strap */}
-      <path d="M52 14 Q54 8 48 6 Q44 4 44 14 Z" fill="#b8a888" opacity="0.95"/>
-      {/* Neckline scoop */}
-      <path d="M28 14 Q40 20 52 14 Q50 24 40 26 Q30 24 28 14 Z" fill="#c0b090" opacity="0.85"/>
-      {/* Armhole left */}
-      <path d="M26 22 Q20 26 20 36 L24 36 Q24 28 28 24 Z" fill="#9a8868" opacity="0.9"/>
-      {/* Armhole right */}
-      <path d="M54 22 Q60 26 60 36 L56 36 Q56 28 52 24 Z" fill="#9a8868" opacity="0.9"/>
-      {/* Drape / flow lines */}
-      <line x1="36" y1="26" x2="34" y2="88" stroke="#c0b090" strokeWidth="0.8" strokeDasharray="4,3" opacity="0.5"/>
-      <line x1="44" y1="26" x2="46" y2="88" stroke="#c0b090" strokeWidth="0.8" strokeDasharray="4,3" opacity="0.5"/>
-      {/* Hem curve */}
-      <path d="M20 84 Q40 92 60 84 L60 88 L20 88 Z" fill="#90806a" opacity="0.8"/>
-      {/* Cropped hint band */}
-      <rect x="20" y="60" width="40" height="4" rx="2" fill="#9a8868" opacity="0.5"/>
-    </svg>
+    <div className="flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm border border-stone-100/80 flex-1">
+      {/* Illustration tile */}
+      <div className={`relative flex items-center justify-center ${bg} overflow-hidden`} style={{ height: 178 }}>
+        <div className="w-24 h-32 flex items-center justify-center">
+          {illustration}
+        </div>
+
+        {tag && (
+          <span
+            className={`absolute top-3 left-3 rounded-full px-2.5 py-0.5 text-[10px] font-bold tracking-wide shadow-sm ${
+              tag === "New" ? "bg-violet-500 text-white" : "bg-lime-400 text-stone-800"
+            }`}
+          >
+            {tag}
+          </span>
+        )}
+
+        <button className="absolute top-3 right-3 flex h-7 w-7 items-center justify-center rounded-full bg-white/85 text-stone-400 shadow-sm backdrop-blur-sm hover:text-violet-500 transition-colors">
+          <Heart size={13} strokeWidth={1.8} />
+        </button>
+      </div>
+
+      {/* Card info */}
+      <div className="px-3.5 pt-3 pb-3.5 flex flex-col gap-2">
+        {/* Swatches */}
+        <div className="flex items-center gap-1.5">
+          {swatches.map((color) => (
+            <span
+              key={color}
+              className="h-3 w-3 rounded-full border-[1.5px] border-white shadow ring-1 ring-stone-200/70"
+              style={{ backgroundColor: color }}
+            />
+          ))}
+          <span className="ml-1 text-[10px] text-stone-400 font-medium">{swatches.length} colors</span>
+        </div>
+
+        {/* Name + price */}
+        <div className="flex items-end justify-between gap-2">
+          <div>
+            <p className="text-[13px] font-semibold text-stone-800 leading-tight">{name}</p>
+            <p className="text-[12px] font-bold text-stone-500 mt-0.5">{price}</p>
+          </div>
+          <button className="flex-shrink-0 rounded-full bg-stone-900 text-white text-[10px] font-bold tracking-wide px-3.5 py-1.5 hover:bg-violet-600 transition-colors">
+            Add
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
-/* ── Product data ── */
-const products = [
+/* ─────────────────────────────────────────────
+   Static data  (module scope)
+───────────────────────────────────────────── */
+const navLinks = ["Women", "Men", "Collections", "Sale"];
+
+const products: ProductCardProps[] = [
   {
     name: "Seamless Leggings",
     price: "$98",
-    bg: "bg-[#e8e6f0]",
+    bg: "bg-[#edeaf8]",
     tag: "Bestseller",
-    tagColor: "bg-lime-400 text-stone-800",
-    swatches: ["#7c7c9e", "#4a4a6a", "#a09880"],
+    swatches: ["#8080aa", "#4a4a70", "#a09888"],
     illustration: <LeggingsSVG />,
   },
   {
     name: "Sculpt Bra",
     price: "$64",
-    bg: "bg-[#f0e8ec]",
+    bg: "bg-[#f6eef6]",
     tag: "New",
-    tagColor: "bg-violet-400 text-white",
-    swatches: ["#c4a0b4", "#8a6878", "#d4c0b0"],
+    swatches: ["#c8a0c0", "#8a6878", "#e0ccd8"],
     illustration: <BraSVG />,
   },
   {
     name: "Featherlight Jacket",
     price: "$145",
-    bg: "bg-[#e6ede8]",
+    bg: "bg-[#eaf0ec]",
     tag: null,
-    tagColor: "",
-    swatches: ["#5e7060", "#3a4a3c", "#8a9a7a"],
+    swatches: ["#6b8c70", "#3e5442", "#9aaa8a"],
     illustration: <JacketSVG />,
   },
   {
     name: "Performance Tee",
     price: "$52",
-    bg: "bg-[#eeede8]",
+    bg: "bg-[#f0efea]",
     tag: null,
-    tagColor: "",
-    swatches: ["#9e9e8e", "#6a6a5a", "#cac8b8"],
+    swatches: ["#a8a898", "#686858", "#d0cebe"],
     illustration: <TeeSVG />,
   },
-  {
-    name: "Train Shorts",
-    price: "$58",
-    bg: "bg-[#e6eaf0]",
-    tag: "New",
-    tagColor: "bg-violet-400 text-white",
-    swatches: ["#6e84a0", "#3a4e62", "#9ab0c8"],
-    illustration: <ShortsSVG />,
-  },
-  {
-    name: "Flow Tank",
-    price: "$46",
-    bg: "bg-[#f0ece4]",
-    tag: null,
-    tagColor: "",
-    swatches: ["#a89878", "#6a5c40", "#d0c0a0"],
-    illustration: <TankSVG />,
-  },
 ];
 
-const trustItems = [
-  { icon: <Truck size={10} strokeWidth={1.8} />, label: "Free ship $75+" },
-  { icon: <RotateCcw size={10} strokeWidth={1.8} />, label: "30-day returns" },
-  { icon: <Leaf size={10} strokeWidth={1.8} />, label: "Carbon neutral" },
-];
-
+/* ─────────────────────────────────────────────
+   Main component
+───────────────────────────────────────────── */
 export default function SportStore() {
   return (
-    <div className="relative flex h-full w-full flex-col overflow-hidden bg-stone-50 font-sans">
+    <div className="relative flex h-full w-full flex-col overflow-hidden bg-[#fafaf9] font-sans">
 
-      {/* ── Sticky Top Nav ── */}
-      <header className="z-20 flex flex-shrink-0 items-center justify-between border-b border-stone-200 bg-white/95 px-3 py-2 backdrop-blur-sm">
-        <span className="text-[13px] font-black tracking-[0.2em] text-stone-800">
+      {/* ══════════════ TOP NAV ══════════════ */}
+      <header className="flex flex-shrink-0 items-center justify-between border-b border-stone-200/80 bg-white px-8 py-0" style={{ height: 54 }}>
+        {/* Wordmark */}
+        <span className="text-[17px] font-black tracking-[0.28em] text-stone-900 select-none">
           AERIS
         </span>
-        <nav className="flex items-center gap-2.5">
-          {["Women", "Collections", "New", "Sale"].map((link) => (
+
+        {/* Nav links */}
+        <nav className="flex items-center gap-7">
+          {navLinks.map((link) => (
             <span
               key={link}
-              className={`text-[9px] font-medium tracking-wide ${
-                link === "New"
-                  ? "text-lime-600 underline underline-offset-2"
-                  : "text-stone-400"
+              className={`text-[13px] font-medium tracking-wide cursor-pointer transition-colors ${
+                link === "Sale"
+                  ? "text-violet-600 font-semibold"
+                  : "text-stone-500 hover:text-stone-900"
               }`}
             >
               {link}
             </span>
           ))}
         </nav>
-        <div className="flex items-center gap-2 text-stone-500">
-          <Search size={12} strokeWidth={1.8} />
-          <User size={12} strokeWidth={1.8} />
-          <span className="relative">
-            <ShoppingCart size={12} strokeWidth={1.8} />
-            <span className="absolute -right-1 -top-1 flex h-3 w-3 items-center justify-center rounded-full bg-lime-500 text-[7px] font-bold leading-none text-white">
+
+        {/* Icons */}
+        <div className="flex items-center gap-5 text-stone-500">
+          <Search size={16} strokeWidth={1.8} className="cursor-pointer hover:text-stone-900 transition-colors" />
+          <User size={16} strokeWidth={1.8} className="cursor-pointer hover:text-stone-900 transition-colors" />
+          <span className="relative cursor-pointer">
+            <ShoppingCart size={16} strokeWidth={1.8} className="hover:text-stone-900 transition-colors" />
+            <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-violet-600 text-[9px] font-bold leading-none text-white">
               2
             </span>
           </span>
         </div>
       </header>
 
-      {/* ── Hero Strip ── */}
-      <section className="relative flex flex-shrink-0 items-center overflow-hidden bg-gradient-to-r from-stone-100 to-stone-200" style={{ minHeight: "22%", maxHeight: "26%" }}>
-        {/* Decorative arcs */}
-        <div className="absolute -right-6 -top-6 h-36 w-36 rounded-full border-[18px] border-stone-300/40" />
-        <div className="absolute -right-2 top-4 h-20 w-20 rounded-full border-[10px] border-lime-400/20" />
+      {/* ══════════════ HERO ══════════════ */}
+      <section
+        className="relative flex flex-shrink-0 overflow-hidden"
+        style={{ height: 296 }}
+      >
+        {/* Left — editorial text */}
+        <div
+          className="relative flex flex-col justify-center pl-12 pr-6 z-10"
+          style={{ width: 560 }}
+        >
+          {/* Eyebrow */}
+          <div className="flex items-center gap-2 mb-4">
+            <span className="h-px w-8 bg-violet-500" />
+            <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-violet-600">
+              Summer &#8217;26 Collection
+            </span>
+          </div>
 
-        <div className="relative z-10 flex flex-col justify-center px-4 py-3">
-          <span className="mb-1 inline-flex w-fit items-center rounded-full bg-lime-400 px-2 py-0.5 text-[8px] font-bold uppercase tracking-widest text-stone-800">
-            Summer &#8217;26
-          </span>
-          <h1 className="text-[20px] font-black leading-tight tracking-tight text-stone-800">
-            Move with<br />Intention
+          {/* Headline */}
+          <h1 className="text-[52px] font-black leading-[1.0] tracking-tight text-stone-900 mb-4">
+            Move with<br />
+            <span className="text-violet-600">Intention.</span>
           </h1>
-          <p className="mt-1 text-[9px] font-medium text-stone-500 leading-relaxed">
-            Premium activewear for<br />women who demand more.
+
+          {/* Sub-copy */}
+          <p className="text-[14px] font-normal text-stone-500 leading-relaxed mb-6 max-w-xs">
+            Performance activewear engineered for women who refuse to compromise&mdash;in the studio or on the street.
           </p>
-          <button className="mt-2 w-fit rounded-full bg-stone-800 px-4 py-1.5 text-[8px] font-bold uppercase tracking-widest text-white shadow-sm">
-            Shop New In
-          </button>
+
+          {/* CTAs */}
+          <div className="flex items-center gap-4">
+            <button className="rounded-full bg-stone-900 px-7 py-2.5 text-[13px] font-bold tracking-wide text-white shadow-md hover:bg-violet-700 transition-colors">
+              Shop New In
+            </button>
+            <button className="flex items-center gap-1.5 text-[13px] font-semibold text-stone-600 hover:text-violet-600 transition-colors">
+              View Lookbook <ChevronRight size={14} />
+            </button>
+          </div>
+
+          {/* Trust micro-row */}
+          <div className="flex items-center gap-5 mt-5">
+            <div className="flex items-center gap-1.5 text-stone-400">
+              <Truck size={12} strokeWidth={1.8} />
+              <span className="text-[11px]">Free over $75</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-stone-400">
+              <RotateCcw size={12} strokeWidth={1.8} />
+              <span className="text-[11px]">30-day returns</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-stone-400">
+              <Leaf size={12} strokeWidth={1.8} />
+              <span className="text-[11px]">Carbon neutral</span>
+            </div>
+          </div>
         </div>
 
-        {/* Mini product peek — three stacked pill shapes */}
-        <div className="absolute right-3 bottom-0 flex items-end gap-1.5 opacity-80">
-          <div className="h-16 w-8 rounded-t-full bg-[#e8e6f0] border border-stone-200/60 shadow-sm" />
-          <div className="h-20 w-8 rounded-t-full bg-[#e6ede8] border border-stone-200/60 shadow-sm" />
-          <div className="h-14 w-8 rounded-t-full bg-[#f0e8ec] border border-stone-200/60 shadow-sm" />
+        {/* Right — hero lifestyle image block */}
+        <div className="absolute right-0 top-0 bottom-0 flex items-stretch" style={{ width: 660 }}>
+          {/* Gradient wash */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: "linear-gradient(135deg, #ede9fe 0%, #ddd6fe 35%, #c4b5fd 70%, #a78bfa 100%)",
+            }}
+          />
+          {/* Subtle grid texture */}
+          <svg className="absolute inset-0 w-full h-full opacity-[0.07]" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="gridPat" width="28" height="28" patternUnits="userSpaceOnUse">
+                <path d="M 28 0 L 0 0 0 28" fill="none" stroke="#4c1d95" strokeWidth="0.6" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#gridPat)" />
+          </svg>
+          {/* Decorative circles */}
+          <div className="absolute top-[-40px] right-[-40px] w-48 h-48 rounded-full bg-violet-300/25" />
+          <div className="absolute bottom-[-30px] left-[60px] w-32 h-32 rounded-full bg-white/15" />
+          {/* Athlete illustration */}
+          <div className="relative z-10 flex items-center justify-center w-full h-full overflow-hidden pl-12">
+            <div style={{ height: 288, width: 340 }} className="flex-shrink-0">
+              <HeroAthleteIllustration />
+            </div>
+          </div>
+          {/* Fade-left blend */}
+          <div
+            className="absolute inset-y-0 left-0 w-20 pointer-events-none"
+            style={{ background: "linear-gradient(to right, #fafaf9, transparent)" }}
+          />
         </div>
       </section>
 
-      {/* ── Trust Bar ── */}
-      <div className="flex flex-shrink-0 items-center justify-around border-b border-stone-100 bg-stone-100/60 px-2 py-1">
-        {trustItems.map((item) => (
-          <div key={item.label} className="flex items-center gap-1 text-stone-500">
-            <span className="text-lime-600">{item.icon}</span>
-            <span className="text-[8px] font-medium">{item.label}</span>
-          </div>
+      {/* ══════════════ TRUST BAR ══════════════ */}
+      <div className="flex flex-shrink-0 items-center justify-center gap-10 border-y border-stone-200/60 bg-white px-8" style={{ height: 38 }}>
+        <div className="flex items-center gap-2 text-stone-500">
+          <Truck size={13} strokeWidth={1.8} className="text-violet-500" />
+          <span className="text-[12px] font-medium">Free shipping over $75</span>
+        </div>
+        <span className="h-3 w-px bg-stone-200" />
+        <div className="flex items-center gap-2 text-stone-500">
+          <RotateCcw size={13} strokeWidth={1.8} className="text-violet-500" />
+          <span className="text-[12px] font-medium">30-day returns</span>
+        </div>
+        <span className="h-3 w-px bg-stone-200" />
+        <div className="flex items-center gap-2 text-stone-500">
+          <Leaf size={13} strokeWidth={1.8} className="text-violet-500" />
+          <span className="text-[12px] font-medium">Carbon neutral shipping</span>
+        </div>
+      </div>
+
+      {/* ══════════════ NEW ARRIVALS ══════════════ */}
+      <div className="flex flex-shrink-0 items-end justify-between px-8 pt-4 pb-3">
+        <div>
+          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-violet-600 mb-0.5">
+            Just Dropped
+          </p>
+          <h2 className="text-[20px] font-black tracking-tight text-stone-900">
+            New Arrivals
+          </h2>
+        </div>
+        <button className="flex items-center gap-1.5 rounded-full border border-stone-200 bg-white px-4 py-1.5 text-[12px] font-semibold text-stone-600 shadow-sm hover:border-violet-400 hover:text-violet-600 transition-colors">
+          View all <ChevronRight size={13} />
+        </button>
+      </div>
+
+      {/* ══════════════ PRODUCT GRID ══════════════ */}
+      <div className="flex flex-1 min-h-0 gap-4 px-8 pb-5">
+        {products.map((product) => (
+          <ProductCard key={product.name} {...product} />
         ))}
-      </div>
-
-      {/* ── Section Header ── */}
-      <div className="flex flex-shrink-0 items-center justify-between px-3 pb-1 pt-2">
-        <span className="text-[10px] font-black uppercase tracking-widest text-stone-700">
-          New Arrivals
-        </span>
-        <span className="text-[8px] font-semibold text-lime-600">
-          View all &rsaquo;
-        </span>
-      </div>
-
-      {/* ── Product Grid ── */}
-      <div className="min-h-0 flex-1 overflow-y-auto px-3 pb-3">
-        <div className="grid grid-cols-2 gap-2">
-          {products.map((product) => (
-            <div
-              key={product.name}
-              className="flex flex-col overflow-hidden rounded-2xl border border-stone-100 bg-white shadow-sm"
-            >
-              {/* Garment illustration tile */}
-              <div className={`relative flex aspect-[3/4] w-full items-center justify-center ${product.bg}`}>
-                {product.illustration}
-
-                {/* Tag badge */}
-                {product.tag && (
-                  <span
-                    className={`absolute left-2 top-2 rounded-full px-2 py-0.5 text-[7px] font-bold tracking-wide shadow-sm ${product.tagColor}`}
-                  >
-                    {product.tag}
-                  </span>
-                )}
-
-                {/* Heart */}
-                <button className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-white/80 text-stone-400 shadow-sm backdrop-blur-sm">
-                  <Heart size={9} strokeWidth={1.8} />
-                </button>
-              </div>
-
-              {/* Card footer */}
-              <div className="px-2 py-2">
-                {/* Color swatches */}
-                <div className="mb-1.5 flex items-center gap-1">
-                  {product.swatches.map((color) => (
-                    <span
-                      key={color}
-                      className="h-2.5 w-2.5 rounded-full border border-white shadow-sm ring-1 ring-stone-200"
-                      style={{ backgroundColor: color }}
-                    />
-                  ))}
-                </div>
-
-                <div className="flex items-center justify-between gap-1">
-                  <div className="flex min-w-0 flex-col">
-                    <span className="truncate text-[9px] font-semibold leading-tight text-stone-800">
-                      {product.name}
-                    </span>
-                    <span className="text-[9px] font-bold text-stone-500 leading-tight">
-                      {product.price}
-                    </span>
-                  </div>
-                  <button className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-stone-800 text-white shadow-sm">
-                    <Plus size={9} strokeWidth={2.5} />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* ── Member CTA ── */}
-        <div className="mt-3 flex items-center justify-between rounded-2xl bg-gradient-to-r from-stone-800 to-zinc-700 px-4 py-3">
-          <div>
-            <p className="text-[8px] font-black uppercase tracking-widest text-lime-400">
-              Member Exclusive
-            </p>
-            <p className="mt-0.5 text-[10px] font-bold leading-tight text-white">
-              20% off your first order
-            </p>
-          </div>
-          <button className="rounded-full bg-lime-400 px-3 py-1.5 text-[8px] font-bold uppercase tracking-wider text-stone-800 shadow-sm">
-            Join Free
-          </button>
-        </div>
       </div>
     </div>
   );

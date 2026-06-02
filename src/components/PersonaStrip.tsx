@@ -62,7 +62,7 @@ function Chip({
         alt=""
         width={128}
         height={128}
-        loading="eager"
+        loading="lazy"
         className={`h-10 w-10 shrink-0 rounded-full object-cover ring-1 ${
           active ? "ring-primary" : "ring-white/10"
         }`}

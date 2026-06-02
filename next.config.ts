@@ -2,6 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    // Prefer AVIF (smallest), fall back to WebP — served at the exact
+    // displayed size, ~30-50% smaller than the source PNG/JPG.
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 31536000,
     remotePatterns: [
       // Cloudflare Images (AI-generated product photos)
       { protocol: "https", hostname: "imagedelivery.net" },

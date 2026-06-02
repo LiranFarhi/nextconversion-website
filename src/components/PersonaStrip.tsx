@@ -7,17 +7,17 @@ import type { StorefrontId } from "./storefronts";
 
 export type Persona = { tag: string; label: string; img: number; storefront: StorefrontId };
 
-// Each visitor gets a bespoke storefront — a different *format* per person
-// (modern shop, magazine, lookbook, video feed, pin board, social shop, chat, deals).
+// Each visitor maps to a distinct Figma storefront layout (8 unique) — desktop
+// layouts in a browser, the mobile-native eco/yoga layouts in a phone.
 export const PERSONAS: Persona[] = [
-  { tag: "34 • F", label: "Sophisticated Sportwear", img: 1, storefront: "sportswear" },
-  { tag: "24 • M", label: "Sustainable Hiking Gear", img: 2, storefront: "activewear" },
+  { tag: "34 • F", label: "Sophisticated Sportwear", img: 1, storefront: "activewear" },
+  { tag: "24 • M", label: "Sustainable Hiking Gear", img: 2, storefront: "eco" },
   { tag: "52 • F", label: "Luxury coats", img: 3, storefront: "luxury" },
   { tag: "19 • M", label: "Streetwear", img: 4, storefront: "streetwear" },
-  { tag: "41 • F", label: "Organic Skincare", img: 5, storefront: "dresses" },
+  { tag: "41 • F", label: "Organic Skincare", img: 5, storefront: "yoga" },
   { tag: "30 • M", label: "Vintage Accesories", img: 6, storefront: "swimwear" },
-  { tag: "61 • F", label: "Handcrafted Jewelry", img: 7, storefront: "luxury" },
-  { tag: "28 • F", label: "Budget-Friendly", img: 8, storefront: "streetwear" },
+  { tag: "61 • F", label: "Handcrafted Jewelry", img: 7, storefront: "dresses" },
+  { tag: "28 • F", label: "Budget-Friendly", img: 8, storefront: "sportswear" },
 ];
 
 function DeviceIcon() {

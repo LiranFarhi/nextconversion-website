@@ -96,9 +96,10 @@ function StoreCard({
           className="pointer-events-none absolute -bottom-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-primary-2/30 blur-[90px]"
         />
       )}
-      <div className="relative mb-2.5 flex justify-center sm:mb-4">{badge}</div>
+      {/* badge row — hidden on the compact mobile cards to reduce density */}
+      <div className="relative hidden justify-center sm:mb-4 sm:flex">{badge}</div>
       <p className="relative font-display text-sm font-medium leading-tight text-white sm:text-2xl">{card.label}</p>
-      <p className="relative mb-3 mt-1 font-inter text-[11px] leading-snug text-soft transition-colors sm:mb-6 sm:min-h-[24px] sm:text-base">{sub}</p>
+      <p className="relative mb-3 mt-1.5 font-inter text-xs leading-snug text-soft transition-colors sm:mb-6 sm:min-h-[24px] sm:text-base">{sub}</p>
       <div
         className={`relative mt-auto overflow-hidden rounded-2xl ${
           card.highlight ? "ring-1 ring-primary/30" : "border border-border bg-black/30"
@@ -163,7 +164,8 @@ export default function StorefrontComparison() {
       <span>
         Personalized for <span className="text-white">{active.label}</span>
       </span>
-      <span className="inline-flex items-center gap-1 rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary-3">
+      {/* format chip — desktop only, to keep the mobile card uncluttered */}
+      <span className="hidden items-center gap-1 rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary-3 sm:inline-flex">
         <span className="h-1.5 w-1.5 rounded-full bg-primary" />
         {STOREFRONTS[active.storefront].label}
       </span>

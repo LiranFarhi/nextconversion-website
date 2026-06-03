@@ -126,6 +126,11 @@ export default function DemoModal(): ReactElement {
   // ── open/close helpers ──────────────────────────────────────────────────
 
   function requestClose() {
+    // Already on the "are you sure?" view — a second X (or Esc) means close.
+    if (confirming) {
+      doClose();
+      return;
+    }
     if (dirty && !sent) {
       setConfirming(true);
     } else {
@@ -170,9 +175,9 @@ export default function DemoModal(): ReactElement {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
     };
-    // requestClose reads `dirty` and `sent` — include them so the closure is fresh
+    // requestClose reads dirty/sent/confirming — include them so the closure is fresh
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, dirty, sent]);
+  }, [open, dirty, sent, confirming]);
 
   // ── submit handler ──────────────────────────────────────────────────────
 

@@ -35,9 +35,6 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 6rem;
-  /* Only elements with scroll-snap-align (the demo phase cards) become snap
-     points, so this is gentle and scoped in practice. */
-  scroll-snap-type: y proximity;
 }
 
 html,

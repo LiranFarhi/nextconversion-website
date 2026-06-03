@@ -5,7 +5,6 @@ import Image from "next/image";
 import { Check, TrendingUp } from "lucide-react";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
-import { useAutoAdvance } from "./useAutoAdvance";
 
 // ---------------------------------------------------------------------------
 // Phase data — verbatim from the Figma "Use case" frames.
@@ -224,24 +223,51 @@ function PhaseCard({ phase, isActive, distance, onSelect }: PhaseCardProps): Rea
 // ---------------------------------------------------------------------------
 
 export default function LiveDemoSection(): ReactElement {
-  // Phases advance automatically on a loop and can be jumped to by click. This
-  // is purely time-based — nothing is driven by scroll — so the transitions are
-  // smooth (no scroll <-> layout feedback). Auto-advance only runs while the
-  // section is in view and pauses after a manual selection.
-  const { index: active, select, pause, ref } = useAutoAdvance(PHASES.length, {
-    dwell: 4200,
-  });
-  const sectionRef = useRef<HTMLElement | null>(null);
-  // On small screens the phone slides to sit next to the highlighted step
+  const [active, setActive] = useState(0);
+  // trackRef: the tall scroll track (desktop) that the sticky stage pins inside.
+  const trackRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
   const phoneColRef = useRef<HTMLDivElement>(null);
   const [phoneY, setPhoneY] = useState(0);
 
-  // Attach both the auto-advance in-view ref and our own ref to the section.
-  const setSectionRef = (node: HTMLElement | null) => {
-    sectionRef.current = node;
-    ref(node);
-  };
+  // Active phase is a pure function of scroll *position* — never of the cards'
+  // measured size — so it is strictly monotonic and cannot oscillate/flicker.
+  // Desktop: progress through the pinned track. Mobile: the cards passing the
+  // viewport centre. The card stack has a fixed height, so nothing it does can
+  // change the scroll, which is what kills the old feedback loop.
+  useEffect(() => {
+    let raf = 0;
+    const derive = () => {
+      raf = 0;
+      const desktop = window.matchMedia("(min-width: 1024px)").matches;
+      let progress = 0;
+      if (desktop) {
+        const track = trackRef.current;
+        if (!track) return;
+        const scrollable = track.offsetHeight - window.innerHeight;
+        if (scrollable > 0) progress = -track.getBoundingClientRect().top / scrollable;
+      } else {
+        const cards = cardsRef.current;
+        if (!cards) return;
+        const r = cards.getBoundingClientRect();
+        progress = (window.innerHeight * 0.5 - r.top) / r.height;
+      }
+      progress = Math.max(0, Math.min(0.99999, progress));
+      const idx = Math.floor(progress * PHASES.length);
+      setActive((prev) => (prev === idx ? prev : idx));
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(derive);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    derive();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
 
   // Slide the phone to align with the active step (mobile/tablet only).
   // Transform-based and only re-runs on phase change, so it stays smooth.
@@ -260,7 +286,6 @@ export default function LiveDemoSection(): ReactElement {
       const max = cards.offsetHeight - phone.offsetHeight;
       setPhoneY(Math.max(0, Math.min(target, Math.max(0, max))));
     };
-    // Measure now and again as the expand/collapse animation settles.
     const raf = requestAnimationFrame(align);
     const timers = [setTimeout(align, 250), setTimeout(align, 650)];
     window.addEventListener("resize", align);
@@ -274,76 +299,100 @@ export default function LiveDemoSection(): ReactElement {
     };
   }, [active]);
 
+  // Clicking a card scrolls to that phase's slice of the track, keeping scroll
+  // and selection in sync. On desktop the stage is pinned, so the reposition is
+  // invisible — only the active card animates. On mobile it scrolls smoothly.
   const handleSelect = (i: number) => {
-    select(i);
-    pause();
+    setActive(i);
+    const desktop = window.matchMedia("(min-width: 1024px)").matches;
+    const targetProgress = (i + 0.5) / PHASES.length;
+    if (desktop) {
+      const track = trackRef.current;
+      if (!track) return;
+      const scrollable = track.offsetHeight - window.innerHeight;
+      const topDoc = track.getBoundingClientRect().top + window.scrollY;
+      // Instant: the stage is pinned, so this reposition is invisible — only the
+      // active card animates (no smooth fast-forward through intermediate phases).
+      window.scrollTo({ top: topDoc + targetProgress * scrollable, behavior: "instant" as ScrollBehavior });
+    } else {
+      const cards = cardsRef.current;
+      if (!cards) return;
+      const r = cards.getBoundingClientRect();
+      const topDoc = r.top + window.scrollY;
+      window.scrollTo({
+        top: topDoc - window.innerHeight * 0.5 + targetProgress * r.height,
+        behavior: "smooth",
+      });
+    }
   };
 
   return (
-    <section
-      ref={setSectionRef}
-      id="how-it-works"
-      className="mx-auto max-w-[1200px] px-5 py-20 sm:px-8 sm:py-28"
-    >
-      <SectionHeading
-        title="Watch a Storefront Evolve in Real-Time"
-        subtitle="Meet your agent workforce that deliver autonomously behind the scenes."
-      />
+    <section id="how-it-works" className="mx-auto max-w-[1200px] px-5 py-20 sm:px-8 sm:py-28 lg:py-0">
+      <div className="lg:pt-28">
+        <SectionHeading
+          title="Watch a Storefront Evolve in Real-Time"
+          subtitle="Meet your agent workforce that deliver autonomously behind the scenes."
+        />
+      </div>
 
-      {/* ------------------------------------------------------------------ */}
-      {/* DESKTOP layout: phone (left) | phase stack (right)                  */}
-      {/* ------------------------------------------------------------------ */}
-      {/* Phone (left) and phase cards (right) — side by side, centered on desktop */}
-      <Reveal className="mt-10 flex items-start gap-3 sm:mt-14 sm:gap-8 lg:items-center lg:gap-8">
-        {/* Phone with concentric purple/blue glow (scaled down on small screens) */}
-        <div
-          ref={phoneColRef}
-          className="relative flex shrink-0 items-center justify-center transition-transform duration-500 ease-out lg:min-w-0 lg:flex-1 lg:basis-0"
-          style={{ transform: `translateY(${phoneY}px)` }}
-        >
-          <div
-            aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 h-[290px] w-[290px] -translate-x-1/2 -translate-y-1/2 rounded-full sm:h-[420px] sm:w-[420px] lg:h-[540px] lg:w-[540px]"
-            style={{
-              background:
-                "radial-gradient(circle, rgba(131,79,251,0.30) 0%, rgba(96,80,255,0.22) 24%, rgba(60,90,255,0.12) 44%, rgba(40,70,230,0.05) 60%, transparent 74%)",
-              filter: "blur(8px)",
-            }}
-          />
-          <div className="relative z-[1] aspect-[320/720] w-[150px] sm:w-[185px] lg:w-[290px]">
-            {PHASES.map((p, i) => (
-              <Image
-                key={p.num}
-                src={`/demo/step-${i + 1}.webp`}
-                alt={`Storefront preview — ${p.title}`}
-                fill
-                sizes="(max-width: 1024px) 185px, 290px"
-                priority={i === 0}
-                className="object-contain transition-opacity duration-500"
-                style={{ opacity: i === active ? 1 : 0 }}
+      {/* Tall track (desktop) gives the scroll distance; the stage pins inside it
+          so the demo stays on screen while you scroll slowly through the phases.
+          On mobile the track collapses and the section scrolls normally. */}
+      <div ref={trackRef} className="relative lg:h-[300vh]">
+        <div className="lg:sticky lg:top-0 lg:flex lg:h-screen lg:items-center">
+          {/* Phone (left) and phase cards (right) */}
+          <Reveal className="mt-10 flex w-full items-start gap-3 sm:mt-14 sm:gap-8 lg:mt-0 lg:items-center lg:gap-8">
+            {/* Phone with concentric purple/blue glow (scaled down on small screens) */}
+            <div
+              ref={phoneColRef}
+              className="relative flex shrink-0 items-center justify-center transition-transform duration-500 ease-out lg:min-w-0 lg:flex-1 lg:basis-0"
+              style={{ transform: `translateY(${phoneY}px)` }}
+            >
+              <div
+                aria-hidden
+                className="pointer-events-none absolute left-1/2 top-1/2 h-[290px] w-[290px] -translate-x-1/2 -translate-y-1/2 rounded-full sm:h-[420px] sm:w-[420px] lg:h-[540px] lg:w-[540px]"
+                style={{
+                  background:
+                    "radial-gradient(circle, rgba(131,79,251,0.30) 0%, rgba(96,80,255,0.22) 24%, rgba(60,90,255,0.12) 44%, rgba(40,70,230,0.05) 60%, transparent 74%)",
+                  filter: "blur(8px)",
+                }}
               />
-            ))}
-          </div>
-        </div>
+              <div className="relative z-[1] aspect-[320/720] w-[150px] sm:w-[185px] lg:w-[290px]">
+                {PHASES.map((p, i) => (
+                  <Image
+                    key={p.num}
+                    src={`/demo/step-${i + 1}.webp`}
+                    alt={`Storefront preview — ${p.title}`}
+                    fill
+                    sizes="(max-width: 1024px) 185px, 290px"
+                    priority={i === 0}
+                    className="object-contain transition-opacity duration-500"
+                    style={{ opacity: i === active ? 1 : 0 }}
+                  />
+                ))}
+              </div>
+            </div>
 
-        {/* Phase card stack — active expands. Fixed min-height so the page below
-            never reflows when the active phase changes height (cards stay
-            top-anchored; any slack sits harmlessly at the bottom). */}
-        <div
-          ref={cardsRef}
-          className="flex min-h-[880px] min-w-0 flex-1 flex-col gap-2.5 sm:min-h-[800px] sm:gap-3 lg:min-h-[760px] lg:basis-0"
-        >
-          {PHASES.map((phase, i) => (
-            <PhaseCard
-              key={phase.num}
-              phase={phase}
-              isActive={i === active}
-              distance={Math.abs(i - active)}
-              onSelect={() => handleSelect(i)}
-            />
-          ))}
+            {/* Phase card stack — active expands. Fixed min-height so the layout
+                never reflows when the active phase changes height (cards stay
+                top-anchored; any slack sits harmlessly at the bottom). */}
+            <div
+              ref={cardsRef}
+              className="flex min-h-[880px] min-w-0 flex-1 flex-col gap-2.5 sm:min-h-[800px] sm:gap-3 lg:min-h-[760px] lg:basis-0"
+            >
+              {PHASES.map((phase, i) => (
+                <PhaseCard
+                  key={phase.num}
+                  phase={phase}
+                  isActive={i === active}
+                  distance={Math.abs(i - active)}
+                  onSelect={() => handleSelect(i)}
+                />
+              ))}
+            </div>
+          </Reveal>
         </div>
-      </Reveal>
+      </div>
     </section>
   );
 }

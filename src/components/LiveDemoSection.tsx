@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Check, TrendingUp } from "lucide-react";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
+import { useAutoAdvance } from "./useAutoAdvance";
 
 // ---------------------------------------------------------------------------
 // Phase data — verbatim from the Figma "Use case" frames.
@@ -170,7 +171,7 @@ function PhaseCard({ phase, isActive, distance, onSelect }: PhaseCardProps): Rea
       aria-label={`Select ${phase.title} phase`}
       style={{ opacity }}
       className={[
-        "w-full snap-center scroll-my-24 rounded-[24px] border text-left transition-all duration-500",
+        "w-full rounded-[24px] border text-left transition-all duration-500",
         isActive
           ? "border-primary/30 bg-white/[0.05] p-4 shadow-[0_18px_50px_-26px_rgba(131,79,251,0.6)] sm:p-6"
           : "border-primary/15 bg-white/[0.03] p-3.5 hover:border-primary/30 sm:p-5",
@@ -223,82 +224,27 @@ function PhaseCard({ phase, isActive, distance, onSelect }: PhaseCardProps): Rea
 // ---------------------------------------------------------------------------
 
 export default function LiveDemoSection(): ReactElement {
-  const [active, setActive] = useState(0);
-  const sectionRef = useRef<HTMLElement>(null);
-  const [inView, setInView] = useState(false);
-  // On small screens the phone slides down to sit next to the highlighted step
+  // Phases advance automatically on a loop and can be jumped to by click. This
+  // is purely time-based — nothing is driven by scroll — so the transitions are
+  // smooth (no scroll <-> layout feedback). Auto-advance only runs while the
+  // section is in view and pauses after a manual selection.
+  const { index: active, select, pause, ref } = useAutoAdvance(PHASES.length, {
+    dwell: 4200,
+  });
+  const sectionRef = useRef<HTMLElement | null>(null);
+  // On small screens the phone slides to sit next to the highlighted step
   const cardsRef = useRef<HTMLDivElement>(null);
   const phoneColRef = useRef<HTMLDivElement>(null);
   const [phoneY, setPhoneY] = useState(0);
-  // After a press, briefly ignore scroll-derived selection so the browser's
-  // scroll-anchoring (triggered by the card expanding) can't override the pick.
-  const selectLock = useRef(0);
 
-  // Observe whether the section has entered the viewport
-  useEffect(() => {
-    const node = sectionRef.current;
-    if (!node) return;
-    const obs = new IntersectionObserver(
-      ([e]) => setInView(e.isIntersecting),
-      { threshold: 0.15 }
-    );
-    obs.observe(node);
-    return () => obs.disconnect();
-  }, []);
+  // Attach both the auto-advance in-view ref and our own ref to the section.
+  const setSectionRef = (node: HTMLElement | null) => {
+    sectionRef.current = node;
+    ref(node);
+  };
 
-  // Selection follows scroll: the active phase is the last card whose top has
-  // crossed a reference line in the upper-middle of the viewport. Activating a
-  // card only pushes the cards below it, so this never oscillates.
-  useEffect(() => {
-    if (!inView) return;
-    let raf = 0;
-    const derive = () => {
-      raf = 0;
-      if (performance.now() < selectLock.current) return;
-      const cards = cardsRef.current;
-      if (!cards) return;
-      // Match the snapport centre: viewport centre, shifted by the 6rem
-      // scroll-padding-top so the selected card lines up with where it snaps.
-      const line = (window.innerHeight + 96) / 2;
-      // Pick the card that straddles the centre line. This is stable: the active
-      // card expands downward, so it keeps straddling instead of flipping. In the
-      // small gaps between cards, fall back to the nearest card centre.
-      let next = 0;
-      let nearest = Infinity;
-      for (let i = 0; i < cards.children.length; i++) {
-        const r = (cards.children[i] as HTMLElement).getBoundingClientRect();
-        if (r.top <= line && r.bottom >= line) {
-          next = i;
-          nearest = -1;
-          break;
-        }
-        const dist = Math.abs(r.top + r.height / 2 - line);
-        if (nearest >= 0 && dist < nearest) {
-          nearest = dist;
-          next = i;
-        }
-      }
-      setActive((prev) => {
-        if (prev === next) return prev;
-        // Let the height animation finish before re-deriving. Otherwise the
-        // animation shifts the layout (scroll-anchoring), which fires scroll
-        // events that re-run this and flip the card again → flicker.
-        selectLock.current = performance.now() + 520;
-        return next;
-      });
-    };
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(derive);
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    derive();
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, [inView]);
-
-  // Slide the phone to align with the active step (mobile/tablet only)
+  // Slide the phone to align with the active step (mobile/tablet only).
+  // Transform-based and only re-runs on phase change, so it stays smooth.
   useEffect(() => {
     const align = () => {
       const cards = cardsRef.current;
@@ -314,34 +260,28 @@ export default function LiveDemoSection(): ReactElement {
       const max = cards.offsetHeight - phone.offsetHeight;
       setPhoneY(Math.max(0, Math.min(target, Math.max(0, max))));
     };
-    // Measure now and again after layout settles — the cards animate in (Reveal)
-    // and the active card expands, so a single measurement can be stale.
+    // Measure now and again as the expand/collapse animation settles.
     const raf = requestAnimationFrame(align);
     const timers = [setTimeout(align, 250), setTimeout(align, 650)];
-
-    // Keep it aligned through scroll/resize and any height change of the stack
-    window.addEventListener("scroll", align, { passive: true });
     window.addEventListener("resize", align);
     const ro = new ResizeObserver(align);
     if (cardsRef.current) ro.observe(cardsRef.current);
-
     return () => {
       cancelAnimationFrame(raf);
       timers.forEach(clearTimeout);
-      window.removeEventListener("scroll", align);
       window.removeEventListener("resize", align);
       ro.disconnect();
     };
   }, [active]);
 
   const handleSelect = (i: number) => {
-    selectLock.current = performance.now() + 800;
-    setActive(i);
+    select(i);
+    pause();
   };
 
   return (
     <section
-      ref={sectionRef}
+      ref={setSectionRef}
       id="how-it-works"
       className="mx-auto max-w-[1200px] px-5 py-20 sm:px-8 sm:py-28"
     >
@@ -386,8 +326,13 @@ export default function LiveDemoSection(): ReactElement {
           </div>
         </div>
 
-        {/* Phase card stack — active expands */}
-        <div ref={cardsRef} className="flex min-w-0 flex-1 flex-col gap-2.5 sm:gap-3 lg:basis-0">
+        {/* Phase card stack — active expands. Fixed min-height so the page below
+            never reflows when the active phase changes height (cards stay
+            top-anchored; any slack sits harmlessly at the bottom). */}
+        <div
+          ref={cardsRef}
+          className="flex min-h-[880px] min-w-0 flex-1 flex-col gap-2.5 sm:min-h-[800px] sm:gap-3 lg:min-h-[760px] lg:basis-0"
+        >
           {PHASES.map((phase, i) => (
             <PhaseCard
               key={phase.num}

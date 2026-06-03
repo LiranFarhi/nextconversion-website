@@ -218,46 +218,33 @@ function PhaseCard({ phase, isActive, distance, onSelect }: PhaseCardProps): Rea
   );
 }
 
-// How far the mobile phases are spread, as a multiple of the card stack height
-// (higher = more scrolling needed to move to the next card).
-const MOBILE_SCROLL_FACTOR = 1.6;
-
 // ---------------------------------------------------------------------------
 // Main component
 // ---------------------------------------------------------------------------
 
 export default function LiveDemoSection(): ReactElement {
   const [active, setActive] = useState(0);
-  // trackRef: the tall scroll track (desktop) that the sticky stage pins inside.
+  // trackRef: the tall scroll track that the sticky stage pins inside.
   const trackRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
-  const phoneColRef = useRef<HTMLDivElement>(null);
-  const [phoneY, setPhoneY] = useState(0);
+  // Vertical offset that keeps the ACTIVE card at the centre of the stage.
+  const [cardsY, setCardsY] = useState(0);
 
-  // Active phase is a pure function of scroll *position* — never of the cards'
-  // measured size — so it is strictly monotonic and cannot oscillate/flicker.
-  // Desktop: progress through the pinned track. Mobile: the cards passing the
-  // viewport centre. The card stack has a fixed height, so nothing it does can
-  // change the scroll, which is what kills the old feedback loop.
+  // Active phase is a pure function of scroll *position* through the pinned
+  // track — never of the cards' measured size — so it is strictly monotonic and
+  // cannot oscillate/flicker.
   useEffect(() => {
     let raf = 0;
     const derive = () => {
       raf = 0;
-      const desktop = window.matchMedia("(min-width: 1024px)").matches;
-      let progress = 0;
-      if (desktop) {
-        const track = trackRef.current;
-        if (!track) return;
-        const scrollable = track.offsetHeight - window.innerHeight;
-        if (scrollable > 0) progress = -track.getBoundingClientRect().top / scrollable;
-      } else {
-        const cards = cardsRef.current;
-        if (!cards) return;
-        const r = cards.getBoundingClientRect();
-        // Spread the phases over a longer scroll distance than the cards' own
-        // height so each one takes more scrolling to advance.
-        progress = (window.innerHeight * 0.5 - r.top) / (r.height * MOBILE_SCROLL_FACTOR);
+      const track = trackRef.current;
+      if (!track) return;
+      const scrollable = track.offsetHeight - window.innerHeight;
+      if (scrollable <= 0) {
+        setActive(0);
+        return;
       }
+      let progress = -track.getBoundingClientRect().top / scrollable;
       progress = Math.max(0, Math.min(0.99999, progress));
       const idx = Math.floor(progress * PHASES.length);
       setActive((prev) => (prev === idx ? prev : idx));
@@ -275,85 +262,63 @@ export default function LiveDemoSection(): ReactElement {
     };
   }, []);
 
-  // Slide the phone to align with the active step (mobile/tablet only).
-  // Transform-based and only re-runs on phase change, so it stays smooth.
+  // Slide the whole stack so the ACTIVE card's centre sits on the stage's
+  // vertical centre line (the cards are absolutely positioned with their top at
+  // 50%, so the offset is just minus the active card's centre). This makes every
+  // transition happen at screen centre — the previous card rises and fades out
+  // above, the next rises in from below — which is what feels natural.
   useEffect(() => {
-    const align = () => {
+    const measure = () => {
       const cards = cardsRef.current;
-      const phone = phoneColRef.current;
-      if (!cards || !phone) return;
-      if (window.matchMedia("(min-width: 1024px)").matches) {
-        setPhoneY(0);
-        return;
-      }
+      if (!cards) return;
       const card = cards.children[active] as HTMLElement | undefined;
       if (!card) return;
-      const target = card.offsetTop + card.offsetHeight / 2 - phone.offsetHeight / 2;
-      const max = cards.offsetHeight - phone.offsetHeight;
-      setPhoneY(Math.max(0, Math.min(target, Math.max(0, max))));
+      setCardsY(-(card.offsetTop + card.offsetHeight / 2));
     };
-    const raf = requestAnimationFrame(align);
-    const timers = [setTimeout(align, 250), setTimeout(align, 650)];
-    window.addEventListener("resize", align);
-    const ro = new ResizeObserver(align);
+    // Re-measure as the active card's expand/collapse animation settles.
+    const raf = requestAnimationFrame(measure);
+    const timers = [setTimeout(measure, 120), setTimeout(measure, 320), setTimeout(measure, 620)];
+    window.addEventListener("resize", measure);
+    const ro = new ResizeObserver(measure);
     if (cardsRef.current) ro.observe(cardsRef.current);
     return () => {
       cancelAnimationFrame(raf);
       timers.forEach(clearTimeout);
-      window.removeEventListener("resize", align);
+      window.removeEventListener("resize", measure);
       ro.disconnect();
     };
   }, [active]);
 
-  // Clicking a card scrolls to that phase's slice of the track, keeping scroll
-  // and selection in sync. On desktop the stage is pinned, so the reposition is
-  // invisible — only the active card animates. On mobile it scrolls smoothly.
+  // Clicking a card scrolls to that phase's slice of the track. The stage is
+  // pinned, so the reposition is invisible — only the active card animates.
   const handleSelect = (i: number) => {
     setActive(i);
-    const desktop = window.matchMedia("(min-width: 1024px)").matches;
+    const track = trackRef.current;
+    if (!track) return;
+    const scrollable = track.offsetHeight - window.innerHeight;
+    if (scrollable <= 0) return;
+    const topDoc = track.getBoundingClientRect().top + window.scrollY;
     const targetProgress = (i + 0.5) / PHASES.length;
-    if (desktop) {
-      const track = trackRef.current;
-      if (!track) return;
-      const scrollable = track.offsetHeight - window.innerHeight;
-      const topDoc = track.getBoundingClientRect().top + window.scrollY;
-      // Instant: the stage is pinned, so this reposition is invisible — only the
-      // active card animates (no smooth fast-forward through intermediate phases).
-      window.scrollTo({ top: topDoc + targetProgress * scrollable, behavior: "instant" as ScrollBehavior });
-    } else {
-      const cards = cardsRef.current;
-      if (!cards) return;
-      const r = cards.getBoundingClientRect();
-      const topDoc = r.top + window.scrollY;
-      window.scrollTo({
-        top: topDoc - window.innerHeight * 0.5 + targetProgress * r.height * MOBILE_SCROLL_FACTOR,
-        behavior: "smooth",
-      });
-    }
+    window.scrollTo({ top: topDoc + targetProgress * scrollable, behavior: "instant" as ScrollBehavior });
   };
 
   return (
-    <section id="how-it-works" className="mx-auto max-w-[1200px] px-5 py-20 sm:px-8 sm:py-28 lg:py-0">
-      <div className="lg:pt-28">
+    <section id="how-it-works" className="mx-auto max-w-[1200px] px-5 sm:px-8">
+      <div className="pt-20 sm:pt-28">
         <SectionHeading
           title="Watch a Storefront Evolve in Real-Time"
           subtitle="Meet your agent workforce that deliver autonomously behind the scenes."
         />
       </div>
 
-      {/* Tall track (desktop) gives the scroll distance; the stage pins inside it
-          so the demo stays on screen while you scroll slowly through the phases.
-          On mobile the track collapses and the section scrolls normally. */}
-      <div ref={trackRef} className="relative lg:h-[500vh]">
-        <div className="lg:sticky lg:top-0 lg:flex lg:h-screen lg:items-center">
-          {/* Phone (left) and phase cards (right) */}
-          <Reveal className="mt-10 flex w-full items-start gap-3 sm:mt-14 sm:gap-8 lg:mt-0 lg:items-center lg:gap-8">
-            {/* Phone with concentric purple/blue glow (scaled down on small screens) */}
-            <div
-              ref={phoneColRef}
-              className="relative flex shrink-0 items-center justify-center transition-transform duration-500 ease-out lg:min-w-0 lg:flex-1 lg:basis-0"
-              style={{ transform: `translateY(${phoneY}px)` }}
-            >
+      {/* Tall track gives the scroll distance; the stage pins inside it so the
+          demo stays on screen while you scroll slowly through the phases. The
+          active card is held at the vertical centre of the stage. */}
+      <div ref={trackRef} className="relative h-[340vh] lg:h-[480vh]">
+        <div className="sticky top-0 h-screen overflow-hidden">
+          <Reveal className="flex h-full w-full items-stretch gap-3 sm:gap-8">
+            {/* Phone column — phone centred vertically, glued behind a soft glow */}
+            <div className="relative flex shrink-0 items-center justify-center lg:min-w-0 lg:flex-1 lg:basis-0">
               <div
                 aria-hidden
                 className="pointer-events-none absolute left-1/2 top-1/2 h-[290px] w-[290px] -translate-x-1/2 -translate-y-1/2 rounded-full sm:h-[420px] sm:w-[420px] lg:h-[540px] lg:w-[540px]"
@@ -379,22 +344,25 @@ export default function LiveDemoSection(): ReactElement {
               </div>
             </div>
 
-            {/* Phase card stack — active expands. Fixed min-height so the layout
-                never reflows when the active phase changes height (cards stay
-                top-anchored; any slack sits harmlessly at the bottom). */}
-            <div
-              ref={cardsRef}
-              className="flex min-h-[880px] min-w-0 flex-1 flex-col gap-2.5 sm:min-h-[800px] sm:gap-3 lg:min-h-[760px] lg:basis-0"
-            >
-              {PHASES.map((phase, i) => (
-                <PhaseCard
-                  key={phase.num}
-                  phase={phase}
-                  isActive={i === active}
-                  distance={Math.abs(i - active)}
-                  onSelect={() => handleSelect(i)}
-                />
-              ))}
+            {/* Phase cards — the stack is absolutely positioned and slid so the
+                active card stays centred; off-screen cards are clipped by the
+                stage's overflow-hidden. */}
+            <div className="relative min-w-0 flex-1 lg:basis-0">
+              <div
+                ref={cardsRef}
+                className="absolute inset-x-0 top-1/2 flex flex-col gap-2.5 transition-transform duration-500 ease-out sm:gap-3"
+                style={{ transform: `translateY(${cardsY}px)` }}
+              >
+                {PHASES.map((phase, i) => (
+                  <PhaseCard
+                    key={phase.num}
+                    phase={phase}
+                    isActive={i === active}
+                    distance={Math.abs(i - active)}
+                    onSelect={() => handleSelect(i)}
+                  />
+                ))}
+              </div>
             </div>
           </Reveal>
         </div>

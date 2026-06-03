@@ -1,0 +1,12 @@
+<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M48 7.5H12C10.8065 7.5 9.66194 7.97411 8.81802 8.81802C7.97411 9.66194 7.5 10.8065 7.5 12V48C7.5 49.1934 7.97411 50.3381 8.81802 51.1819C9.66194 52.0258 10.8065 52.5 12 52.5H48C49.1934 52.5 50.3381 52.0258 51.1819 51.1819C52.0258 50.3381 52.5 49.1934 52.5 48V12C52.5 10.8065 52.0258 9.66194 51.1819 8.81802C50.3381 7.97411 49.1934 7.5 48 7.5Z" fill="url(#paint0_linear_1221_6944)" fill-opacity="0.24" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M13.5 13.5H13.515M18 13.5H18.015M22.5 13.5H22.515" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M19.5 40.5V33H40.5V40.5H19.5Z" fill="white" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+<path opacity="0.4" d="M19.5 28.5H18C17.2044 28.5 16.4414 28.8161 15.8787 29.3787C15.3161 29.9414 15 30.7044 15 31.5V33M40.5 28.5H42C42.7956 28.5 43.5586 28.8161 44.1213 29.3787C44.6839 29.9414 45 30.7044 45 31.5V33M19.5 45H18C17.2044 45 16.4414 44.6839 15.8787 44.1213C15.3161 43.5586 15 42.7956 15 42V40.5M40.5 45H42C42.7956 45 43.5586 44.6839 44.1213 44.1213C44.6839 43.5586 45 42.7956 45 42V40.5" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+<defs>
+<linearGradient id="paint0_linear_1221_6944" x1="30" y1="7.5" x2="30" y2="52.5" gradientUnits="userSpaceOnUse">
+<stop stop-color="white" stop-opacity="0"/>
+<stop offset="1" stop-color="white"/>
+</linearGradient>
+</defs>
+</svg>

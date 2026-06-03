@@ -270,10 +270,19 @@ export default function LiveDemoSection(): ReactElement {
   useEffect(() => {
     const measure = () => {
       const cards = cardsRef.current;
-      if (!cards) return;
+      const col = cards?.parentElement;
+      if (!cards || !col) return;
       const card = cards.children[active] as HTMLElement | undefined;
       if (!card) return;
-      setCardsY(-(card.offsetTop + card.offsetHeight / 2));
+      // Centre the active card on the stage's middle line…
+      const centered = -(card.offsetTop + card.offsetHeight / 2);
+      // …but clamp so the stack never scrolls past its own ends (no empty space
+      // above the first card or below the last) — like a normal carousel.
+      const H = col.clientHeight;
+      const S = cards.offsetHeight;
+      const lo = Math.min(-H / 2, H / 2 - S);
+      const hi = Math.max(-H / 2, H / 2 - S);
+      setCardsY(Math.max(lo, Math.min(hi, centered)));
     };
     // Re-measure as the active card's expand/collapse animation settles.
     const raf = requestAnimationFrame(measure);
@@ -343,24 +352,27 @@ export default function LiveDemoSection(): ReactElement {
               </div>
             </div>
 
-            {/* Phase cards — the stack is absolutely positioned and slid so the
-                active card stays centred; off-screen cards are clipped by the
-                stage's overflow-hidden. */}
-            <div className="relative min-w-0 flex-1 lg:basis-0">
-              <div
-                ref={cardsRef}
-                className="absolute inset-x-0 top-1/2 flex flex-col gap-2.5 transition-transform duration-500 ease-out sm:gap-3"
-                style={{ transform: `translateY(${cardsY}px)` }}
-              >
-                {PHASES.map((phase, i) => (
-                  <PhaseCard
-                    key={phase.num}
-                    phase={phase}
-                    isActive={i === active}
-                    distance={Math.abs(i - active)}
-                    onSelect={() => handleSelect(i)}
-                  />
-                ))}
+            {/* Phase cards — a fixed-height window (centred in the column) with
+                the stack slid so the active card stays centred and its
+                neighbours peek above/below; the window clips the rest and keeps
+                empty space bounded. */}
+            <div className="relative flex min-w-0 flex-1 items-center justify-center lg:basis-0">
+              <div className="relative h-[420px] w-full overflow-hidden sm:h-[460px] lg:h-[480px]">
+                <div
+                  ref={cardsRef}
+                  className="absolute inset-x-0 top-1/2 flex flex-col gap-2.5 transition-transform duration-500 ease-out sm:gap-3"
+                  style={{ transform: `translateY(${cardsY}px)` }}
+                >
+                  {PHASES.map((phase, i) => (
+                    <PhaseCard
+                      key={phase.num}
+                      phase={phase}
+                      isActive={i === active}
+                      distance={Math.abs(i - active)}
+                      onSelect={() => handleSelect(i)}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
           </Reveal>

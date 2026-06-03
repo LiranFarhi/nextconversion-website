@@ -1,69 +1,56 @@
-// The real storefront layouts from the Figma file. Each visitor's segment maps
-// to the storefront the agents build for them — desktop layouts render in a
-// browser frame, mobile-native layouts in a phone frame.
+// The real storefront variations exported from the Figma "Store Variations"
+// frame (node 1453-13978). Each visitor's segment maps to the desktop store the
+// agents build for them. Order matches the Figma user-profile order.
 
 export type StorefrontId =
-  | "sportswear"
-  | "activewear"
-  | "luxury"
-  | "streetwear"
-  | "swimwear"
-  | "dresses"
-  | "eco"
-  | "yoga";
+  | "store1"
+  | "store2"
+  | "store3"
+  | "store4"
+  | "store5"
+  | "store6"
+  | "store7"
+  | "store8";
 
-export type DeviceType = "browser" | "phone";
-
-export const STOREFRONTS: Record<
-  StorefrontId,
-  { src: string; label: string; alt: string; device: DeviceType }
-> = {
-  sportswear: {
-    src: "/storefronts/sportswear.jpg",
-    label: "Move with Intention",
-    alt: "Athletic sportswear storefront — Move with Intention",
-    device: "browser",
+export const STOREFRONTS: Record<StorefrontId, { src: string; label: string; alt: string }> = {
+  store1: {
+    src: "/storefronts/store-1.jpg",
+    label: "Sophisticated Sportwear",
+    alt: "Sportswear storefront — Sophisticated Strength",
   },
-  activewear: {
-    src: "/storefronts/activewear.jpg",
-    label: "Performance Activewear",
-    alt: "Performance activewear storefront — Shop All New",
-    device: "browser",
+  store2: {
+    src: "/storefronts/store-2.jpg",
+    label: "Luxury Coats",
+    alt: "Luxury outerwear storefront — timeless coats",
   },
-  luxury: {
-    src: "/storefronts/luxury.jpg",
-    label: "Timeless Luxury",
-    alt: "Luxury outerwear storefront — Timeless Luxury coats",
-    device: "browser",
+  store3: {
+    src: "/storefronts/store-3.jpg",
+    label: "Streetwear",
+    alt: "Streetwear storefront — new drops",
   },
-  streetwear: {
-    src: "/storefronts/streetwear.jpg",
-    label: "New Drops",
-    alt: "Streetwear storefront — New Drops, No Limits",
-    device: "browser",
+  store4: {
+    src: "/storefronts/store-4.jpg",
+    label: "Sustainable Hiking Gear",
+    alt: "Sustainable activewear storefront — Mind. Body. Balance.",
   },
-  swimwear: {
-    src: "/storefronts/swimwear.jpg",
-    label: "Sunlit Swim Edit",
-    alt: "Swimwear storefront — crafted for sunlit elegance",
-    device: "browser",
+  store5: {
+    src: "/storefronts/store-5.jpg",
+    label: "Organic Skincare",
+    alt: "Organic skincare storefront",
   },
-  dresses: {
-    src: "/storefronts/dresses.jpg",
-    label: "Summer Dresses",
-    alt: "Summer dresses storefront — Shop All New",
-    device: "browser",
+  store6: {
+    src: "/storefronts/store-6.jpg",
+    label: "Vintage Accessories",
+    alt: "Vintage accessories storefront",
   },
-  eco: {
-    src: "/storefronts/eco.jpg",
-    label: "Eco-Friendly Sportwear",
-    alt: "Eco-friendly sportswear mobile storefront — Performance, conscious by design",
-    device: "phone",
+  store7: {
+    src: "/storefronts/store-7.jpg",
+    label: "Handcrafted Jewelry",
+    alt: "Handcrafted jewelry storefront",
   },
-  yoga: {
-    src: "/storefronts/yoga.jpg",
-    label: "Yoga Studio Flow",
-    alt: "Yoga studio mobile storefront — Grip Technology collection",
-    device: "phone",
+  store8: {
+    src: "/storefronts/store-8.jpg",
+    label: "Budget-Friendly",
+    alt: "Budget outerwear storefront — Warm up, spend less",
   },
 };

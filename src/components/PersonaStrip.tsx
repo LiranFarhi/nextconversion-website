@@ -10,14 +10,14 @@ export type Persona = { tag: string; label: string; img: number; storefront: Sto
 // Each visitor maps to a distinct Figma storefront layout (8 unique) — desktop
 // layouts in a browser, the mobile-native eco/yoga layouts in a phone.
 export const PERSONAS: Persona[] = [
-  { tag: "34 • F", label: "Sophisticated Sportwear", img: 1, storefront: "activewear" },
-  { tag: "24 • M", label: "Sustainable Hiking Gear", img: 2, storefront: "eco" },
-  { tag: "52 • F", label: "Luxury coats", img: 3, storefront: "luxury" },
-  { tag: "19 • M", label: "Streetwear", img: 4, storefront: "streetwear" },
-  { tag: "41 • F", label: "Organic Skincare", img: 5, storefront: "yoga" },
-  { tag: "30 • M", label: "Vintage Accesories", img: 6, storefront: "swimwear" },
-  { tag: "61 • F", label: "Handcrafted Jewelry", img: 7, storefront: "dresses" },
-  { tag: "28 • F", label: "Budget-Friendly", img: 8, storefront: "sportswear" },
+  { tag: "34 • F", label: "Sophisticated Sportwear", img: 1, storefront: "store1" },
+  { tag: "52 • F", label: "Luxury coats", img: 3, storefront: "store2" },
+  { tag: "19 • M", label: "Streetwear", img: 4, storefront: "store3" },
+  { tag: "24 • M", label: "Sustainable Hiking Gear", img: 2, storefront: "store4" },
+  { tag: "41 • F", label: "Organic Skincare", img: 5, storefront: "store5" },
+  { tag: "30 • M", label: "Vintage Accesories", img: 6, storefront: "store6" },
+  { tag: "61 • F", label: "Handcrafted Jewelry", img: 7, storefront: "store7" },
+  { tag: "28 • F", label: "Budget-Friendly", img: 8, storefront: "store8" },
 ];
 
 function Chip({

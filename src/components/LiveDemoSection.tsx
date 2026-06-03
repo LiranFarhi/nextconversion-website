@@ -5,7 +5,6 @@ import Image from "next/image";
 import { Check, Zap, Layers, Wand2, Tag, TrendingUp, type LucideIcon } from "lucide-react";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
-import DemoPhone from "./DemoPhone";
 
 // ---------------------------------------------------------------------------
 // Phase data — verbatim from the Figma "Use case" frames.
@@ -327,8 +326,6 @@ export default function LiveDemoSection(): ReactElement {
     setActive(i);
   };
 
-  const activePhase = PHASES[active];
-
   return (
     <section
       ref={sectionRef}
@@ -360,10 +357,19 @@ export default function LiveDemoSection(): ReactElement {
               filter: "blur(8px)",
             }}
           />
-          <div className="relative z-[1] h-[313px] w-[145px] sm:h-[388px] sm:w-[180px] lg:h-[625px] lg:w-[290px]">
-            <div className="origin-top-left scale-[0.5] sm:scale-[0.62] lg:scale-100">
-              <DemoPhone step={activePhase.phoneStep} />
-            </div>
+          <div className="relative z-[1] aspect-[320/720] w-[150px] sm:w-[185px] lg:w-[290px]">
+            {PHASES.map((p, i) => (
+              <Image
+                key={p.num}
+                src={`/demo/step-${i + 1}.webp`}
+                alt={`Storefront preview — ${p.title}`}
+                fill
+                sizes="(max-width: 1024px) 185px, 290px"
+                priority={i === 0}
+                className="object-contain transition-opacity duration-500"
+                style={{ opacity: i === active ? 1 : 0 }}
+              />
+            ))}
           </div>
         </div>
 

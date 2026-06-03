@@ -278,7 +278,14 @@ export default function LiveDemoSection(): ReactElement {
           next = i;
         }
       }
-      setActive((prev) => (prev === next ? prev : next));
+      setActive((prev) => {
+        if (prev === next) return prev;
+        // Let the height animation finish before re-deriving. Otherwise the
+        // animation shifts the layout (scroll-anchoring), which fires scroll
+        // events that re-run this and flip the card again → flicker.
+        selectLock.current = performance.now() + 520;
+        return next;
+      });
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(derive);

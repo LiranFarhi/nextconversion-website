@@ -119,6 +119,10 @@ export default function DemoModal(): ReactElement {
   const [confirming, setConfirming] = useState(false);
   // dirty — true once the user has typed anything in any field
   const [dirty, setDirty] = useState(false);
+  // submitting — request to /api/book-demo is in flight
+  const [submitting, setSubmitting] = useState(false);
+  // error — message shown when the submission fails
+  const [error, setError] = useState<string | null>(null);
 
   const lastFocused = useRef<HTMLElement | null>(null);
   const formRef = useRef<HTMLFormElement | null>(null);
@@ -143,6 +147,8 @@ export default function DemoModal(): ReactElement {
     setConfirming(false);
     setDirty(false);
     setSent(false);
+    setSubmitting(false);
+    setError(null);
   }
 
   // ── lifecycle ───────────────────────────────────────────────────────────
@@ -153,6 +159,8 @@ export default function DemoModal(): ReactElement {
       setSent(false);
       setDirty(false);
       setConfirming(false);
+      setSubmitting(false);
+      setError(null);
       setOpen(true);
     };
     window.addEventListener("open-demo-modal", onOpen);
@@ -181,12 +189,12 @@ export default function DemoModal(): ReactElement {
 
   // ── submit handler ──────────────────────────────────────────────────────
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
     const data = new FormData(form);
 
-    // Normalize the website URL before it would be sent
+    // Normalize + validate the website URL before sending
     const rawWebsite = (data.get("website") as string) ?? "";
     if (rawWebsite && !isValidUrl(rawWebsite)) {
       // Basic client-side feedback — keep the form open so the user can fix it
@@ -197,22 +205,35 @@ export default function DemoModal(): ReactElement {
       websiteInput?.reportValidity();
       return;
     }
-    const normalizedWebsite = normalizeUrl(rawWebsite);
 
-    // Build the payload that WOULD be sent to Email/Airtable
     const payload = {
       name: data.get("name"),
       email: data.get("email"),
-      website: normalizedWebsite,
+      website: normalizeUrl(rawWebsite),
       message: data.get("message"),
+      // Honeypot — left empty by humans; filled by bots → server ignores it
+      company: data.get("company"),
     };
 
-    // payload (with normalized website, e.g. http://aghion.com) is ready to
-    // POST to the email/Airtable endpoint here.
-    void payload;
-
-    setSent(true);
-    setDirty(false);
+    setSubmitting(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/book-demo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const json = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (!res.ok || !json.ok) {
+        throw new Error(json.error || "Something went wrong. Please try again.");
+      }
+      setSent(true);
+      setDirty(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   // ── render ──────────────────────────────────────────────────────────────
@@ -363,13 +384,32 @@ export default function DemoModal(): ReactElement {
                         className="resize-none rounded-xl border border-border-strong bg-white/[0.03] px-4 py-2.5 font-inter text-sm text-white placeholder:text-muted focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                       />
                     </label>
+                    {/* Honeypot — hidden from people; bots fill it and the
+                        server silently ignores those submissions. */}
+                    <div
+                      aria-hidden
+                      style={{ position: "absolute", left: "-9999px", width: 1, height: 1, overflow: "hidden" }}
+                    >
+                      <label>
+                        Company
+                        <input type="text" name="company" tabIndex={-1} autoComplete="off" />
+                      </label>
+                    </div>
                     <button
                       type="submit"
-                      className="group mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 font-inter text-sm font-medium text-white transition-colors hover:bg-primary-2"
+                      disabled={submitting}
+                      className="group mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 font-inter text-sm font-medium text-white transition-colors hover:bg-primary-2 disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                      Book a demo
-                      <CircleArrowRight size={18} strokeWidth={1.75} className="btn-arrow" />
+                      {submitting ? "Booking…" : "Book a demo"}
+                      {!submitting && (
+                        <CircleArrowRight size={18} strokeWidth={1.75} className="btn-arrow" />
+                      )}
                     </button>
+                    {error && (
+                      <p role="alert" className="text-center font-inter text-[12px] text-coral">
+                        {error}
+                      </p>
+                    )}
                     <p className="text-center font-inter text-[11px] text-muted">
                       No spam · 2-min setup · We&rsquo;ll only use this to schedule your
                       demo.

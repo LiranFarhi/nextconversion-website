@@ -41,7 +41,7 @@ export default function ProblemSection() {
               delay={i * 120}
               className="card flex flex-1 flex-col justify-center p-6"
             >
-              <p className="font-inter text-sm font-medium uppercase tracking-[0.05em] text-primary-3">
+              <p className="font-inter text-sm font-medium uppercase tracking-[0.05em] text-[#ff6eba]">
                 {s.eyebrow}
               </p>
               <div className="mt-2 flex items-center gap-4">
@@ -53,7 +53,7 @@ export default function ProblemSection() {
                   className="font-display text-4xl font-semibold leading-none text-white"
                 />
               </div>
-              <p className="mt-2 max-w-[22rem] font-inter text-base leading-relaxed text-soft/60">
+              <p className="mt-2 font-inter text-base leading-relaxed text-soft/60">
                 {s.desc}
               </p>
             </TiltCard>
@@ -62,7 +62,7 @@ export default function ProblemSection() {
 
         <TiltCard
           delay={120}
-          className="card flex items-center justify-center overflow-hidden border-primary/40 p-6"
+          className="flex items-center justify-center"
         >
           <Image
             src="/figma/funnel.png"

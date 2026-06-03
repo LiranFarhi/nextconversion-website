@@ -111,8 +111,8 @@ const PHASES: Phase[] = [
 function AgentPill({ agent }: { agent: NonNullable<Phase["agent"]> }): ReactElement {
   return (
     <div className="inline-flex flex-wrap items-center gap-x-1.5 gap-y-1 self-start rounded-2xl border border-white/10 bg-white/[0.05] px-2.5 py-1.5 sm:rounded-full sm:py-1.5 sm:pl-1.5 sm:pr-4">
-      <span className="relative h-6 w-6 shrink-0 overflow-hidden rounded-full">
-        <Image src={agent.img} alt={agent.name} fill sizes="24px" className="object-cover" />
+      <span className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full">
+        <Image src={agent.img} alt={agent.name} fill sizes="36px" className="object-cover object-top" />
       </span>
       <span className="font-inter text-[13px] leading-tight sm:text-sm">
         <span className="font-semibold text-[#ff6eba]">{agent.name}</span>{" "}
@@ -154,19 +154,25 @@ function ResultMetric({ result }: { result: { value: string; label: string } }):
 type PhaseCardProps = {
   phase: Phase;
   isActive: boolean;
+  /** distance from the active card (0 = active, 1 = neighbour, ≥2 = far) */
+  distance: number;
   onSelect: () => void;
 };
 
-function PhaseCard({ phase, isActive, onSelect }: PhaseCardProps): ReactElement {
+function PhaseCard({ phase, isActive, distance, onSelect }: PhaseCardProps): ReactElement {
   const Icon = phase.icon;
+  // Only the current phase and its immediate neighbours stay prominent; the rest
+  // fade back so the eye follows the one being viewed.
+  const opacity = distance === 0 ? 1 : distance === 1 ? 0.5 : 0.12;
   return (
     <button
       type="button"
       onClick={onSelect}
       aria-pressed={isActive}
       aria-label={`Select ${phase.title} phase`}
+      style={{ opacity }}
       className={[
-        "w-full snap-center scroll-my-24 rounded-[24px] border text-left transition-all duration-300",
+        "w-full snap-center scroll-my-24 rounded-[24px] border text-left transition-all duration-500",
         isActive
           ? "border-primary/30 bg-white/[0.05] p-4 shadow-[0_18px_50px_-26px_rgba(131,79,251,0.6)] sm:p-6"
           : "border-primary/15 bg-white/[0.03] p-3.5 hover:border-primary/30 sm:p-5",
@@ -338,7 +344,7 @@ export default function LiveDemoSection(): ReactElement {
       {/* DESKTOP layout: phone (left) | phase stack (right)                  */}
       {/* ------------------------------------------------------------------ */}
       {/* Phone (left) and phase cards (right) — side by side, centered on desktop */}
-      <Reveal className="mt-10 flex items-start gap-3 sm:mt-14 sm:gap-8 lg:items-center lg:justify-center lg:gap-16">
+      <Reveal className="mt-10 flex items-start gap-3 sm:mt-14 sm:gap-8 lg:items-center lg:justify-center lg:gap-12">
         {/* Phone with concentric purple/blue glow (scaled down on small screens) */}
         <div
           ref={phoneColRef}
@@ -350,8 +356,8 @@ export default function LiveDemoSection(): ReactElement {
             className="pointer-events-none absolute left-1/2 top-1/2 h-[290px] w-[290px] -translate-x-1/2 -translate-y-1/2 rounded-full sm:h-[420px] sm:w-[420px] lg:h-[540px] lg:w-[540px]"
             style={{
               background:
-                "radial-gradient(circle, rgba(131,79,251,0.55) 0%, rgba(96,80,255,0.5) 22%, rgba(60,90,255,0.32) 40%, rgba(40,70,230,0.16) 58%, transparent 72%)",
-              filter: "blur(6px)",
+                "radial-gradient(circle, rgba(131,79,251,0.30) 0%, rgba(96,80,255,0.22) 24%, rgba(60,90,255,0.12) 44%, rgba(40,70,230,0.05) 60%, transparent 74%)",
+              filter: "blur(8px)",
             }}
           />
           <div className="relative z-[1] h-[313px] w-[145px] sm:h-[388px] sm:w-[180px] lg:h-[625px] lg:w-[290px]">
@@ -362,12 +368,13 @@ export default function LiveDemoSection(): ReactElement {
         </div>
 
         {/* Phase card stack — active expands */}
-        <div ref={cardsRef} className="flex min-w-0 flex-1 flex-col gap-2.5 sm:gap-3 lg:w-[400px] lg:flex-none">
+        <div ref={cardsRef} className="flex min-w-0 flex-1 flex-col gap-2.5 sm:gap-3 lg:w-[540px] lg:flex-none">
           {PHASES.map((phase, i) => (
             <PhaseCard
               key={phase.num}
               phase={phase}
               isActive={i === active}
+              distance={Math.abs(i - active)}
               onSelect={() => handleSelect(i)}
             />
           ))}

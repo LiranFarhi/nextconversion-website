@@ -119,12 +119,13 @@ function StoreCard({
           className="pointer-events-none absolute -bottom-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-primary-2/30 blur-[90px]"
         />
       )}
-      {/* Fixed-height header so the frame below never shifts with text length */}
-      <div className="relative flex h-[76px] flex-col items-center justify-start overflow-hidden sm:h-[104px]">
+      {/* Fixed-height header, bottom-aligned, so the picture sits a consistent
+          ~16px below the text and the frame never shifts between the two cards */}
+      <div className="relative flex h-[56px] flex-col items-center justify-end overflow-hidden sm:h-[78px]">
         <p className="font-display text-sm font-medium leading-tight text-white sm:text-2xl">{card.label}</p>
         <p className="mt-1.5 font-inter text-xs leading-snug text-soft sm:text-base">{sub}</p>
       </div>
-      <div className="relative mt-auto pt-3 sm:pt-5">{media}</div>
+      <div className="relative mt-auto pt-4">{media}</div>
     </div>
   );
 }
@@ -137,18 +138,7 @@ export default function StorefrontComparison() {
   const active = PERSONAS[pIdx];
 
   const legacySub = "One page for everyone";
-  const curatedSub = (
-    <span className="inline-flex flex-wrap items-center justify-center gap-x-1.5 gap-y-1">
-      <span>
-        Personalized for <span className="text-white">{active.label}</span>
-      </span>
-      {/* format chip — desktop only, to keep the mobile card uncluttered */}
-      <span className="hidden items-center gap-1 rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary-3 sm:inline-flex">
-        <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-        {STOREFRONTS[active.storefront].label}
-      </span>
-    </span>
-  );
+  const curatedSub = "Personalized per visitor";
 
   return (
     <section id="why" className="relative mx-auto max-w-[1200px] px-5 py-12 sm:px-8 sm:py-16">
@@ -163,7 +153,7 @@ export default function StorefrontComparison() {
 
       {/* Connector: the active visitor flows down into the curated storefront */}
       <div aria-hidden className="relative flex flex-col items-center">
-        <span className="mt-5 h-6 w-px bg-gradient-to-b from-transparent to-primary/70 sm:mt-7 sm:h-8" />
+        <span className="mt-2 h-6 w-px bg-gradient-to-b from-transparent to-primary/70 sm:h-8" />
         <svg viewBox="0 0 600 40" preserveAspectRatio="none" className="h-8 w-[78%] max-w-[680px] sm:h-10">
           <path d="M300 0 C300 26 150 6 150 40" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5" />
           <path d="M300 0 C300 26 450 6 450 40" fill="none" stroke="url(#cg)" strokeWidth="2" />

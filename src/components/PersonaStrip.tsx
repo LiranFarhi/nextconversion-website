@@ -20,24 +20,6 @@ export const PERSONAS: Persona[] = [
   { tag: "28 • F", label: "Budget-Friendly", img: 8, storefront: "sportswear" },
 ];
 
-function DeviceIcon() {
-  return (
-    <svg
-      aria-hidden
-      viewBox="0 0 16 16"
-      className="ml-3 mt-0.5 h-4 w-4 shrink-0 text-white/80"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.33}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="4.5" y="1.5" width="7" height="13" rx="1.5" />
-      <line x1="7" y1="12.5" x2="9" y2="12.5" />
-    </svg>
-  );
-}
-
 function Chip({
   tag,
   label,
@@ -63,15 +45,12 @@ function Chip({
         width={128}
         height={128}
         loading="lazy"
-        className={`h-10 w-10 shrink-0 rounded-full object-cover ring-1 ${
+        className={`h-10 w-10 shrink-0 rounded-full object-cover object-[50%_22%] ring-1 ${
           active ? "ring-primary" : "ring-white/10"
         }`}
       />
-      <span className="flex min-w-[164px] flex-col items-start leading-tight">
-        <span className="flex w-full items-center justify-between">
-          <span className="font-inter text-sm font-normal text-white/80">{tag}</span>
-          <DeviceIcon />
-        </span>
+      <span className="flex min-w-[150px] flex-col items-start leading-tight">
+        <span className="font-inter text-sm font-normal text-white/80">{tag}</span>
         <span className="whitespace-nowrap font-inter text-sm font-normal text-white/80">{label}</span>
       </span>
     </button>

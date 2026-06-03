@@ -6,10 +6,19 @@ export default function CtaSection() {
     <section id="book-demo" className="relative overflow-hidden px-5 py-28 sm:py-36">
       <div
         aria-hidden
-        className="animate-glow pointer-events-none absolute bottom-[-30%] left-1/2 h-[600px] w-[1100px] max-w-[150vw] -translate-x-1/2 rounded-full opacity-70"
+        className="animate-glow pointer-events-none absolute bottom-[-26%] left-1/2 h-[680px] w-[1200px] max-w-[160vw] -translate-x-1/2 rounded-full opacity-90"
         style={{
           background:
-            "radial-gradient(closest-side, rgba(131,79,251,0.5), rgba(113,77,255,0.18) 45%, rgba(1,0,30,0) 72%)",
+            "radial-gradient(closest-side, rgba(131,79,251,0.72), rgba(225,81,255,0.26) 44%, rgba(1,0,30,0) 72%)",
+        }}
+      />
+      {/* tighter, brighter core for a stronger centre */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute bottom-[-12%] left-1/2 h-[360px] w-[620px] max-w-[120vw] -translate-x-1/2 rounded-full opacity-80"
+        style={{
+          background:
+            "radial-gradient(closest-side, rgba(156,131,255,0.55), rgba(131,79,251,0) 70%)",
         }}
       />
       <Reveal className="relative mx-auto max-w-[900px] text-center">

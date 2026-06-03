@@ -45,19 +45,21 @@ export default function Hero() {
         variants={container}
         initial="hidden"
         animate="show"
-        className="relative mx-auto max-w-[900px] px-5 pb-16 pt-[60px] text-center sm:pt-[80px]"
+        className="relative mx-auto max-w-[1040px] px-5 pb-16 pt-[60px] text-center sm:pt-[80px]"
       >
         <motion.h1
           variants={item}
-          className="mx-auto max-w-[16ch] font-display text-[clamp(2.25rem,5.5vw,4.25rem)] font-light leading-[1.05] tracking-[-0.02em] text-white"
+          className="mx-auto font-display text-[clamp(2.4rem,5.6vw,4.4rem)] font-light leading-[1.07] tracking-[-0.02em] text-white"
         >
-          Turning Static Storefronts Into Endless{" "}
+          Turning Static Storefronts
+          <br className="hidden sm:block" /> Into Endless{" "}
+          <br className="hidden sm:block" />
           <span className="gradient-text gradient-animate font-normal">Self-Adaptive Experiences</span>
         </motion.h1>
 
         <motion.p
           variants={item}
-          className="mx-auto mt-5 max-w-[540px] font-inter text-[15px] font-medium leading-[1.5] text-soft sm:text-[16px]"
+          className="mx-auto mt-5 max-w-[680px] text-balance font-inter text-[15px] font-medium leading-[1.5] text-soft sm:text-[16px]"
         >
           Stop directing targeted ad traffic to generic websites. NextConversion transforms each click into
           a personalized, real-time storefront that optimizes continuously.

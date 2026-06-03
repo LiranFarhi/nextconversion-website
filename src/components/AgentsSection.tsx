@@ -143,14 +143,14 @@ function AgentCard({ agent }: { agent: Agent }): ReactElement {
           alt={`Portrait of ${agent.name}`}
           width={256}
           height={256}
-          className="h-[88px] w-[88px] flex-shrink-0 rounded-3xl object-cover sm:h-[119px] sm:w-[119px]"
+          className="h-[88px] w-[88px] flex-shrink-0 rounded-3xl object-cover object-top sm:h-[119px] sm:w-[119px]"
         />
         <div className="flex flex-col gap-3">
           <div>
             <p className="font-display text-lg font-normal leading-6 text-[#f4f0ff]">{agent.name}</p>
             <p className="mt-0.5 font-inter text-sm font-light leading-5 text-muted">{agent.role}</p>
           </div>
-          <p className="font-inter text-sm font-light leading-6 text-white/80">{agent.quote}</p>
+          <p className="font-inter text-sm font-light leading-6 text-white">{agent.quote}</p>
         </div>
       </div>
 
@@ -232,12 +232,12 @@ export default function AgentsSection(): ReactElement {
         subtitle="Meet your agent workforce that deliver autonomously behind the scenes"
       />
 
-      <div className="mt-12 grid items-stretch gap-6 md:grid-cols-2">
+      <div className="mt-12 grid items-start gap-6 md:grid-cols-2">
         {/* ── Left: illustration with click zones + name pills ── */}
-        <div className="relative flex min-w-0 items-center justify-center overflow-hidden rounded-3xl border border-primary/30 bg-white/[0.02] p-4">
+        <div className="relative flex min-w-0 items-center justify-center">
           {/* image wrapper — overlays are positioned relative to the image so
-              they stay aligned when the card is stretched to equal height */}
-          <div className="relative w-full">
+              they stay aligned; overflow-hidden clips the spotlight to the art */}
+          <div className="relative w-full overflow-hidden rounded-2xl">
             <Image
               src="/figma/agents-table.jpg"
               alt="Emilia, Donna, Danny and John — the AI agent workforce at a table"
@@ -325,8 +325,8 @@ export default function AgentsSection(): ReactElement {
       </div>
 
       {/* ── Impact stats ── */}
-      <Reveal className="mt-10 rounded-3xl border border-white/10 px-4 py-8 sm:px-6">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:gap-12">
+      <Reveal className="mt-10">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:gap-6">
           {IMPACT.map(({ icon: Icon, value, color, label }) => (
             <div
               key={label}
@@ -357,12 +357,16 @@ export default function AgentsSection(): ReactElement {
                 alt=""
                 width={256}
                 height={256}
-                className="h-8 w-8 rounded-full border-2 border-background object-cover"
+                className="h-8 w-8 rounded-full object-cover object-top ring-1 ring-white/20"
                 style={{ zIndex: EXTRA_AVATARS.length - i }}
               />
             ))}
-            <span className="grid h-8 w-8 place-items-center rounded-full border-2 border-background bg-primary font-inter text-base font-semibold leading-none text-white">
-              ...
+            <span className="grid h-8 w-8 place-items-center rounded-full bg-primary ring-1 ring-white/20">
+              <span className="flex items-center gap-[3px]">
+                <span className="h-1 w-1 rounded-full bg-white" />
+                <span className="h-1 w-1 rounded-full bg-white" />
+                <span className="h-1 w-1 rounded-full bg-white" />
+              </span>
             </span>
           </div>
           <span className="font-inter text-sm leading-5 text-white/80">+10 more agents ready to scale</span>

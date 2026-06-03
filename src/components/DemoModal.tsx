@@ -249,7 +249,7 @@ export default function DemoModal(): ReactElement {
               type="button"
               onClick={requestClose}
               aria-label="Close"
-              className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full text-muted transition-colors hover:bg-white/10 hover:text-white"
+              className="absolute right-4 top-4 z-20 grid h-9 w-9 place-items-center rounded-full text-muted transition-colors hover:bg-white/10 hover:text-white"
             >
               <X size={18} />
             </button>

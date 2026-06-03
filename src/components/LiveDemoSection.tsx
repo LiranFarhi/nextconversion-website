@@ -218,6 +218,10 @@ function PhaseCard({ phase, isActive, distance, onSelect }: PhaseCardProps): Rea
   );
 }
 
+// How far the mobile phases are spread, as a multiple of the card stack height
+// (higher = more scrolling needed to move to the next card).
+const MOBILE_SCROLL_FACTOR = 1.6;
+
 // ---------------------------------------------------------------------------
 // Main component
 // ---------------------------------------------------------------------------
@@ -250,7 +254,9 @@ export default function LiveDemoSection(): ReactElement {
         const cards = cardsRef.current;
         if (!cards) return;
         const r = cards.getBoundingClientRect();
-        progress = (window.innerHeight * 0.5 - r.top) / r.height;
+        // Spread the phases over a longer scroll distance than the cards' own
+        // height so each one takes more scrolling to advance.
+        progress = (window.innerHeight * 0.5 - r.top) / (r.height * MOBILE_SCROLL_FACTOR);
       }
       progress = Math.max(0, Math.min(0.99999, progress));
       const idx = Math.floor(progress * PHASES.length);
@@ -320,7 +326,7 @@ export default function LiveDemoSection(): ReactElement {
       const r = cards.getBoundingClientRect();
       const topDoc = r.top + window.scrollY;
       window.scrollTo({
-        top: topDoc - window.innerHeight * 0.5 + targetProgress * r.height,
+        top: topDoc - window.innerHeight * 0.5 + targetProgress * r.height * MOBILE_SCROLL_FACTOR,
         behavior: "smooth",
       });
     }
@@ -338,7 +344,7 @@ export default function LiveDemoSection(): ReactElement {
       {/* Tall track (desktop) gives the scroll distance; the stage pins inside it
           so the demo stays on screen while you scroll slowly through the phases.
           On mobile the track collapses and the section scrolls normally. */}
-      <div ref={trackRef} className="relative lg:h-[300vh]">
+      <div ref={trackRef} className="relative lg:h-[500vh]">
         <div className="lg:sticky lg:top-0 lg:flex lg:h-screen lg:items-center">
           {/* Phone (left) and phase cards (right) */}
           <Reveal className="mt-10 flex w-full items-start gap-3 sm:mt-14 sm:gap-8 lg:mt-0 lg:items-center lg:gap-8">

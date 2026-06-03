@@ -2,10 +2,9 @@
 
 import { useEffect, useRef, useState, type ReactElement } from "react";
 import Image from "next/image";
-import { Check, Zap, Layers, Wand2, Tag, TrendingUp, type LucideIcon } from "lucide-react";
+import { Check, TrendingUp } from "lucide-react";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
-import DemoPhone from "./DemoPhone";
 
 // ---------------------------------------------------------------------------
 // Phase data — verbatim from the Figma "Use case" frames.
@@ -18,8 +17,8 @@ type Phase = {
   label: string;
   /** Card title */
   title: string;
-  /** Phase icon */
-  icon: LucideIcon;
+  /** Phase icon — Figma-exported SVG in /public/demo/icons */
+  iconSrc: string;
   /** Optional body copy */
   body?: string;
   /** Agent shown in this phase (omitted on the final result step) */
@@ -41,7 +40,7 @@ const PHASES: Phase[] = [
     num: 1,
     label: "PHASE 1",
     title: "Trigger",
-    icon: Zap,
+    iconSrc: "/demo/icons/trigger.svg",
     body: "Danny reads the intent signals and social trends behind the click to trigger the right experience.",
     agent: {
       name: "Danny",
@@ -55,7 +54,7 @@ const PHASES: Phase[] = [
     num: 2,
     label: "PHASE 2",
     title: "Evolution",
-    icon: Layers,
+    iconSrc: "/demo/icons/evolution.svg",
     body: "Emilia builds a full storefront that adapts to sustainability — not just a landing page.",
     agent: {
       name: "Emilia",
@@ -69,7 +68,7 @@ const PHASES: Phase[] = [
     num: 3,
     label: "PHASE 3",
     title: "Adaptation",
-    icon: Wand2,
+    iconSrc: "/demo/icons/adaptation.svg",
     body: "John enhances every product — descriptions, imagery and copy — so performance never drops.",
     agent: {
       name: "John",
@@ -83,7 +82,7 @@ const PHASES: Phase[] = [
     num: 4,
     label: "PHASE 4",
     title: "Upsell",
-    icon: Tag,
+    iconSrc: "/demo/icons/upsell.svg",
     body: "Donna suggests complementing sets at the right moment to lift average order value.",
     agent: {
       name: "Donna",
@@ -97,7 +96,7 @@ const PHASES: Phase[] = [
     num: 5,
     label: "PHASE 5",
     title: "Result",
-    icon: TrendingUp,
+    iconSrc: "/demo/icons/result.svg",
     body: "A higher-intent visitor converts — ROAS climbs and the storefront keeps learning for the next click.",
     result: { value: "+200%", label: "Conversion Rate" },
     phoneStep: 4,
@@ -160,7 +159,6 @@ type PhaseCardProps = {
 };
 
 function PhaseCard({ phase, isActive, distance, onSelect }: PhaseCardProps): ReactElement {
-  const Icon = phase.icon;
   // Only the current phase and its immediate neighbours stay prominent; the rest
   // fade back so the eye follows the one being viewed.
   const opacity = distance === 0 ? 1 : distance === 1 ? 0.5 : 0.12;
@@ -178,16 +176,10 @@ function PhaseCard({ phase, isActive, distance, onSelect }: PhaseCardProps): Rea
           : "border-primary/15 bg-white/[0.03] p-3.5 hover:border-primary/30 sm:p-5",
       ].join(" ")}
     >
-      {/* Icon badge + eyebrow/title */}
+      {/* Bare Figma outline icon + eyebrow/title (no filled badge) */}
       <div className="flex items-center gap-3">
-        <span
-          className={[
-            "grid h-9 w-9 shrink-0 place-items-center rounded-xl transition-colors",
-            isActive ? "bg-primary text-white" : "bg-white/10 text-white/70",
-          ].join(" ")}
-        >
-          <Icon size={17} strokeWidth={2} />
-        </span>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={phase.iconSrc} alt="" className="h-11 w-11 shrink-0" />
         <div className="flex flex-col">
           <span className="font-inter text-[13px] uppercase tracking-[0.08em] text-primary">
             {phase.label}
@@ -327,8 +319,6 @@ export default function LiveDemoSection(): ReactElement {
     setActive(i);
   };
 
-  const activePhase = PHASES[active];
-
   return (
     <section
       ref={sectionRef}
@@ -344,11 +334,11 @@ export default function LiveDemoSection(): ReactElement {
       {/* DESKTOP layout: phone (left) | phase stack (right)                  */}
       {/* ------------------------------------------------------------------ */}
       {/* Phone (left) and phase cards (right) — side by side, centered on desktop */}
-      <Reveal className="mt-10 flex items-start gap-3 sm:mt-14 sm:gap-8 lg:items-center lg:justify-center lg:gap-12">
+      <Reveal className="mt-10 flex items-start gap-3 sm:mt-14 sm:gap-8 lg:items-center lg:gap-8">
         {/* Phone with concentric purple/blue glow (scaled down on small screens) */}
         <div
           ref={phoneColRef}
-          className="relative flex shrink-0 items-center justify-center transition-transform duration-500 ease-out"
+          className="relative flex shrink-0 items-center justify-center transition-transform duration-500 ease-out lg:min-w-0 lg:flex-1 lg:basis-0"
           style={{ transform: `translateY(${phoneY}px)` }}
         >
           <div
@@ -360,15 +350,24 @@ export default function LiveDemoSection(): ReactElement {
               filter: "blur(8px)",
             }}
           />
-          <div className="relative z-[1] h-[313px] w-[145px] sm:h-[388px] sm:w-[180px] lg:h-[625px] lg:w-[290px]">
-            <div className="origin-top-left scale-[0.5] sm:scale-[0.62] lg:scale-100">
-              <DemoPhone step={activePhase.phoneStep} />
-            </div>
+          <div className="relative z-[1] aspect-[320/720] w-[150px] sm:w-[185px] lg:w-[290px]">
+            {PHASES.map((p, i) => (
+              <Image
+                key={p.num}
+                src={`/demo/step-${i + 1}.webp`}
+                alt={`Storefront preview — ${p.title}`}
+                fill
+                sizes="(max-width: 1024px) 185px, 290px"
+                priority={i === 0}
+                className="object-contain transition-opacity duration-500"
+                style={{ opacity: i === active ? 1 : 0 }}
+              />
+            ))}
           </div>
         </div>
 
         {/* Phase card stack — active expands */}
-        <div ref={cardsRef} className="flex min-w-0 flex-1 flex-col gap-2.5 sm:gap-3 lg:w-[540px] lg:flex-none">
+        <div ref={cardsRef} className="flex min-w-0 flex-1 flex-col gap-2.5 sm:gap-3 lg:basis-0">
           {PHASES.map((phase, i) => (
             <PhaseCard
               key={phase.num}

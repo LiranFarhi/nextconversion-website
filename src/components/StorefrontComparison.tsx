@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import Reveal from "./Reveal";
 import PersonaStrip, { PERSONAS } from "./PersonaStrip";
 import { STOREFRONTS, type StorefrontId } from "./storefronts";
@@ -10,8 +11,6 @@ import { useAutoAdvance } from "./useAutoAdvance";
 type Card = {
   label: string;
   src: string;
-  w: number;
-  h: number;
   alt: string;
   highlight?: boolean;
 };
@@ -19,65 +18,36 @@ type Card = {
 const LEGACY: Card = {
   label: "Legacy website",
   src: "/figma/legacy-store.jpg",
-  w: 1024,
-  h: 1004,
   alt: "A single generic storefront shown to every visitor",
 };
 const CURATED: Card = {
   label: "Endless curated storefronts",
-  src: "/figma/legacy-store.jpg",
-  w: 1024,
-  h: 1004,
+  src: "/storefronts/store-1.jpg",
   alt: "A curated storefront, personalized to the active visitor",
   highlight: true,
 };
 
-/** A storefront layout, shown frameless (just the rounded layout, like Figma). */
+/** A desktop storefront variation, shown frameless and cut off at the bottom
+ *  (the page continues below the card), matching the Figma. */
 function BrowserScreen({ src, alt }: { src: string; alt: string }) {
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-xl bg-white sm:rounded-2xl">
-      <Image src={src} alt={alt} fill sizes="(max-width: 768px) 44vw, 540px" className="object-cover object-top" />
-    </div>
-  );
-}
-
-/** A mobile-native storefront shown inside a phone, centred on a purple stage. */
-function PhoneScreen({ src, alt }: { src: string; alt: string }) {
-  return (
-    <div
-      className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-xl sm:rounded-2xl"
-      style={{ background: "radial-gradient(120% 95% at 50% 0%, #221b4d 0%, #0b0a1f 58%, #070617 100%)" }}
-    >
-      <div
-        className="relative h-[96%] overflow-hidden rounded-[1.1rem] bg-black p-1 shadow-[0_18px_45px_-18px_rgba(0,0,0,0.85)] ring-1 ring-white/10 sm:rounded-[1.6rem] sm:p-1.5"
-        style={{ aspectRatio: "320 / 690" }}
-      >
-        <div className="relative h-full w-full overflow-hidden rounded-[0.85rem] bg-black sm:rounded-[1.3rem]">
-          <Image src={src} alt={alt} fill sizes="(max-width: 768px) 28vw, 200px" className="object-cover object-top" />
-        </div>
-      </div>
+    <div className="relative aspect-[1024/860] w-full overflow-hidden rounded-xl bg-white sm:rounded-2xl">
+      <Image src={src} alt={alt} fill sizes="(max-width: 768px) 40vw, 480px" className="object-cover object-top" />
     </div>
   );
 }
 
 /** The static "one page for everyone" legacy storefront. */
 function LegacyShowcase() {
-  return (
-    <div className="aspect-[1024/800] w-full">
-      <BrowserScreen src="/figma/legacy-store.jpg" alt="A single generic storefront shown to every visitor" />
-    </div>
-  );
+  return <BrowserScreen src={LEGACY.src} alt={LEGACY.alt} />;
 }
 
-/**
- * The real Figma storefront the agents built for the active visitor — desktop
- * layouts in a browser, mobile-native layouts in a phone — cross-fading as the
- * visitor changes.
- */
+/** The real Figma storefront variation the agents built for the active visitor,
+ *  cross-fading as the visitor changes. */
 function CuratedShowcase({ id }: { id: StorefrontId }) {
   const reduce = useReducedMotion();
   return (
-    <div className="relative aspect-[1024/800] w-full">
+    <div className="relative aspect-[1024/860] w-full">
       <AnimatePresence initial={false}>
         <motion.div
           key={id}
@@ -87,11 +57,7 @@ function CuratedShowcase({ id }: { id: StorefrontId }) {
           exit={{ opacity: 0 }}
           transition={{ duration: reduce ? 0 : 0.5, ease: "easeOut" }}
         >
-          {STOREFRONTS[id].device === "phone" ? (
-            <PhoneScreen src={STOREFRONTS[id].src} alt={STOREFRONTS[id].alt} />
-          ) : (
-            <BrowserScreen src={STOREFRONTS[id].src} alt={STOREFRONTS[id].alt} />
-          )}
+          <BrowserScreen src={STOREFRONTS[id].src} alt={STOREFRONTS[id].alt} />
         </motion.div>
       </AnimatePresence>
     </div>
@@ -109,7 +75,7 @@ function StoreCard({
 }) {
   return (
     <div
-      className={`card relative flex h-full flex-col overflow-hidden p-3 text-center sm:p-7 ${
+      className={`card relative flex h-full flex-col overflow-hidden p-3 text-center sm:p-6 ${
         card.highlight ? "border-primary/40 shadow-[0_0_60px_-24px_rgba(131,79,251,0.6)]" : ""
       }`}
     >
@@ -130,12 +96,37 @@ function StoreCard({
   );
 }
 
+/** Previous / next control flanking the storefronts to cycle the variation. */
+function NavButton({
+  dir,
+  onClick,
+}: {
+  dir: "prev" | "next";
+  onClick: () => void;
+}) {
+  const Icon = dir === "prev" ? ChevronLeft : ChevronRight;
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={dir === "prev" ? "Previous storefront" : "Next storefront"}
+      className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-border-strong bg-white/[0.04] text-soft transition-colors hover:border-primary/40 hover:bg-white/[0.1] hover:text-white sm:h-11 sm:w-11"
+    >
+      <Icon size={18} />
+    </button>
+  );
+}
+
 export default function StorefrontComparison() {
   // shared "active visitor" — connects the segments to the curated storefront
   const { index: pIdx, select: pSelect, pause: pPause, ref: personaRef } = useAutoAdvance(PERSONAS.length, {
     dwell: 3000,
   });
   const active = PERSONAS[pIdx];
+  const step = (dir: number) => {
+    pSelect((pIdx + dir + PERSONAS.length) % PERSONAS.length);
+    pPause();
+  };
 
   const legacySub = "One page for everyone";
   const curatedSub = "Personalized per visitor";
@@ -166,10 +157,23 @@ export default function StorefrontComparison() {
         </svg>
       </div>
 
-      {/* Legacy vs curated — side by side at every size */}
-      <div ref={personaRef} className="mt-3 grid grid-cols-2 gap-2.5 sm:mt-4 sm:gap-6">
-        <StoreCard card={LEGACY} sub={legacySub} media={<LegacyShowcase />} />
-        <StoreCard card={CURATED} sub={curatedSub} media={<CuratedShowcase id={active.storefront} />} />
+      {/* Legacy vs curated — flanked by prev/next controls (below on mobile) */}
+      <div className="mt-3 flex items-center gap-3 sm:mt-4">
+        <div className="hidden sm:block">
+          <NavButton dir="prev" onClick={() => step(-1)} />
+        </div>
+        <div ref={personaRef} className="grid min-w-0 flex-1 grid-cols-2 gap-2.5 sm:gap-6">
+          <StoreCard card={LEGACY} sub={legacySub} media={<LegacyShowcase />} />
+          <StoreCard card={CURATED} sub={curatedSub} media={<CuratedShowcase id={active.storefront} />} />
+        </div>
+        <div className="hidden sm:block">
+          <NavButton dir="next" onClick={() => step(1)} />
+        </div>
+      </div>
+      {/* Mobile prev/next */}
+      <div className="mt-4 flex justify-center gap-5 sm:hidden">
+        <NavButton dir="prev" onClick={() => step(-1)} />
+        <NavButton dir="next" onClick={() => step(1)} />
       </div>
     </section>
   );

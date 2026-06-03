@@ -273,8 +273,8 @@ export default function AgentsSection(): ReactElement {
                 type="button"
                 onClick={() => select(i)}
                 aria-label={`Show ${a.name}`}
-                style={{ left: `${a.x * 100}%`, top: "16%", zIndex: 10 }}
-                className={`absolute -translate-x-1/2 rounded-full border px-3 py-1 font-inter text-xs font-normal backdrop-blur-sm transition-all duration-500 ${
+                style={{ left: `${a.x * 100}%`, zIndex: 10 }}
+                className={`absolute top-[6%] -translate-x-1/2 rounded-full border px-3 py-1 font-inter text-xs font-normal backdrop-blur-sm transition-all duration-500 sm:top-[16%] ${
                   i === index
                     ? "scale-110 border-primary bg-background/80 text-white shadow-[0_0_24px_-6px_rgba(131,79,251,0.85)] opacity-100"
                     : "border-white/15 bg-background/40 text-white/70 opacity-30 hover:opacity-70"

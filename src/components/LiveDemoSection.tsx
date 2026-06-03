@@ -41,7 +41,7 @@ const PHASES: Phase[] = [
     label: "PHASE 1",
     title: "Trigger",
     iconSrc: "/demo/icons/trigger.svg",
-    body: "Danny reads the intent signals and social trends behind the click to trigger the right experience.",
+    body: "Danny reads intent signals and social trends behind the Ad click to trigger the right experience.",
     agent: {
       name: "Danny",
       role: "The Analyst",
@@ -98,7 +98,7 @@ const PHASES: Phase[] = [
     title: "Result",
     iconSrc: "/demo/icons/result.svg",
     body: "A higher-intent visitor converts — ROAS climbs and the storefront keeps learning for the next click.",
-    result: { value: "+200%", label: "Conversion Rate" },
+    result: { value: "+30%", label: "Conversion Rate" },
     phoneStep: 4,
   },
 ];
@@ -304,19 +304,18 @@ export default function LiveDemoSection(): ReactElement {
 
   return (
     <section id="how-it-works" className="mx-auto max-w-[1200px] px-5 sm:px-8">
-      <div className="pt-20 sm:pt-28">
-        <SectionHeading
-          title="Watch a Storefront Evolve in Real-Time"
-          subtitle="Meet your agent workforce that deliver autonomously behind the scenes."
-        />
-      </div>
-
       {/* Tall track gives the scroll distance; the stage pins inside it so the
-          demo stays on screen while you scroll slowly through the phases. The
-          active card is held at the vertical centre of the stage. */}
+          heading + demo stay on screen while you scroll slowly through the
+          phases. The active card is held at the vertical centre of the demo. */}
       <div ref={trackRef} className="relative h-[340vh] lg:h-[480vh]">
-        <div className="sticky top-0 h-screen overflow-hidden">
-          <Reveal className="flex h-full w-full items-stretch gap-3 sm:gap-8">
+        <div className="sticky top-0 flex h-screen flex-col overflow-hidden">
+          <div className="shrink-0 pt-20 sm:pt-24">
+            <SectionHeading
+              title="Watch a Storefront Evolve in Real-Time"
+              subtitle="Meet your agent workforce that deliver autonomously behind the scenes."
+            />
+          </div>
+          <Reveal className="flex min-h-0 w-full flex-1 items-stretch gap-3 pb-6 sm:gap-8">
             {/* Phone column — phone centred vertically, glued behind a soft glow */}
             <div className="relative flex shrink-0 items-center justify-center lg:min-w-0 lg:flex-1 lg:basis-0">
               <div

@@ -190,17 +190,30 @@ function PhaseCard({ phase, isActive, distance, onSelect }: PhaseCardProps): Rea
         </div>
       </div>
 
-      {/* Expanded content — only when active */}
-      {isActive && (
-        <div className="mt-4 flex flex-col gap-4">
-          {phase.body && (
-            <p className="font-inter text-[15px] leading-relaxed text-white/90">{phase.body}</p>
-          )}
-          {phase.agent && <AgentPill agent={phase.agent} />}
-          {phase.actions && <ActionChecklist actions={phase.actions} />}
-          {phase.result && <ResultMetric result={phase.result} />}
+      {/* Expanded content — height animates open/closed (grid-rows trick) so the
+          card-to-card transition is smooth instead of jumping when active flips */}
+      <div
+        className={[
+          "grid transition-[grid-template-rows] duration-500 ease-out",
+          isActive ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+        ].join(" ")}
+      >
+        <div className="overflow-hidden">
+          <div
+            className={[
+              "flex flex-col gap-4 pt-4 transition-opacity duration-300",
+              isActive ? "opacity-100 delay-100" : "opacity-0",
+            ].join(" ")}
+          >
+            {phase.body && (
+              <p className="font-inter text-[15px] leading-relaxed text-white/90">{phase.body}</p>
+            )}
+            {phase.agent && <AgentPill agent={phase.agent} />}
+            {phase.actions && <ActionChecklist actions={phase.actions} />}
+            {phase.result && <ResultMetric result={phase.result} />}
+          </div>
         </div>
-      )}
+      </div>
     </button>
   );
 }

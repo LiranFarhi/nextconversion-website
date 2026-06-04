@@ -21,7 +21,7 @@ const STATS = [
 
 export default function ProblemSection() {
   return (
-    <section className="mx-auto max-w-[1200px] px-5 py-20 sm:px-8 sm:py-28">
+    <section className="mx-auto max-w-[1200px] px-5 py-12 sm:px-8 sm:py-28">
       <SectionHeading
         title={
           <>
@@ -33,7 +33,7 @@ export default function ProblemSection() {
         subtitle="Doubling down on personalization is what every brand desires. It always gets pushed to the next quarter, because your dev and creative teams are underwater, and it hurts your business."
       />
 
-      <div className="mt-14 grid items-stretch gap-6 md:grid-cols-2">
+      <div className="mt-8 grid items-stretch gap-6 sm:mt-14 md:grid-cols-2">
         <div className="flex flex-col gap-6">
           {STATS.map((s, i) => (
             <TiltCard

@@ -49,7 +49,7 @@ export default function Hero() {
       >
         <motion.h1
           variants={item}
-          className="mx-auto font-display text-[clamp(2.4rem,5.6vw,4.4rem)] font-light leading-[1.07] tracking-[-0.02em] text-white"
+          className="mx-auto font-display text-[clamp(2.75rem,6.2vw,4.4rem)] font-light leading-[1.07] tracking-[-0.02em] text-white"
         >
           Turning Static Storefronts
           <br className="hidden sm:block" /> Into Endless{" "}

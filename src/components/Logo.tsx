@@ -15,7 +15,7 @@ type Props = {
 export default function Logo({ size = 26, withWordmark = true, className = "" }: Props): ReactElement {
   return (
     <span
-      className={`inline-flex items-center gap-2.5 font-display text-[19px] font-semibold tracking-[-0.02em] text-white ${className}`}
+      className={`inline-flex items-center gap-2.5 font-display text-[19px] font-semibold leading-none tracking-[-0.02em] text-white ${className}`}
     >
       <svg
         width={size}

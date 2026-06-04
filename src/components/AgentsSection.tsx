@@ -218,7 +218,7 @@ export default function AgentsSection(): ReactElement {
     <section
       ref={setRef}
       id="agents"
-      className="mx-auto max-w-[1200px] px-5 py-20 sm:px-8 sm:py-28"
+      className="mx-auto max-w-[1200px] px-5 py-12 sm:px-8 sm:py-28"
       tabIndex={-1}
     >
       <SectionHeading
@@ -232,17 +232,17 @@ export default function AgentsSection(): ReactElement {
         subtitle="Meet your agent workforce that deliver autonomously behind the scenes"
       />
 
-      <div className="mt-12 grid items-start gap-6 md:grid-cols-2">
+      <div className="mt-8 grid items-stretch gap-6 sm:mt-12 md:grid-cols-2">
         {/* ── Left: illustration with click zones + name pills ── */}
         <div className="relative flex min-w-0 items-center justify-center">
           {/* image wrapper — overlays are positioned relative to the image so
               they stay aligned; overflow-hidden clips the spotlight to the art */}
           <div className="relative w-full overflow-hidden rounded-2xl">
             <Image
-              src="/figma/agents-table.jpg"
+              src="/figma/agents-table-crop.jpg"
               alt="Emilia, Donna, Danny and John — the AI agent workforce at a table"
               width={1327}
-              height={752}
+              height={534}
               className="h-auto w-full rounded-2xl"
               sizes="(max-width: 1024px) 92vw, 560px"
             />
@@ -251,7 +251,7 @@ export default function AgentsSection(): ReactElement {
             <span
               aria-hidden
               style={{ left: `${active.x * 100}%` }}
-              className="pointer-events-none absolute top-[30%] h-36 w-36 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/35 blur-[55px] transition-[left] duration-500 ease-out"
+              className="pointer-events-none absolute top-[38%] h-36 w-36 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/35 blur-[55px] transition-[left] duration-500 ease-out"
             />
 
             {/* Four even click areas over the illustration (Emilia→John) */}
@@ -274,7 +274,7 @@ export default function AgentsSection(): ReactElement {
                 onClick={() => select(i)}
                 aria-label={`Show ${a.name}`}
                 style={{ left: `${a.x * 100}%`, zIndex: 10 }}
-                className={`absolute top-[6%] -translate-x-1/2 rounded-full border px-3 py-1 font-inter text-xs font-normal backdrop-blur-sm transition-all duration-500 sm:top-[16%] ${
+                className={`absolute top-[4%] -translate-x-1/2 rounded-full border px-3 py-0.5 font-inter text-xs font-normal leading-tight backdrop-blur-sm transition-all duration-500 sm:top-[8%] ${
                   i === index
                     ? "scale-110 border-primary bg-background/80 text-white shadow-[0_0_24px_-6px_rgba(131,79,251,0.85)] opacity-100"
                     : "border-white/15 bg-background/40 text-white/70 opacity-30 hover:opacity-70"
@@ -325,21 +325,25 @@ export default function AgentsSection(): ReactElement {
       </div>
 
       {/* ── Impact stats ── */}
-      <Reveal className="mt-10">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:gap-6">
+      <Reveal className="mt-8 sm:mt-10">
+        <div className="grid grid-cols-3 gap-2.5 sm:gap-4 lg:gap-6">
           {IMPACT.map(({ icon: Icon, value, color, label }) => (
             <div
               key={label}
-              className="flex flex-col gap-4 rounded-3xl border border-primary/30 p-6"
+              className="flex flex-col gap-2 rounded-2xl border border-primary/30 p-3 sm:gap-4 sm:rounded-3xl sm:p-6"
               style={{
                 background:
                   "linear-gradient(135deg, rgba(131,79,251,0.30) 0%, rgba(113,77,255,0.13) 45%, rgba(225,81,255,0.06) 100%)",
               }}
             >
-              <Icon size={16} className="text-soft" strokeWidth={2} />
-              <div className="flex flex-col gap-2">
-                <CountUp value={value} className="font-display text-4xl font-semibold leading-10" style={{ color }} />
-                <p className="font-inter text-base leading-6 text-soft">{label}</p>
+              <Icon size={16} className="hidden text-soft sm:block" strokeWidth={2} />
+              <div className="flex flex-col gap-1 sm:gap-2">
+                <CountUp
+                  value={value}
+                  className="font-display text-2xl font-semibold leading-none sm:text-4xl sm:leading-10"
+                  style={{ color }}
+                />
+                <p className="font-inter text-[11px] leading-tight text-soft sm:text-base sm:leading-6">{label}</p>
               </div>
             </div>
           ))}

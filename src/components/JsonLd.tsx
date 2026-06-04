@@ -19,6 +19,7 @@ export default function JsonLd(): ReactElement {
         "@id": `${SITE_URL}/#organization`,
         name: "NextConversion",
         url: SITE_URL,
+        slogan: "Turning Static Storefronts Into Endless Self-Adaptive Experiences",
         logo: {
           "@type": "ImageObject",
           url: `${SITE_URL}/brand/nc-logo-512.png`,
@@ -27,6 +28,13 @@ export default function JsonLd(): ReactElement {
         },
         description:
           "NextConversion is an agent-first engine that turns static websites into endless, self-adaptive storefronts — personalized per visitor, optimized 24/7.",
+        knowsAbout: [
+          "AI conversion rate optimization",
+          "E-commerce personalization",
+          "Agentic commerce",
+          "Self-adaptive storefronts",
+          "Real-time website personalization",
+        ],
         sameAs: ["https://www.linkedin.com/company/nextconversion"],
       },
       {
@@ -44,11 +52,24 @@ export default function JsonLd(): ReactElement {
         "@id": `${SITE_URL}/#software`,
         name: "NextConversion",
         applicationCategory: "BusinessApplication",
+        applicationSubCategory: "Conversion Rate Optimization Software",
         operatingSystem: "Web",
         url: SITE_URL,
         description:
           "An autonomous AI agent workforce that personalizes e-commerce storefronts in real time to lift conversion rate.",
         publisher: { "@id": `${SITE_URL}/#organization` },
+        audience: {
+          "@type": "Audience",
+          audienceType: "E-commerce businesses",
+        },
+        featureList: [
+          "Real-time per-visitor storefront personalization",
+          "Autonomous AI agent workforce",
+          "Dynamic UX layouts and adaptive merchandising",
+          "AI-generated product descriptions, images, and videos",
+          "Intelligent product bundling and cart optimization",
+          "Continuous A/B testing and performance monitoring",
+        ],
         offers: {
           "@type": "Offer",
           availability: "https://schema.org/InStock",

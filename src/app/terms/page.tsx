@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions | NextConversion",
+  title: "Terms & Conditions",
+  description:
+    "The terms and conditions governing your use of the NextConversion website and services.",
+  alternates: { canonical: "/terms" },
+  robots: { index: true, follow: true },
 };
 
 export default function TermsPage() {

@@ -241,12 +241,12 @@ export default function AgentsSection(): ReactElement {
             {/* Full-image layer — overlays are positioned in the image's own
                 coordinates, so the name pills stay locked to each agent even
                 when the sides are clipped on desktop. */}
-            <div className="relative w-full md:h-full md:w-auto md:shrink-0 md:aspect-[1327/624]">
+            <div className="relative w-full md:h-full md:w-auto md:shrink-0 md:aspect-[1327/754]">
               <Image
                 src="/figma/agents-table-crop.jpg"
                 alt="Emilia, Donna, Danny and John — the AI agent workforce at a table"
                 width={1327}
-                height={624}
+                height={754}
                 className="h-auto w-full md:h-full md:w-auto"
                 sizes="(max-width: 1024px) 92vw, 560px"
               />
@@ -255,7 +255,7 @@ export default function AgentsSection(): ReactElement {
               <span
                 aria-hidden
                 style={{ left: `${active.x * 100}%` }}
-                className="pointer-events-none absolute top-[38%] h-36 w-36 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/35 blur-[55px] transition-[left] duration-500 ease-out"
+                className="pointer-events-none absolute top-[48%] h-36 w-36 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/35 blur-[55px] transition-[left] duration-500 ease-out"
               />
 
               {/* Four even click areas over the illustration (Emilia→John) */}
@@ -278,7 +278,7 @@ export default function AgentsSection(): ReactElement {
                   onClick={() => select(i)}
                   aria-label={`Show ${a.name}`}
                   style={{ left: `${a.x * 100}%`, zIndex: 10 }}
-                  className={`absolute top-[4%] -translate-x-1/2 rounded-full border px-3 py-0.5 font-inter text-xs font-normal leading-tight backdrop-blur-sm transition-all duration-500 sm:top-[8%] ${
+                  className={`absolute top-[8%] -translate-x-1/2 rounded-full border px-3 py-0.5 font-inter text-xs font-normal leading-tight backdrop-blur-sm transition-all duration-500 sm:top-[13%] ${
                     i === index
                       ? "scale-110 border-primary bg-background/80 text-white shadow-[0_0_24px_-6px_rgba(131,79,251,0.85)] opacity-100"
                       : "border-white/15 bg-background/40 text-white/70 opacity-30 hover:opacity-70"

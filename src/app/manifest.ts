@@ -1,7 +1,9 @@
 import type { MetadataRoute } from "next";
 
-// Web app manifest — improves how the site appears when bookmarked, added to
-// a mobile home screen, or installed as a PWA. Has no effect on the page UI.
+// Web app manifest — provides the brand name, theme color, and icons for
+// bookmarks / "add to home screen". `display: "browser"` keeps the site
+// NON-installable on purpose: browsers won't show an install icon or suggest
+// installing it as an app. Has no effect on the page UI.
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "NextConversion",
@@ -9,7 +11,7 @@ export default function manifest(): MetadataRoute.Manifest {
     description:
       "Turn static storefronts into endless, self-adaptive experiences with an autonomous AI agent workforce.",
     start_url: "/",
-    display: "standalone",
+    display: "browser",
     background_color: "#01001e",
     theme_color: "#01001e",
     icons: [

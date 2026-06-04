@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 import type { StorefrontId } from "./storefronts";
 
 export type Persona = { tag: string; label: string; img: number; storefront: StorefrontId };
 
-// Each visitor maps to a distinct Figma storefront layout (8 unique) — desktop
-// layouts in a browser, the mobile-native eco/yoga layouts in a phone.
+// Each visitor maps to a distinct Figma storefront layout (8 unique). Order
+// matches the Figma user-profile order.
 export const PERSONAS: Persona[] = [
   { tag: "34 • F", label: "Sophisticated Sportwear", img: 1, storefront: "store1" },
   { tag: "52 • F", label: "Luxury coats", img: 3, storefront: "store2" },
@@ -33,7 +33,7 @@ function Chip({
       onClick={onSelect}
       aria-pressed={active}
       data-active={active || undefined}
-      className={`flex h-[60px] shrink-0 snap-center items-center gap-2 rounded-full py-2 pl-2 pr-5 transition-all duration-300 ${
+      className={`flex h-[60px] shrink-0 items-center gap-2 rounded-full py-2 pl-2 pr-5 transition-all duration-300 ${
         active
           ? "border border-primary bg-white/[0.07] shadow-[0_0_24px_-8px_rgba(131,79,251,0.7)]"
           : "border border-white/15 bg-white/[0.05] opacity-60 hover:opacity-100"
@@ -61,43 +61,104 @@ type Props = {
   /** controlled active persona label; falls back to internal state when omitted */
   activeLabel?: string;
   onSelect?: (label: string) => void;
-  /** called when the user manually scrolls/touches the strip (to pause auto-tour) */
+  /** called when the user manually interacts (to pause the auto-tour) */
   onInteract?: () => void;
 };
+
+const N = PERSONAS.length;
+const COPIES = 5; // odd, so there is a centre band with buffer copies on both sides
+const CENTER_BAND = Math.floor(COPIES / 2) * N; // flat index where the centre copy starts
 
 export default function PersonaStrip({ activeLabel, onSelect, onInteract }: Props) {
   const [internal, setInternal] = useState("Luxury coats");
   const active = activeLabel ?? internal;
   const handle = (label: string) => (onSelect ? onSelect(label) : setInternal(label));
-  const scroller = useRef<HTMLDivElement | null>(null);
+  const activeIndex = Math.max(0, PERSONAS.findIndex((p) => p.label === active));
 
-  // keep the active chip centered as it changes (auto-tour or click)
+  const viewportRef = useRef<HTMLDivElement | null>(null);
+  const trackRef = useRef<HTMLDivElement | null>(null);
+
+  // `pos` is a flat index into the rendered (cloned) list that we keep centred.
+  // It moves by the *shortest* step on each change (so wrapping 7→0 slides one
+  // step forward, never rewinding), then snaps back into the centre band — using
+  // identical clones, so the snap is invisible and the loop feels endless.
+  const [pos, setPos] = useState(CENTER_BAND + activeIndex);
+  const [animate, setAnimate] = useState(true);
+  const [tx, setTx] = useState(0);
+  const prevIndex = useRef(activeIndex);
+
+  // Cloned list: COPIES × the personas.
+  const items = Array.from({ length: COPIES * N }, (_, i) => PERSONAS[i % N]);
+
+  // On active change, advance `pos` by the shortest signed delta.
   useEffect(() => {
-    const el = scroller.current;
-    if (!el) return;
-    const i = PERSONAS.findIndex((p) => p.label === active);
-    const chip = el.children[i] as HTMLElement | undefined;
+    const prev = prevIndex.current;
+    let delta = activeIndex - prev;
+    if (delta > N / 2) delta -= N;
+    if (delta < -N / 2) delta += N;
+    prevIndex.current = activeIndex;
+    setAnimate(true);
+    setPos((p) => p + delta);
+  }, [activeIndex]);
+
+  // Centre the chip at `pos` under the viewport's middle line.
+  useLayoutEffect(() => {
+    const vp = viewportRef.current;
+    const track = trackRef.current;
+    if (!vp || !track) return;
+    const chip = track.children[pos] as HTMLElement | undefined;
     if (!chip) return;
-    el.scrollTo({ left: chip.offsetLeft - (el.clientWidth - chip.clientWidth) / 2, behavior: "smooth" });
-  }, [active]);
+    setTx(vp.clientWidth / 2 - (chip.offsetLeft + chip.offsetWidth / 2));
+  }, [pos]);
+
+  // After the slide settles, jump `pos` back into the centre band (no animation)
+  // so we always keep buffer clones on both sides.
+  useEffect(() => {
+    const want = CENTER_BAND + activeIndex;
+    if (pos === want) return;
+    const t = setTimeout(() => {
+      setAnimate(false);
+      setPos(want);
+    }, 520);
+    return () => clearTimeout(t);
+  }, [pos, activeIndex]);
+
+  // keep aligned on resize
+  useEffect(() => {
+    const onResize = () => {
+      const vp = viewportRef.current;
+      const track = trackRef.current;
+      if (!vp || !track) return;
+      const chip = track.children[pos] as HTMLElement | undefined;
+      if (!chip) return;
+      setAnimate(false);
+      setTx(vp.clientWidth / 2 - (chip.offsetLeft + chip.offsetWidth / 2));
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [pos]);
 
   return (
     <div
-      ref={scroller}
+      ref={viewportRef}
       onPointerDown={onInteract}
-      onWheel={onInteract}
-      onTouchStart={onInteract}
       role="tablist"
       aria-label="Choose a visitor"
-      className="scrollbar-hide relative flex snap-x snap-mandatory gap-3 overflow-x-auto px-2 py-2"
+      className="relative overflow-hidden py-2"
       style={{
-        WebkitMaskImage: "linear-gradient(to right, transparent, #000 6%, #000 94%, transparent)",
-        maskImage: "linear-gradient(to right, transparent, #000 6%, #000 94%, transparent)",
+        WebkitMaskImage: "linear-gradient(to right, transparent, #000 8%, #000 92%, transparent)",
+        maskImage: "linear-gradient(to right, transparent, #000 8%, #000 92%, transparent)",
       }}
     >
-      {PERSONAS.map((p) => (
-        <Chip key={p.label} {...p} active={active === p.label} onSelect={() => handle(p.label)} />
-      ))}
+      <div
+        ref={trackRef}
+        className={`flex w-max gap-3 ${animate ? "transition-transform duration-500 ease-out" : ""}`}
+        style={{ transform: `translateX(${tx}px)` }}
+      >
+        {items.map((p, i) => (
+          <Chip key={i} {...p} active={i % N === activeIndex} onSelect={() => handle(p.label)} />
+        ))}
+      </div>
     </div>
   );
 }

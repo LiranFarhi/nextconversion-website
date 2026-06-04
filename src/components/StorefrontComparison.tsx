@@ -31,7 +31,7 @@ const CURATED: Card = {
  *  (the page continues below the card), matching the Figma. */
 function BrowserScreen({ src, alt }: { src: string; alt: string }) {
   return (
-    <div className="relative aspect-[1024/860] w-full overflow-hidden rounded-xl bg-white sm:rounded-2xl">
+    <div className="relative aspect-[1024/860] w-full overflow-hidden rounded-t-lg bg-white">
       <Image src={src} alt={alt} fill sizes="(max-width: 768px) 40vw, 480px" className="object-cover object-top" />
     </div>
   );
@@ -76,8 +76,18 @@ function StoreCard({
   return (
     <div
       className={`card relative flex h-full flex-col overflow-hidden p-3 text-center sm:p-6 ${
-        card.highlight ? "border-primary/40 shadow-[0_0_60px_-24px_rgba(131,79,251,0.6)]" : ""
+        card.highlight ? "shadow-[0_0_60px_-18px_rgba(131,79,251,0.75)]" : ""
       }`}
+      style={
+        card.highlight
+          ? {
+              // Bright gradient outline (matching the connector line above)
+              border: "1.5px solid transparent",
+              background:
+                "linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)) padding-box, linear-gradient(155deg, #7b5cff 0%, #b15cff 50%, #e151ff 100%) border-box",
+            }
+          : undefined
+      }
     >
       {card.highlight && (
         <div
@@ -85,9 +95,8 @@ function StoreCard({
           className="pointer-events-none absolute -bottom-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-primary-2/30 blur-[90px]"
         />
       )}
-      {/* Fixed-height header, bottom-aligned, so the picture sits a consistent
-          ~16px below the text and the frame never shifts between the two cards */}
-      <div className="relative flex h-[56px] flex-col items-center justify-end overflow-hidden sm:h-[78px]">
+      {/* Fixed-height header — centered so single-line titles don't float low */}
+      <div className="relative flex h-[56px] flex-col items-center justify-center overflow-hidden sm:h-[78px]">
         <p className="font-display text-sm font-medium leading-tight text-white sm:text-2xl">{card.label}</p>
         <p className="mt-1.5 font-inter text-xs leading-snug text-soft sm:text-base">{sub}</p>
       </div>

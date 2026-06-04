@@ -13,7 +13,7 @@ export default function Footer() {
     <footer className="relative z-10 border-t border-border">
       <div className="mx-auto max-w-[1200px] px-5 py-10 sm:px-8">
         {/* Top row: logo + socials */}
-        <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
+        <div className="flex flex-row items-center justify-between gap-6">
           <a href="#top" aria-label="NextConversion home">
             <Logo />
           </a>

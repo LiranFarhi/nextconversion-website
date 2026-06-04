@@ -26,7 +26,7 @@ const PILLARS = [
 
 export default function SafetySection(): ReactElement {
   return (
-    <section id="safety" className="mx-auto max-w-[1200px] px-5 py-20 sm:px-8 sm:py-28">
+    <section id="safety" className="mx-auto max-w-[1200px] px-5 py-12 sm:px-8 sm:py-28">
       <SectionHeading
         title={
           <>
@@ -38,7 +38,7 @@ export default function SafetySection(): ReactElement {
         subtitle="Your brand guidelines are paramount. Our agents operate strictly within your established boundaries, always."
       />
 
-      <div className="mt-14 grid gap-6 lg:grid-cols-3">
+      <div className="mt-8 grid gap-6 sm:mt-14 lg:grid-cols-3">
         {PILLARS.map((p, i) => (
           <TiltCard key={p.title} delay={i * 120} className="card flex flex-col p-7">
             <div className="relative mx-auto aspect-[385/269] w-full max-w-[360px]">

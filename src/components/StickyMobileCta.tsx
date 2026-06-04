@@ -8,10 +8,27 @@ export default function StickyMobileCta() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setShow(window.scrollY > window.innerHeight * 0.7);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    // Hide the bar over the final CTA section + footer (it repeats the CTA there).
+    const cta = document.querySelector("#book-demo");
+    const footer = document.querySelector("footer");
+    const update = () => {
+      const pastHero = window.scrollY > window.innerHeight * 0.7;
+      const vh = window.innerHeight;
+      const inEndZone = [cta, footer].some((el) => {
+        if (!el) return false;
+        const r = el.getBoundingClientRect();
+        // true once the element has scrolled up into the lower part of the viewport
+        return r.top < vh * 0.85;
+      });
+      setShow(pastHero && !inEndZone);
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
   }, []);
 
   return (

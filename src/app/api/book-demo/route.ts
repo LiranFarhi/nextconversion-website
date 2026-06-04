@@ -16,20 +16,6 @@ function airtableConfig() {
   return { token, baseId, table };
 }
 
-// Temporary diagnostic: GET /api/book-demo shows whether the server sees the
-// config (no secrets — token value is never returned).
-export async function GET() {
-  const { token, baseId, table } = airtableConfig();
-  return NextResponse.json({
-    configured: Boolean(token && baseId),
-    baseId,
-    tableName: table,
-    tokenPresent: Boolean(token),
-    tokenLength: token.length,
-    tokenPrefix: token ? token.slice(0, 4) : null,
-  });
-}
-
 type Body = {
   name?: string;
   email?: string;
@@ -103,12 +89,7 @@ export async function POST(req: Request) {
       const detail = await res.text();
       console.error("[book-demo] Airtable error", res.status, detail);
       return NextResponse.json(
-        {
-          ok: false,
-          error: "Something went wrong saving your request. Please try again.",
-          // temporary diagnostic (no secrets) — removed once setup is confirmed
-          _debug: { status: res.status, detail: detail.slice(0, 300), baseId, table },
-        },
+        { ok: false, error: "Something went wrong saving your request. Please try again." },
         { status: 502 }
       );
     }

@@ -9,7 +9,7 @@ import CtaSection from "../components/CtaSection";
 import Footer from "../components/Footer";
 import ScrollProgress from "../components/ScrollProgress";
 import AmbientOrbs from "../components/AmbientOrbs";
-import DemoModal from "../components/DemoModal";
+import DemoModalLazy from "../components/DemoModalLazy";
 import StickyMobileCta from "../components/StickyMobileCta";
 
 export default function Home() {
@@ -28,7 +28,7 @@ export default function Home() {
         <CtaSection />
       </main>
       <Footer />
-      <DemoModal />
+      <DemoModalLazy />
       <StickyMobileCta />
     </>
   );

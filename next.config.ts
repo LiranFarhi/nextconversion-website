@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Tighter tree-shaking for icon/animation barrels (no behaviour change)
+  experimental: {
+    optimizePackageImports: ["lucide-react", "framer-motion"],
+  },
   images: {
     // Prefer AVIF (smallest), fall back to WebP — served at the exact
     // displayed size, ~30-50% smaller than the source PNG/JPG.

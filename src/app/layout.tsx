@@ -5,14 +5,16 @@ import "./globals.css";
 const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-dm-sans",
-  weight: ["300", "400", "500", "600", "700", "800"],
+  // Only the weights actually used on screen (headings: 300/400/500/600)
+  weight: ["300", "400", "500", "600"],
   display: "swap",
 });
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
-  weight: ["400", "500", "600", "700"],
+  // Only the weights actually used on screen (body: 400/500/600)
+  weight: ["400", "500", "600"],
   display: "swap",
 });
 

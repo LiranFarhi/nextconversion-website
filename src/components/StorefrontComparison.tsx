@@ -1,12 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Reveal from "./Reveal";
 import PersonaStrip, { PERSONAS } from "./PersonaStrip";
 import { STOREFRONTS, type StorefrontId } from "./storefronts";
 import { useAutoAdvance } from "./useAutoAdvance";
+
+const STOREFRONT_IDS = Object.keys(STOREFRONTS) as StorefrontId[];
 
 type Card = {
   label: string;
@@ -29,10 +31,17 @@ const CURATED: Card = {
 
 /** A desktop storefront variation, shown frameless and cut off at the bottom
  *  (the page continues below the card), matching the Figma. */
-function BrowserScreen({ src, alt }: { src: string; alt: string }) {
+function BrowserScreen({ src, alt, eager }: { src: string; alt: string; eager?: boolean }) {
   return (
     <div className="relative aspect-[1024/860] w-full overflow-hidden rounded-t-lg bg-white">
-      <Image src={src} alt={alt} fill sizes="(max-width: 768px) 40vw, 480px" className="object-cover object-top" />
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes="(max-width: 768px) 40vw, 480px"
+        loading={eager ? "eager" : undefined}
+        className="object-cover object-top"
+      />
     </div>
   );
 }
@@ -42,24 +51,34 @@ function LegacyShowcase() {
   return <BrowserScreen src={LEGACY.src} alt={LEGACY.alt} />;
 }
 
-/** The real Figma storefront variation the agents built for the active visitor,
- *  cross-fading as the visitor changes. */
-function CuratedShowcase({ id }: { id: StorefrontId }) {
-  const reduce = useReducedMotion();
+/**
+ * The real Figma storefront variation for the active visitor. All variations
+ * are stacked and cross-fade by opacity. Before the page is idle only the
+ * active one is mounted (so it doesn't compete with first paint); once idle
+ * (`preload`) the rest are mounted and eagerly fetched, so cycling left/right
+ * is instant with no flash.
+ */
+function CuratedShowcase({ id, preload }: { id: StorefrontId; preload: boolean }) {
   return (
     <div className="relative aspect-[1024/860] w-full">
-      <AnimatePresence initial={false}>
-        <motion.div
-          key={id}
-          className="absolute inset-0"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: reduce ? 0 : 0.5, ease: "easeOut" }}
-        >
-          <BrowserScreen src={STOREFRONTS[id].src} alt={STOREFRONTS[id].alt} />
-        </motion.div>
-      </AnimatePresence>
+      {STOREFRONT_IDS.map((sid) => {
+        const isActive = sid === id;
+        if (!preload && !isActive) return null;
+        return (
+          <div
+            key={sid}
+            aria-hidden={!isActive}
+            className="absolute inset-0 transition-opacity duration-500 ease-out"
+            style={{ opacity: isActive ? 1 : 0 }}
+          >
+            <BrowserScreen
+              src={STOREFRONTS[sid].src}
+              alt={isActive ? STOREFRONTS[sid].alt : ""}
+              eager={preload && !isActive}
+            />
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -137,6 +156,30 @@ export default function StorefrontComparison() {
     pPause();
   };
 
+  // Warm every storefront variation, but only AFTER the initial page load and
+  // once the browser is idle — so cycling left/right is instant without
+  // competing with first paint.
+  const [preload, setPreload] = useState(false);
+  useEffect(() => {
+    const w = window as typeof window & {
+      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+    let idleId = 0;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const warm = () => {
+      if (w.requestIdleCallback) idleId = w.requestIdleCallback(() => setPreload(true), { timeout: 2500 });
+      else timer = setTimeout(() => setPreload(true), 200);
+    };
+    if (document.readyState === "complete") warm();
+    else window.addEventListener("load", warm, { once: true });
+    return () => {
+      window.removeEventListener("load", warm);
+      if (idleId) w.cancelIdleCallback?.(idleId);
+      if (timer) clearTimeout(timer);
+    };
+  }, []);
+
   const legacySub = "One page for everyone";
   const curatedSub = "Personalized per visitor";
 
@@ -173,7 +216,7 @@ export default function StorefrontComparison() {
         </div>
         <div ref={personaRef} className="grid min-w-0 flex-1 grid-cols-2 gap-2.5 sm:gap-6">
           <StoreCard card={LEGACY} sub={legacySub} media={<LegacyShowcase />} />
-          <StoreCard card={CURATED} sub={curatedSub} media={<CuratedShowcase id={active.storefront} />} />
+          <StoreCard card={CURATED} sub={curatedSub} media={<CuratedShowcase id={active.storefront} preload={preload} />} />
         </div>
         <div className="hidden sm:block">
           <NavButton dir="next" onClick={() => step(1)} />

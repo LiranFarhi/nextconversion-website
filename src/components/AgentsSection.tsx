@@ -241,12 +241,12 @@ export default function AgentsSection(): ReactElement {
             {/* Full-image layer — overlays are positioned in the image's own
                 coordinates, so the name pills stay locked to each agent even
                 when the sides are clipped on desktop. */}
-            <div className="relative w-full md:h-full md:w-auto md:shrink-0 md:aspect-[1327/534]">
+            <div className="relative w-full md:h-full md:w-auto md:shrink-0 md:aspect-[1327/624]">
               <Image
                 src="/figma/agents-table-crop.jpg"
                 alt="Emilia, Donna, Danny and John — the AI agent workforce at a table"
                 width={1327}
-                height={534}
+                height={624}
                 className="h-auto w-full md:h-full md:w-auto"
                 sizes="(max-width: 1024px) 92vw, 560px"
               />

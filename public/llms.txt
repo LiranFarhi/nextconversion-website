@@ -1,0 +1,43 @@
+# NextConversion
+
+> NextConversion is an agent-first engine that turns static e-commerce websites
+> into endless, self-adaptive storefronts — personalized per visitor and
+> optimized 24/7 by an autonomous AI agent workforce.
+
+NextConversion converts targeted ad traffic far more effectively by replacing
+generic, static storefronts with real-time, per-visitor experiences. Instead of
+sending every shopper to the same page, an autonomous workforce of AI agents
+adapts the design, merchandising, product content, and offers continuously to
+lift conversion rate.
+
+## What it does
+
+- Real-time, per-visitor storefront personalization
+- Dynamic UX layouts and adaptive merchandising
+- AI-generated product descriptions, images, and videos
+- Intelligent product bundling and cart optimization to grow average order value
+- Continuous A/B testing and performance monitoring
+
+## The AI agent workforce
+
+- Emilia (The Tailor) — adjusts site design, UX, and merchandising in live sessions
+- Donna (The Shopping Assistant) — bundles products in chat to maximize average order value
+- Danny (The Analyst) — processes intent signals and social trends
+- John (The Optimizer) — generates product content and A/B-tested copy
+- Plus 10+ additional agents ready to scale
+
+## Who it's for
+
+E-commerce businesses that drive paid traffic and want to raise conversion rate
+without adding headcount.
+
+## Key pages
+
+- Home: https://nextconversion.ai
+- Privacy Policy: https://nextconversion.ai/privacy
+- Terms & Conditions: https://nextconversion.ai/terms
+- Book a demo: https://nextconversion.ai/#book-demo
+
+## Contact
+
+- LinkedIn: https://www.linkedin.com/company/nextconversion

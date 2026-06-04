@@ -79,6 +79,15 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
+  // Search-engine ownership verification. Tokens come from env vars so they're
+  // only emitted once you've added them in Search Console / Bing — no bogus
+  // tags ship by default.
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    other: process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION
+      ? { "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION }
+      : {},
+  },
 };
 
 export default function RootLayout({

@@ -318,7 +318,7 @@ export default function LiveDemoSection(): ReactElement {
           phases. The active card is held at the vertical centre of the demo. */}
       <div ref={trackRef} className="relative h-[340vh] lg:h-[480vh]">
         <div className="sticky top-0 flex h-screen flex-col overflow-hidden">
-          <div className="shrink-0 pt-20 sm:pt-24">
+          <div className="shrink-0 pt-12 sm:pt-24">
             <SectionHeading
               title="Watch a Storefront Evolve in Real-Time"
               subtitle="Meet your agent workforce that deliver autonomously behind the scenes."

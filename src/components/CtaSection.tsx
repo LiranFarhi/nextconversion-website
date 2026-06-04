@@ -10,7 +10,7 @@ export default function CtaSection() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(120% 80% at 50% 124%, #8b5cf6 0%, #6a33df 22%, #3a1a7a 44%, rgba(8,5,26,0) 68%)",
+            "radial-gradient(125% 88% at 50% 121%, #9b6bff 0%, #7a40ee 18%, #5026b8 34%, #2a1568 50%, rgba(8,5,26,0) 70%)",
         }}
       />
       <Reveal className="relative mx-auto max-w-[900px] text-center">

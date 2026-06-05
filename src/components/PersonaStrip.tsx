@@ -1,6 +1,14 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 import Image from "next/image";
 
 import type { StorefrontId } from "./storefronts";
@@ -20,17 +28,19 @@ export const PERSONAS: Persona[] = [
   { tag: "28 • F", label: "Budget-Friendly", img: 8, storefront: "store8" },
 ];
 
-function Chip({
+// Memoised so dragging (which re-renders the strip every frame to move the
+// track) doesn't re-render all the chips — only the active/previous chip change.
+const Chip = memo(function Chip({
   tag,
   label,
   img,
   active,
   onSelect,
-}: Persona & { active: boolean; onSelect: () => void }) {
+}: Persona & { active: boolean; onSelect: (label: string) => void }) {
   return (
     <button
       type="button"
-      onClick={onSelect}
+      onClick={() => onSelect(label)}
       aria-pressed={active}
       data-active={active || undefined}
       className={`flex h-[60px] shrink-0 items-center gap-2 rounded-full py-2 pl-2 pr-5 transition-all duration-300 ${
@@ -45,6 +55,7 @@ function Chip({
         width={128}
         height={128}
         loading="lazy"
+        draggable={false}
         className={`h-10 w-10 shrink-0 rounded-full object-cover object-[50%_22%] ring-1 ${
           active ? "ring-primary" : "ring-white/10"
         }`}
@@ -55,7 +66,7 @@ function Chip({
       </span>
     </button>
   );
-}
+});
 
 type Props = {
   /** controlled active persona label; falls back to internal state when omitted */
@@ -68,6 +79,7 @@ type Props = {
 const N = PERSONAS.length;
 const COPIES = 5; // odd, so there is a centre band with buffer copies on both sides
 const CENTER_BAND = Math.floor(COPIES / 2) * N; // flat index where the centre copy starts
+const DRAG_THRESHOLD = 6; // px before a press becomes a drag (vs a tap)
 
 export default function PersonaStrip({ activeLabel, onSelect, onInteract }: Props) {
   const [internal, setInternal] = useState("Luxury coats");
@@ -86,6 +98,11 @@ export default function PersonaStrip({ activeLabel, onSelect, onInteract }: Prop
   const [animate, setAnimate] = useState(true);
   const [tx, setTx] = useState(0);
   const prevIndex = useRef(activeIndex);
+  // Mirror of `tx` for event handlers (avoids stale closures).
+  const txRef = useRef(0);
+  useEffect(() => {
+    txRef.current = tx;
+  }, [tx]);
 
   // Cloned list: COPIES × the personas.
   const items = Array.from({ length: COPIES * N }, (_, i) => PERSONAS[i % N]);
@@ -138,13 +155,101 @@ export default function PersonaStrip({ activeLabel, onSelect, onInteract }: Prop
     return () => window.removeEventListener("resize", onResize);
   }, [pos]);
 
+  // ── Drag-to-scroll (touch + mouse) ─────────────────────────────────────────
+  const drag = useRef({ active: false, startX: 0, startTx: 0, moved: false, pid: -1 });
+  const suppressClick = useRef(false);
+
+  /** transform that centres the chip at flat index `flat` under the viewport. */
+  const centerForFlat = (flat: number) => {
+    const vp = viewportRef.current;
+    const track = trackRef.current;
+    if (!vp || !track) return txRef.current;
+    const chip = track.children[flat] as HTMLElement | undefined;
+    if (!chip) return txRef.current;
+    return vp.clientWidth / 2 - (chip.offsetLeft + chip.offsetWidth / 2);
+  };
+
+  /** flat index whose centre is nearest the viewport centre for a given tx. */
+  const nearestFlat = (txVal: number) => {
+    const vp = viewportRef.current;
+    const track = trackRef.current;
+    if (!vp || !track) return pos;
+    const target = vp.clientWidth / 2 - txVal;
+    let best = pos;
+    let bestD = Infinity;
+    for (let i = 0; i < track.children.length; i++) {
+      const c = track.children[i] as HTMLElement;
+      const mid = c.offsetLeft + c.offsetWidth / 2;
+      const d = Math.abs(mid - target);
+      if (d < bestD) {
+        bestD = d;
+        best = i;
+      }
+    }
+    return best;
+  };
+
+  const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
+    onInteract?.();
+    if (e.button > 0) return; // ignore right/middle mouse buttons
+    drag.current = { active: true, startX: e.clientX, startTx: txRef.current, moved: false, pid: e.pointerId };
+  };
+
+  const onPointerMove = (e: ReactPointerEvent<HTMLDivElement>) => {
+    const d = drag.current;
+    if (!d.active) return;
+    const dx = e.clientX - d.startX;
+    if (!d.moved && Math.abs(dx) > DRAG_THRESHOLD) {
+      d.moved = true;
+      setAnimate(false); // follow the finger 1:1 (no transition)
+      viewportRef.current?.setPointerCapture?.(d.pid);
+    }
+    if (d.moved) setTx(d.startTx + dx);
+  };
+
+  const onPointerEnd = (e: ReactPointerEvent<HTMLDivElement>) => {
+    const d = drag.current;
+    if (!d.active) return;
+    drag.current = { ...d, active: false };
+    viewportRef.current?.releasePointerCapture?.(d.pid);
+    if (!d.moved) return; // a tap → let the chip's onClick select it
+    // Swallow the click that the browser fires after a drag-release.
+    suppressClick.current = true;
+    setTimeout(() => (suppressClick.current = false), 0);
+
+    const finalTx = d.startTx + (e.clientX - d.startX);
+    const np = nearestFlat(finalTx);
+    const idx = ((np % N) + N) % N;
+    prevIndex.current = idx; // so the active-change effect doesn't double-move pos
+    setAnimate(true);
+    setTx(centerForFlat(np));
+    setPos(np);
+    handle(PERSONAS[idx].label);
+  };
+
+  const selectChip = useCallback(
+    (label: string) => {
+      if (suppressClick.current) {
+        suppressClick.current = false;
+        return;
+      }
+      handle(label);
+    },
+    // handle is stable enough for our purposes (depends only on onSelect identity)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [onSelect]
+  );
+
   return (
     <div
       ref={viewportRef}
-      onPointerDown={onInteract}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerEnd}
+      onPointerCancel={onPointerEnd}
       role="tablist"
       aria-label="Choose a visitor"
-      className="relative overflow-hidden py-2"
+      className="relative cursor-grab touch-pan-y select-none overflow-hidden py-2 active:cursor-grabbing"
       style={{
         WebkitMaskImage: "linear-gradient(to right, transparent, #000 8%, #000 92%, transparent)",
         maskImage: "linear-gradient(to right, transparent, #000 8%, #000 92%, transparent)",
@@ -156,7 +261,7 @@ export default function PersonaStrip({ activeLabel, onSelect, onInteract }: Prop
         style={{ transform: `translateX(${tx}px)` }}
       >
         {items.map((p, i) => (
-          <Chip key={i} {...p} active={i % N === activeIndex} onSelect={() => handle(p.label)} />
+          <Chip key={i} {...p} active={i % N === activeIndex} onSelect={selectChip} />
         ))}
       </div>
     </div>

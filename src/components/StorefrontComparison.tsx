@@ -18,12 +18,12 @@ type Card = {
 };
 
 const LEGACY: Card = {
-  label: "Legacy website",
+  label: "Without NextConversion",
   src: "/figma/legacy-store.jpg",
   alt: "A single generic storefront shown to every visitor",
 };
 const CURATED: Card = {
-  label: "Endless curated storefronts",
+  label: "With NextConversion",
   src: "/storefronts/store-1.jpg",
   alt: "A curated storefront, personalized to the active visitor",
   highlight: true,
@@ -83,12 +83,37 @@ function CuratedShowcase({ id, preload }: { id: StorefrontId; preload: boolean }
   );
 }
 
+/** Label for the static "before" store. */
+function OriginalLabel() {
+  return (
+    <span className="font-display text-[15px] font-bold leading-none text-white sm:text-lg">
+      Your website today
+    </span>
+  );
+}
+
+/** NextConversion brand lockup — rendered in white so the mark stays legible
+    on the purple curated card; responsive so it fits the narrow mobile card. */
+function NextConversionLogo() {
+  return (
+    <span className="inline-flex items-center gap-2 font-display font-semibold leading-none tracking-[-0.02em] text-white">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden className="shrink-0 sm:h-[22px] sm:w-[22px]">
+        <rect y="13.7143" width="10.2857" height="10.2857" fill="white" />
+        <path d="M24 24H23.9971L16 16.0947V8.28613H8.10059L0 0.27832V0H24V24Z" fill="white" />
+      </svg>
+      <span className="text-sm sm:text-lg">NextConversion</span>
+    </span>
+  );
+}
+
 function StoreCard({
   card,
+  header,
   sub,
   media,
 }: {
   card: Card;
+  header: React.ReactNode;
   sub: React.ReactNode;
   media?: React.ReactNode;
 }) {
@@ -114,10 +139,10 @@ function StoreCard({
           className="pointer-events-none absolute -bottom-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-primary-2/30 blur-[90px]"
         />
       )}
-      {/* Fixed-height header — centered so single-line titles don't float low */}
-      <div className="relative flex h-[56px] flex-col items-center justify-center overflow-hidden sm:h-[78px]">
-        <p className="font-display text-sm font-medium leading-tight text-white sm:text-2xl">{card.label}</p>
-        <p className="mt-1.5 font-inter text-xs leading-snug text-soft sm:text-base">{sub}</p>
+      {/* Fixed-height header — centered so the logos + sub align across cards */}
+      <div className="relative flex h-[68px] flex-col items-center justify-center overflow-hidden sm:h-[72px]">
+        {header}
+        <p className="mt-1.5 font-inter text-[11px] leading-snug text-soft sm:text-sm">{sub}</p>
       </div>
       <div className="relative mt-auto pt-4">{media}</div>
     </div>
@@ -159,8 +184,8 @@ export default function StorefrontComparison() {
     };
   }, []);
 
-  const legacySub = "One page for everyone";
-  const curatedSub = "Personalized per visitor";
+  const legacySub = "One generic page for every visitor";
+  const curatedSub = "Endless storefronts, curated per visitor";
 
   return (
     <section id="why" className="relative mx-auto max-w-[1200px] px-5 py-12 sm:px-8 sm:py-16">
@@ -194,8 +219,13 @@ export default function StorefrontComparison() {
           <CarouselArrow dir="prev" onClick={() => step(-1)} label="Previous storefront" />
         </div>
         <div ref={personaRef} className="grid min-w-0 flex-1 grid-cols-2 gap-2.5 sm:gap-6">
-          <StoreCard card={LEGACY} sub={legacySub} media={<LegacyShowcase />} />
-          <StoreCard card={CURATED} sub={curatedSub} media={<CuratedShowcase id={active.storefront} preload={preload} />} />
+          <StoreCard card={LEGACY} header={<OriginalLabel />} sub={legacySub} media={<LegacyShowcase />} />
+          <StoreCard
+            card={CURATED}
+            header={<NextConversionLogo />}
+            sub={curatedSub}
+            media={<CuratedShowcase id={active.storefront} preload={preload} />}
+          />
         </div>
         <div className="hidden sm:block">
           <CarouselArrow dir="next" onClick={() => step(1)} label="Next storefront" />

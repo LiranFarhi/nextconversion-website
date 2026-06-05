@@ -86,7 +86,7 @@ function CuratedShowcase({ id, preload }: { id: StorefrontId; preload: boolean }
 /** Label for the static "before" store. */
 function OriginalLabel() {
   return (
-    <span className="font-display text-sm font-semibold leading-none text-white/80 sm:text-lg">
+    <span className="font-display text-[15px] font-bold leading-none text-white sm:text-lg">
       Your website today
     </span>
   );
@@ -142,7 +142,7 @@ function StoreCard({
       {/* Fixed-height header — centered so the logos + sub align across cards */}
       <div className="relative flex h-[68px] flex-col items-center justify-center overflow-hidden sm:h-[72px]">
         {header}
-        <p className="mt-2 font-inter text-xs leading-snug text-soft sm:text-base">{sub}</p>
+        <p className="mt-1.5 font-inter text-[11px] leading-snug text-soft sm:text-sm">{sub}</p>
       </div>
       <div className="relative mt-auto pt-4">{media}</div>
     </div>

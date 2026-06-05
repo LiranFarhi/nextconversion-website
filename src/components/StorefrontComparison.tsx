@@ -18,12 +18,12 @@ type Card = {
 };
 
 const LEGACY: Card = {
-  label: "Legacy website",
+  label: "Without NextConversion",
   src: "/figma/legacy-store.jpg",
   alt: "A single generic storefront shown to every visitor",
 };
 const CURATED: Card = {
-  label: "Endless curated storefronts",
+  label: "With NextConversion",
   src: "/storefronts/store-1.jpg",
   alt: "A curated storefront, personalized to the active visitor",
   highlight: true,
@@ -61,6 +61,21 @@ function LegacyShowcase() {
 function CuratedShowcase({ id, preload }: { id: StorefrontId; preload: boolean }) {
   return (
     <div className="relative aspect-[1024/860] w-full">
+      {/* Brand attribution: signals NextConversion is rendering this storefront
+          live, so it reads as "our solution" rather than just another store. */}
+      <div className="pointer-events-none absolute left-2 top-2 z-10 flex items-center gap-1.5 rounded-full border border-white/15 bg-background/80 px-2 py-1 shadow-[0_4px_14px_-4px_rgba(0,0,0,0.6)] backdrop-blur-md sm:left-3 sm:top-3 sm:px-2.5">
+        <span className="relative flex h-1.5 w-1.5 shrink-0">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#0fdd98] opacity-75" />
+          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#0fdd98]" />
+        </span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden className="shrink-0 sm:h-[13px] sm:w-[13px]">
+          <rect y="13.7143" width="10.2857" height="10.2857" fill="#834FFB" />
+          <path d="M24 24H23.9971L16 16.0947V8.28613H8.10059L0 0.27832V0H24V24Z" fill="#834FFB" />
+        </svg>
+        <span className="font-display text-[10px] font-semibold leading-none tracking-[-0.01em] text-white sm:text-[11px]">
+          NextConversion
+        </span>
+      </div>
       {STOREFRONT_IDS.map((sid) => {
         const isActive = sid === id;
         if (!preload && !isActive) return null;
@@ -115,7 +130,7 @@ function StoreCard({
         />
       )}
       {/* Fixed-height header — centered so single-line titles don't float low */}
-      <div className="relative flex h-[56px] flex-col items-center justify-center overflow-hidden sm:h-[78px]">
+      <div className="relative flex h-[80px] flex-col items-center justify-center overflow-hidden sm:h-[78px]">
         <p className="font-display text-sm font-medium leading-tight text-white sm:text-2xl">{card.label}</p>
         <p className="mt-1.5 font-inter text-xs leading-snug text-soft sm:text-base">{sub}</p>
       </div>
@@ -159,8 +174,8 @@ export default function StorefrontComparison() {
     };
   }, []);
 
-  const legacySub = "One page for everyone";
-  const curatedSub = "Personalized per visitor";
+  const legacySub = "One generic page for every visitor";
+  const curatedSub = "Endless storefronts, curated per visitor";
 
   return (
     <section id="why" className="relative mx-auto max-w-[1200px] px-5 py-12 sm:px-8 sm:py-16">

@@ -26,7 +26,7 @@ const PILLARS = [
 
 export default function SafetySection(): ReactElement {
   return (
-    <section id="safety" className="mx-auto max-w-[1200px] px-5 py-12 sm:px-8 sm:py-28">
+    <section id="safety" className="mx-auto max-w-[1200px] px-5 pb-12 pt-4 sm:px-8 sm:pb-28 sm:pt-12">
       <SectionHeading
         title={
           <>

@@ -61,21 +61,6 @@ function LegacyShowcase() {
 function CuratedShowcase({ id, preload }: { id: StorefrontId; preload: boolean }) {
   return (
     <div className="relative aspect-[1024/860] w-full">
-      {/* Brand attribution: signals NextConversion is rendering this storefront
-          live, so it reads as "our solution" rather than just another store. */}
-      <div className="pointer-events-none absolute left-2 top-2 z-10 flex items-center gap-1.5 rounded-full border border-white/15 bg-background/80 px-2 py-1 shadow-[0_4px_14px_-4px_rgba(0,0,0,0.6)] backdrop-blur-md sm:left-3 sm:top-3 sm:px-2.5">
-        <span className="relative flex h-1.5 w-1.5 shrink-0">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#0fdd98] opacity-75" />
-          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#0fdd98]" />
-        </span>
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden className="shrink-0 sm:h-[13px] sm:w-[13px]">
-          <rect y="13.7143" width="10.2857" height="10.2857" fill="#834FFB" />
-          <path d="M24 24H23.9971L16 16.0947V8.28613H8.10059L0 0.27832V0H24V24Z" fill="#834FFB" />
-        </svg>
-        <span className="font-display text-[10px] font-semibold leading-none tracking-[-0.01em] text-white sm:text-[11px]">
-          NextConversion
-        </span>
-      </div>
       {STOREFRONT_IDS.map((sid) => {
         const isActive = sid === id;
         if (!preload && !isActive) return null;
@@ -98,12 +83,36 @@ function CuratedShowcase({ id, preload }: { id: StorefrontId; preload: boolean }
   );
 }
 
+/** The original site's wordmark — the static "before" store (Northline). */
+function OriginalLogo() {
+  return (
+    <span className="font-display text-sm font-bold uppercase leading-none tracking-[0.18em] text-white/85 sm:text-xl">
+      Northline
+    </span>
+  );
+}
+
+/** NextConversion brand lockup — responsive so it fits the narrow mobile card. */
+function NextConversionLogo() {
+  return (
+    <span className="inline-flex items-center gap-1.5 font-display font-semibold leading-none tracking-[-0.02em] text-white">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden className="shrink-0 sm:h-5 sm:w-5">
+        <rect y="13.7143" width="10.2857" height="10.2857" fill="#834FFB" />
+        <path d="M24 24H23.9971L16 16.0947V8.28613H8.10059L0 0.27832V0H24V24Z" fill="#834FFB" />
+      </svg>
+      <span className="text-sm sm:text-lg">NextConversion</span>
+    </span>
+  );
+}
+
 function StoreCard({
   card,
+  header,
   sub,
   media,
 }: {
   card: Card;
+  header: React.ReactNode;
   sub: React.ReactNode;
   media?: React.ReactNode;
 }) {
@@ -129,10 +138,10 @@ function StoreCard({
           className="pointer-events-none absolute -bottom-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-primary-2/30 blur-[90px]"
         />
       )}
-      {/* Fixed-height header — centered so single-line titles don't float low */}
-      <div className="relative flex h-[80px] flex-col items-center justify-center overflow-hidden sm:h-[78px]">
-        <p className="font-display text-sm font-medium leading-tight text-white sm:text-2xl">{card.label}</p>
-        <p className="mt-1.5 font-inter text-xs leading-snug text-soft sm:text-base">{sub}</p>
+      {/* Fixed-height header — centered so the logos + sub align across cards */}
+      <div className="relative flex h-[68px] flex-col items-center justify-center overflow-hidden sm:h-[72px]">
+        {header}
+        <p className="mt-2 font-inter text-xs leading-snug text-soft sm:text-base">{sub}</p>
       </div>
       <div className="relative mt-auto pt-4">{media}</div>
     </div>
@@ -209,8 +218,13 @@ export default function StorefrontComparison() {
           <CarouselArrow dir="prev" onClick={() => step(-1)} label="Previous storefront" />
         </div>
         <div ref={personaRef} className="grid min-w-0 flex-1 grid-cols-2 gap-2.5 sm:gap-6">
-          <StoreCard card={LEGACY} sub={legacySub} media={<LegacyShowcase />} />
-          <StoreCard card={CURATED} sub={curatedSub} media={<CuratedShowcase id={active.storefront} preload={preload} />} />
+          <StoreCard card={LEGACY} header={<OriginalLogo />} sub={legacySub} media={<LegacyShowcase />} />
+          <StoreCard
+            card={CURATED}
+            header={<NextConversionLogo />}
+            sub={curatedSub}
+            media={<CuratedShowcase id={active.storefront} preload={preload} />}
+          />
         </div>
         <div className="hidden sm:block">
           <CarouselArrow dir="next" onClick={() => step(1)} label="Next storefront" />

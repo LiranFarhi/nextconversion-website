@@ -83,22 +83,23 @@ function CuratedShowcase({ id, preload }: { id: StorefrontId; preload: boolean }
   );
 }
 
-/** The original site's wordmark — the static "before" store (Northline). */
-function OriginalLogo() {
+/** Label for the static "before" store. */
+function OriginalLabel() {
   return (
-    <span className="font-display text-sm font-bold uppercase leading-none tracking-[0.18em] text-white/85 sm:text-xl">
-      Northline
+    <span className="font-display text-sm font-semibold leading-none text-white/80 sm:text-lg">
+      Your website today
     </span>
   );
 }
 
-/** NextConversion brand lockup — responsive so it fits the narrow mobile card. */
+/** NextConversion brand lockup — rendered in white so the mark stays legible
+    on the purple curated card; responsive so it fits the narrow mobile card. */
 function NextConversionLogo() {
   return (
-    <span className="inline-flex items-center gap-1.5 font-display font-semibold leading-none tracking-[-0.02em] text-white">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden className="shrink-0 sm:h-5 sm:w-5">
-        <rect y="13.7143" width="10.2857" height="10.2857" fill="#834FFB" />
-        <path d="M24 24H23.9971L16 16.0947V8.28613H8.10059L0 0.27832V0H24V24Z" fill="#834FFB" />
+    <span className="inline-flex items-center gap-2 font-display font-semibold leading-none tracking-[-0.02em] text-white">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden className="shrink-0 sm:h-[22px] sm:w-[22px]">
+        <rect y="13.7143" width="10.2857" height="10.2857" fill="white" />
+        <path d="M24 24H23.9971L16 16.0947V8.28613H8.10059L0 0.27832V0H24V24Z" fill="white" />
       </svg>
       <span className="text-sm sm:text-lg">NextConversion</span>
     </span>
@@ -218,7 +219,7 @@ export default function StorefrontComparison() {
           <CarouselArrow dir="prev" onClick={() => step(-1)} label="Previous storefront" />
         </div>
         <div ref={personaRef} className="grid min-w-0 flex-1 grid-cols-2 gap-2.5 sm:gap-6">
-          <StoreCard card={LEGACY} header={<OriginalLogo />} sub={legacySub} media={<LegacyShowcase />} />
+          <StoreCard card={LEGACY} header={<OriginalLabel />} sub={legacySub} media={<LegacyShowcase />} />
           <StoreCard
             card={CURATED}
             header={<NextConversionLogo />}

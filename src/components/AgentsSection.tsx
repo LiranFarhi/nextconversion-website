@@ -231,23 +231,23 @@ export default function AgentsSection(): ReactElement {
         subtitle="Meet your agent workforce that deliver autonomously behind the scenes"
       />
 
-      <div className="mt-8 grid items-stretch gap-6 sm:mt-12 md:grid-cols-2">
+      <div className="mt-8 grid items-stretch gap-6 sm:mt-12 xl:grid-cols-2">
         {/* ── Left: illustration with click zones + name pills ── */}
         <div className="relative flex min-w-0 items-center justify-center">
-          {/* Clip box: natural height on mobile; fills the detail-card height on
-              desktop (md+) and clips the wide art's sides — no dark padding. */}
-          <div className="relative w-full overflow-hidden rounded-2xl md:flex md:h-full md:items-center md:justify-center">
-            {/* Full-image layer — overlays are positioned in the image's own
-                coordinates, so the name pills stay locked to each agent even
-                when the sides are clipped on desktop. */}
-            <div className="relative w-full md:h-full md:w-auto md:shrink-0 md:aspect-[1327/754]">
+          {/* Always show the full illustration fit-to-width, so every agent and
+              name pill stays visible. At xl the column width matches the art's
+              aspect ratio, so it sits flush beside the detail card. The name
+              pills are positioned in the image's own coordinates, so they stay
+              locked to each agent. */}
+          <div className="relative w-full overflow-hidden rounded-2xl">
+            <div className="relative w-full">
               <Image
                 src="/figma/agents-table-crop.jpg"
                 alt="Emilia, Donna, Danny and John — the AI agent workforce at a table"
                 width={1327}
                 height={754}
-                className="h-auto w-full md:h-full md:w-auto"
-                sizes="(max-width: 1024px) 92vw, 560px"
+                className="h-auto w-full"
+                sizes="(max-width: 1280px) 92vw, 560px"
               />
 
               {/* Purple spotlight that tracks the active agent */}

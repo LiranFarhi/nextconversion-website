@@ -156,8 +156,47 @@ export default function PersonaStrip({ activeLabel, onSelect, onInteract }: Prop
     return () => window.removeEventListener("resize", onResize);
   }, [pos]);
 
+  // Trackpad / wheel horizontal scrolling. React's onWheel is passive, so we
+  // attach manually to preventDefault. Accumulate horizontal delta and step one
+  // persona per chunk (with a short cooldown so momentum doesn't fly through).
+  useEffect(() => {
+    const vp = viewportRef.current;
+    if (!vp) return;
+    let accum = 0;
+    let cooling = false;
+    const onWheel = (e: WheelEvent) => {
+      // horizontal trackpad swipe, or shift+wheel for mouse users
+      const horiz =
+        Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.shiftKey ? e.deltaY : 0;
+      if (horiz === 0) return; // pure vertical → let the page scroll
+      e.preventDefault();
+      onInteract?.();
+      accum += horiz;
+      if (cooling || Math.abs(accum) < 40) return;
+      const dir = accum > 0 ? 1 : -1;
+      accum = 0;
+      const next = (((activeIndex + dir) % N) + N) % N;
+      const label = PERSONAS[next].label;
+      if (onSelect) onSelect(label);
+      else setInternal(label);
+      cooling = true;
+      setTimeout(() => (cooling = false), 110);
+    };
+    vp.addEventListener("wheel", onWheel, { passive: false });
+    return () => vp.removeEventListener("wheel", onWheel);
+  }, [activeIndex, onSelect, onInteract]);
+
   // ── Drag-to-scroll (touch + mouse) ─────────────────────────────────────────
-  const drag = useRef({ active: false, startX: 0, startTx: 0, moved: false, pid: -1 });
+  const drag = useRef({
+    active: false,
+    startX: 0,
+    startTx: 0,
+    moved: false,
+    pid: -1,
+    lastX: 0,
+    lastT: 0,
+    vx: 0, // velocity px/ms, for flick momentum
+  });
   const suppressClick = useRef(false);
 
   /** transform that centres the chip at flat index `flat` under the viewport. */
@@ -193,7 +232,16 @@ export default function PersonaStrip({ activeLabel, onSelect, onInteract }: Prop
   const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
     onInteract?.();
     if (e.button > 0) return; // ignore right/middle mouse buttons
-    drag.current = { active: true, startX: e.clientX, startTx: txRef.current, moved: false, pid: e.pointerId };
+    drag.current = {
+      active: true,
+      startX: e.clientX,
+      startTx: txRef.current,
+      moved: false,
+      pid: e.pointerId,
+      lastX: e.clientX,
+      lastT: performance.now(),
+      vx: 0,
+    };
   };
 
   const onPointerMove = (e: ReactPointerEvent<HTMLDivElement>) => {
@@ -210,6 +258,15 @@ export default function PersonaStrip({ activeLabel, onSelect, onInteract }: Prop
       if (trackRef.current) trackRef.current.style.transition = "none";
     }
     if (!d.moved) return;
+    // Track velocity (exponential smoothing) for flick momentum on release.
+    const now = performance.now();
+    const dt = now - d.lastT;
+    if (dt > 0) {
+      const v = (e.clientX - d.lastX) / dt;
+      d.vx = d.vx * 0.7 + v * 0.3;
+      d.lastX = e.clientX;
+      d.lastT = now;
+    }
     const ntx = d.startTx + dx;
     txRef.current = ntx;
     if (trackRef.current) {
@@ -227,8 +284,11 @@ export default function PersonaStrip({ activeLabel, onSelect, onInteract }: Prop
     suppressClick.current = true;
     setTimeout(() => (suppressClick.current = false), 0);
 
-    const finalTx = txRef.current;
-    const np = nearestFlat(finalTx);
+    // Project a little past the release point based on flick velocity, so a
+    // quick swipe travels several personas instead of snapping to the nearest.
+    const MOMENTUM = 180; // ms of projected glide
+    const projected = txRef.current + d.vx * MOMENTUM;
+    const np = nearestFlat(projected);
     const idx = ((np % N) + N) % N;
     prevIndex.current = idx; // so the active-change effect doesn't double-move pos
 
@@ -242,7 +302,7 @@ export default function PersonaStrip({ activeLabel, onSelect, onInteract }: Prop
     if (trackRef.current) trackRef.current.style.transition = "";
     flushSync(() => {
       setAnimate(true);
-      setTx(finalTx);
+      setTx(txRef.current);
     });
     setTx(centerForFlat(np));
     setPos(np);

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import CarouselArrow from "./CarouselArrow";
 import Reveal from "./Reveal";
 import PersonaStrip, { PERSONAS } from "./PersonaStrip";
 import { STOREFRONTS, type StorefrontId } from "./storefronts";
@@ -124,27 +124,6 @@ function StoreCard({
   );
 }
 
-/** Previous / next control flanking the storefronts to cycle the variation. */
-function NavButton({
-  dir,
-  onClick,
-}: {
-  dir: "prev" | "next";
-  onClick: () => void;
-}) {
-  const Icon = dir === "prev" ? ChevronLeft : ChevronRight;
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={dir === "prev" ? "Previous storefront" : "Next storefront"}
-      className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-border-strong bg-white/[0.04] text-soft transition-colors hover:border-primary/40 hover:bg-white/[0.1] hover:text-white sm:h-11 sm:w-11"
-    >
-      <Icon size={18} />
-    </button>
-  );
-}
-
 export default function StorefrontComparison() {
   // shared "active visitor" — connects the segments to the curated storefront
   const { index: pIdx, select: pSelect, pause: pPause, ref: personaRef } = useAutoAdvance(PERSONAS.length, {
@@ -212,20 +191,20 @@ export default function StorefrontComparison() {
       {/* Legacy vs curated — flanked by prev/next controls (below on mobile) */}
       <div className="mt-3 flex items-center gap-3 sm:mt-4">
         <div className="hidden sm:block">
-          <NavButton dir="prev" onClick={() => step(-1)} />
+          <CarouselArrow dir="prev" onClick={() => step(-1)} label="Previous storefront" />
         </div>
         <div ref={personaRef} className="grid min-w-0 flex-1 grid-cols-2 gap-2.5 sm:gap-6">
           <StoreCard card={LEGACY} sub={legacySub} media={<LegacyShowcase />} />
           <StoreCard card={CURATED} sub={curatedSub} media={<CuratedShowcase id={active.storefront} preload={preload} />} />
         </div>
         <div className="hidden sm:block">
-          <NavButton dir="next" onClick={() => step(1)} />
+          <CarouselArrow dir="next" onClick={() => step(1)} label="Next storefront" />
         </div>
       </div>
       {/* Mobile prev/next */}
       <div className="mt-4 flex justify-center gap-5 sm:hidden">
-        <NavButton dir="prev" onClick={() => step(-1)} />
-        <NavButton dir="next" onClick={() => step(1)} />
+        <CarouselArrow dir="prev" onClick={() => step(-1)} label="Previous storefront" />
+        <CarouselArrow dir="next" onClick={() => step(1)} label="Next storefront" />
       </div>
     </section>
   );

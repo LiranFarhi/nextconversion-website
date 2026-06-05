@@ -198,6 +198,8 @@ export default function PersonaStrip({ activeLabel, onSelect, onInteract }: Prop
     vx: 0, // velocity px/ms, for flick momentum
   });
   const suppressClick = useRef(false);
+  const rafId = useRef(0);
+  useEffect(() => () => cancelAnimationFrame(rafId.current), []);
 
   /** transform that centres the chip at flat index `flat` under the viewport. */
   const centerForFlat = (flat: number) => {
@@ -229,8 +231,49 @@ export default function PersonaStrip({ activeLabel, onSelect, onInteract }: Prop
     return best;
   };
 
+  // After the inertial snap settles, commit the resting position to React with
+  // NO transition (so its transform matches the DOM exactly — no jump) and move
+  // the active persona. The active-change effect then re-enables the transition
+  // for subsequent clicks/wheel steps.
+  const finishSnap = (np: number, to: number) => {
+    const idx = ((np % N) + N) % N;
+    txRef.current = to;
+    if (trackRef.current) trackRef.current.style.transition = "";
+    flushSync(() => {
+      setAnimate(false);
+      setTx(to);
+      setPos(np);
+    });
+    prevIndex.current = idx;
+    handle(PERSONAS[idx].label);
+  };
+
+  // Inertial snap to a flat index, driven by requestAnimationFrame. Unlike a
+  // fixed CSS transition, the duration scales with distance and it eases out
+  // naturally — which is what makes the strip feel smooth on touch.
+  const snapTo = (np: number) => {
+    const from = txRef.current;
+    const to = centerForFlat(np);
+    const dist = Math.abs(to - from);
+    const duration = Math.min(480, Math.max(240, dist * 0.8));
+    const start = performance.now();
+    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+    if (trackRef.current) trackRef.current.style.transition = "none";
+    cancelAnimationFrame(rafId.current);
+    const tick = (now: number) => {
+      const t = duration === 0 ? 1 : Math.min(1, (now - start) / duration);
+      const val = from + (to - from) * easeOutCubic(t);
+      txRef.current = val;
+      if (trackRef.current) trackRef.current.style.transform = `translateX(${val}px)`;
+      if (t < 1) rafId.current = requestAnimationFrame(tick);
+      else finishSnap(np, to);
+    };
+    rafId.current = requestAnimationFrame(tick);
+  };
+
   const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
     onInteract?.();
+    cancelAnimationFrame(rafId.current); // grab control if a snap is mid-flight
     if (e.button > 0) return; // ignore right/middle mouse buttons
     drag.current = {
       active: true,
@@ -285,28 +328,11 @@ export default function PersonaStrip({ activeLabel, onSelect, onInteract }: Prop
     setTimeout(() => (suppressClick.current = false), 0);
 
     // Project a little past the release point based on flick velocity, so a
-    // quick swipe travels several personas instead of snapping to the nearest.
+    // quick swipe travels several personas instead of snapping to the nearest,
+    // then glide to it with the inertial rAF snap.
     const MOMENTUM = 180; // ms of projected glide
     const projected = txRef.current + d.vx * MOMENTUM;
-    const np = nearestFlat(projected);
-    const idx = ((np % N) + N) % N;
-    prevIndex.current = idx; // so the active-change effect doesn't double-move pos
-
-    // Hand control back to React for the animated snap. Drop the inline
-    // transition override the drag set, then commit the current position with
-    // the transition *already enabled* (flushSync, no visual change because the
-    // transform is unchanged). This primes the CSS transition so the subsequent
-    // move to the snapped target animates — without it, releasing right after a
-    // settle would jump instantly (transition + transform changing in one frame
-    // never animates).
-    if (trackRef.current) trackRef.current.style.transition = "";
-    flushSync(() => {
-      setAnimate(true);
-      setTx(txRef.current);
-    });
-    setTx(centerForFlat(np));
-    setPos(np);
-    handle(PERSONAS[idx].label);
+    snapTo(nearestFlat(projected));
   };
 
   const selectChip = useCallback(

@@ -9,6 +9,7 @@ import {
   useState,
   type PointerEvent as ReactPointerEvent,
 } from "react";
+import { flushSync } from "react-dom";
 import Image from "next/image";
 
 import type { StorefrontId } from "./storefronts";
@@ -199,12 +200,21 @@ export default function PersonaStrip({ activeLabel, onSelect, onInteract }: Prop
     const d = drag.current;
     if (!d.active) return;
     const dx = e.clientX - d.startX;
-    if (!d.moved && Math.abs(dx) > DRAG_THRESHOLD) {
+    if (!d.moved) {
+      if (Math.abs(dx) <= DRAG_THRESHOLD) return;
       d.moved = true;
-      setAnimate(false); // follow the finger 1:1 (no transition)
       viewportRef.current?.setPointerCapture?.(d.pid);
+      // Follow the finger 1:1: kill the CSS transition and drive the transform
+      // imperatively so we don't re-render React on every frame (the cause of
+      // the janky / "stuck" feel).
+      if (trackRef.current) trackRef.current.style.transition = "none";
     }
-    if (d.moved) setTx(d.startTx + dx);
+    if (!d.moved) return;
+    const ntx = d.startTx + dx;
+    txRef.current = ntx;
+    if (trackRef.current) {
+      trackRef.current.style.transform = `translateX(${ntx}px)`;
+    }
   };
 
   const onPointerEnd = (e: ReactPointerEvent<HTMLDivElement>) => {
@@ -217,11 +227,23 @@ export default function PersonaStrip({ activeLabel, onSelect, onInteract }: Prop
     suppressClick.current = true;
     setTimeout(() => (suppressClick.current = false), 0);
 
-    const finalTx = d.startTx + (e.clientX - d.startX);
+    const finalTx = txRef.current;
     const np = nearestFlat(finalTx);
     const idx = ((np % N) + N) % N;
     prevIndex.current = idx; // so the active-change effect doesn't double-move pos
-    setAnimate(true);
+
+    // Hand control back to React for the animated snap. Drop the inline
+    // transition override the drag set, then commit the current position with
+    // the transition *already enabled* (flushSync, no visual change because the
+    // transform is unchanged). This primes the CSS transition so the subsequent
+    // move to the snapped target animates — without it, releasing right after a
+    // settle would jump instantly (transition + transform changing in one frame
+    // never animates).
+    if (trackRef.current) trackRef.current.style.transition = "";
+    flushSync(() => {
+      setAnimate(true);
+      setTx(finalTx);
+    });
     setTx(centerForFlat(np));
     setPos(np);
     handle(PERSONAS[idx].label);
@@ -257,7 +279,7 @@ export default function PersonaStrip({ activeLabel, onSelect, onInteract }: Prop
     >
       <div
         ref={trackRef}
-        className={`flex w-max gap-3 ${animate ? "transition-transform duration-500 ease-out" : ""}`}
+        className={`flex w-max gap-3 will-change-transform ${animate ? "transition-transform duration-500 ease-out" : ""}`}
         style={{ transform: `translateX(${tx}px)` }}
       >
         {items.map((p, i) => (

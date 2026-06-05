@@ -110,7 +110,7 @@ const PHASES: Phase[] = [
 function AgentPill({ agent }: { agent: NonNullable<Phase["agent"]> }): ReactElement {
   return (
     <div className="inline-flex flex-wrap items-center gap-x-1.5 gap-y-1 self-start rounded-2xl border border-white/10 bg-white/[0.05] px-2.5 py-1.5 sm:rounded-full sm:py-1.5 sm:pl-1.5 sm:pr-4">
-      <span className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full">
+      <span className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full sm:h-9 sm:w-9">
         <Image src={agent.img} alt={agent.name} fill sizes="36px" className="object-cover object-top" />
       </span>
       <span className="font-inter text-[13px] leading-tight sm:text-sm">
@@ -124,12 +124,12 @@ function AgentPill({ agent }: { agent: NonNullable<Phase["agent"]> }): ReactElem
 
 function ActionChecklist({ actions }: { actions: string[] }): ReactElement {
   return (
-    <div className="flex flex-col gap-2.5">
-      <p className="font-inter text-sm text-white/60">Agent Actions:</p>
+    <div className="flex flex-col gap-2 sm:gap-2.5">
+      <p className="font-inter text-[13px] text-white/60 sm:text-sm">Agent Actions:</p>
       {actions.map((action) => (
-        <div key={action} className="flex items-center gap-3">
+        <div key={action} className="flex items-center gap-2.5 sm:gap-3">
           <Check size={16} strokeWidth={2.5} className="shrink-0 text-[#0fdd98]" />
-          <span className="font-inter text-sm leading-snug text-white/80">{action}</span>
+          <span className="font-inter text-[13px] leading-snug text-white/80 sm:text-sm">{action}</span>
         </div>
       ))}
     </div>
@@ -172,14 +172,14 @@ function PhaseCard({ phase, isActive, distance, onSelect }: PhaseCardProps): Rea
       className={[
         "w-full rounded-[24px] border text-left transition-all duration-500",
         isActive
-          ? "border-primary/30 bg-white/[0.05] p-4 shadow-[0_18px_50px_-26px_rgba(131,79,251,0.6)] sm:p-6"
-          : "border-primary/15 bg-white/[0.03] p-3.5 hover:border-primary/30 sm:p-5",
+          ? "border-primary/30 bg-white/[0.05] p-3 shadow-[0_18px_50px_-26px_rgba(131,79,251,0.6)] sm:p-6"
+          : "border-primary/15 bg-white/[0.03] p-3 hover:border-primary/30 sm:p-5",
       ].join(" ")}
     >
       {/* Bare Figma outline icon + eyebrow/title (no filled badge) */}
       <div className="flex items-center gap-3">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={phase.iconSrc} alt="" className="h-11 w-11 shrink-0" />
+        <img src={phase.iconSrc} alt="" className="h-9 w-9 shrink-0 sm:h-11 sm:w-11" />
         <div className="flex flex-col">
           <span className="font-inter text-[13px] uppercase tracking-[0.08em] text-primary">
             {phase.label}
@@ -201,12 +201,12 @@ function PhaseCard({ phase, isActive, distance, onSelect }: PhaseCardProps): Rea
         <div className="overflow-hidden">
           <div
             className={[
-              "flex flex-col gap-4 pt-4 transition-opacity duration-300",
+              "flex flex-col gap-2.5 pt-3 transition-opacity duration-300 sm:gap-4 sm:pt-4",
               isActive ? "opacity-100 delay-100" : "opacity-0",
             ].join(" ")}
           >
             {phase.body && (
-              <p className="font-inter text-[15px] leading-relaxed text-white/90">{phase.body}</p>
+              <p className="font-inter text-[13.5px] leading-snug text-white/90 sm:text-[15px] sm:leading-relaxed">{phase.body}</p>
             )}
             {phase.agent && <AgentPill agent={phase.agent} />}
             {phase.actions && <ActionChecklist actions={phase.actions} />}
@@ -318,7 +318,7 @@ export default function LiveDemoSection(): ReactElement {
           phases. The active card is held at the vertical centre of the demo. */}
       <div ref={trackRef} className="relative h-[340vh] lg:h-[480vh]">
         <div className="sticky top-0 flex h-screen flex-col overflow-hidden">
-          <div className="shrink-0 pt-12 sm:pt-24">
+          <div className="shrink-0 pt-6 sm:pt-24">
             <SectionHeading
               title="Watch a Storefront Evolve in Real-Time"
               subtitle="Meet your agent workforce that deliver autonomously behind the scenes."
@@ -357,7 +357,7 @@ export default function LiveDemoSection(): ReactElement {
                 neighbours peek above/below; the window clips the rest and keeps
                 empty space bounded. */}
             <div className="relative flex min-w-0 flex-1 items-center justify-center lg:basis-0">
-              <div className="relative h-[420px] w-full overflow-hidden sm:h-[460px] lg:h-[480px]">
+              <div className="relative h-full max-h-[480px] w-full overflow-hidden sm:h-[460px] sm:max-h-none lg:h-[480px]">
                 <div
                   ref={cardsRef}
                   className="absolute inset-x-0 top-1/2 flex flex-col gap-2.5 transition-transform duration-500 ease-out sm:gap-3"

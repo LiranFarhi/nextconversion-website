@@ -10,8 +10,6 @@ import {
   TrendingUp,
   CircleDollarSign,
   Clock,
-  ChevronLeft,
-  ChevronRight,
   LayoutTemplate,
   Package,
   Eraser,
@@ -28,6 +26,7 @@ import SectionHeading from "./SectionHeading";
 import CountUp from "./CountUp";
 import SnapRow from "./SnapRow";
 import CarouselDots from "./CarouselDots";
+import CarouselArrow from "./CarouselArrow";
 import { useAutoAdvance } from "./useAutoAdvance";
 
 type AgentSkill = { icon: LucideIcon; label: string };
@@ -303,14 +302,7 @@ export default function AgentsSection(): ReactElement {
 
       {/* ── Agent scroller — under both the illustration and the card ── */}
       <div className="mt-6 flex items-center justify-center gap-3">
-        <button
-          type="button"
-          onClick={() => go(-1)}
-          aria-label="Previous agent"
-          className="grid h-9 w-9 place-items-center rounded-full border border-border-strong bg-white/[0.03] text-soft transition-colors hover:bg-white/[0.1]"
-        >
-          <ChevronLeft size={16} />
-        </button>
+        <CarouselArrow dir="prev" onClick={() => go(-1)} label="Previous agent" />
         <CarouselDots
           count={AGENTS.length}
           active={index}
@@ -319,14 +311,7 @@ export default function AgentsSection(): ReactElement {
           playing={playing}
           label="Agent"
         />
-        <button
-          type="button"
-          onClick={() => go(1)}
-          aria-label="Next agent"
-          className="grid h-9 w-9 place-items-center rounded-full border border-border-strong bg-white/[0.03] text-soft transition-colors hover:bg-white/[0.1]"
-        >
-          <ChevronRight size={16} />
-        </button>
+        <CarouselArrow dir="next" onClick={() => go(1)} label="Next agent" />
       </div>
 
       {/* ── Impact stats ── */}
